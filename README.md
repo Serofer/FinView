@@ -1,17 +1,10 @@
-# fin_view
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
 # FinView
+This is my CS50 final project. I try coding an android app in which you can see how much money you spent. This application will be coded in Kotlin using mostly the Android Studio IDE.
+</br>
+<h1>What this Application should provide</h1>
+<ul>
+  <li>The possibility to create an account and log in (delete account as well)</li>
+  <li>Being able to type in the amount of money spent and selecting time frame (by default current time)</li>
+  <li>Selecting a category for what the money was spent on</li>
+  <li>Being able to plot a graph of money psent by time (velocity) and total amount of money spent ordered by week, month and year of selected category (food, electronics, event, diverse, all)</li>
+</ul>
