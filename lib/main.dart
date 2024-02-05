@@ -170,7 +170,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
                   const SizedBox(height: 16.0),
                   //Dropdown
                   DropdownButton(
-                    alignment: AlignmentDirectional.centerStart,
+                    //TODO: align the Button in the middle
                     hint: const Text('Choose a category'),
                     items: categories.map((value) {
                       return DropdownMenuItem(
