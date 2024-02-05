@@ -1,9 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -16,10 +15,10 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
 
-  List<Widget> _pages = [
-    ViewExpenditurePage(),
-    AddExpenditurePage(),
-    SettingsPage(),
+  final List<Widget> _pages = [
+    const ViewExpenditurePage(),
+    const AddExpenditurePage(),
+    const SettingsPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -78,15 +77,17 @@ class AddExpenditurePage extends StatefulWidget {
 }
 
 class _AddExpenditurePageState extends State<AddExpenditurePage> {
+  //set Variables for input
   late TextEditingController inputPrice;
   late TextEditingController inputCategory;
+  DateTime selectedDate = DateTime.now();
   double price = 0.0;
-  String category = '';
-  var information1 = {'Expenditure': 18.90, 'Category': 'Food'};
-  var information2 = {'Expenditure': 5.00, 'Category': 'Event'};
+  String? category;
+  List categories = ['Food', 'Event', 'Education', 'Other'];
+
   List<Map<String, dynamic>> cost = [
-    {'Expenditure': 18.90, 'Category': 'Food'},
-    {'Expenditure': 5.00, 'Category': 'Event'}
+    {'Date': '2022-01-01', 'Expenditure': 18.90, 'Category': 'Food'},
+    {'Date': '2022-01-01', 'Expenditure': 5.00, 'Category': 'Event'}
   ];
 
   @override
@@ -104,37 +105,81 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
     super.dispose();
   }
 
+  //Add Expenditure
+  void addExpenditure() {
+    setState(() {
+      //Add input
+      price = double.parse(inputPrice.text);
+      DateFormat('yyyy').format(selectedDate);
+      cost.add({
+        'Date': selectedDate.toString(),
+        'Expenditure': price,
+        'Category': category
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(mainAxisSize: MainAxisSize.min, children: [
+          //Date
+          Text(
+            '${selectedDate.day}.${selectedDate.month}.${selectedDate.year}',
+          ),
+
+          //DatePicker
+          ElevatedButton(
+            onPressed: () async {
+              final DateTime? dateTime = await showDatePicker(
+                context: context,
+                initialDate: selectedDate,
+                firstDate: DateTime(2000),
+                lastDate: DateTime(2100),
+              );
+              if (dateTime != null) {
+                setState(() {
+                  selectedDate = dateTime;
+                });
+              }
+            },
+            child: const Text('Select Date'),
+          ),
+
+          //Price
           TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Price',
               border: OutlineInputBorder(),
             ),
             controller: inputPrice,
           ),
-          TextField(
-            decoration: InputDecoration(
-              hintText: 'Category',
-              border: OutlineInputBorder(),
-            ),
-            controller: inputCategory,
-          ),
-          FloatingActionButton(
-            onPressed: () {
+
+          //Dropdown
+          DropdownButton(
+            hint: const Text('Choose a category'),
+            items: categories.map((value) {
+              return DropdownMenuItem(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            value: category,
+            onChanged: (selectedValue) {
               setState(() {
-                //Add input
-                price = double.parse(inputPrice.text);
-                category = inputCategory.text;
-                cost.add({'Expenditure': price, 'Category': category});
+                category = selectedValue.toString();
               });
             },
-            child: Text('Submit'),
+          ),
+
+          //Submit
+          FloatingActionButton(
+            onPressed: addExpenditure,
             backgroundColor: Colors.blue,
+            isExtended: true,
+            child: const Text('Submit'),
           ),
           Text('$cost'),
         ]),
