@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -68,12 +70,75 @@ class ViewExpenditurePage extends StatelessWidget {
   }
 }
 
-class AddExpenditurePage extends StatelessWidget {
+class AddExpenditurePage extends StatefulWidget {
   const AddExpenditurePage({super.key});
+
+  @override
+  State<AddExpenditurePage> createState() => _AddExpenditurePageState();
+}
+
+class _AddExpenditurePageState extends State<AddExpenditurePage> {
+  late TextEditingController inputPrice;
+  late TextEditingController inputCategory;
+  double price = 0.0;
+  String category = '';
+  var information1 = {'Expenditure': 18.90, 'Category': 'Food'};
+  var information2 = {'Expenditure': 5.00, 'Category': 'Event'};
+  List<Map<String, dynamic>> cost = [
+    {'Expenditure': 18.90, 'Category': 'Food'},
+    {'Expenditure': 5.00, 'Category': 'Event'}
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    inputPrice = TextEditingController();
+    inputCategory = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    inputPrice.dispose();
+    inputCategory.dispose();
+
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Add expenditure'),
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(mainAxisSize: MainAxisSize.min, children: [
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Price',
+              border: OutlineInputBorder(),
+            ),
+            controller: inputPrice,
+          ),
+          TextField(
+            decoration: InputDecoration(
+              hintText: 'Category',
+              border: OutlineInputBorder(),
+            ),
+            controller: inputCategory,
+          ),
+          FloatingActionButton(
+            onPressed: () {
+              setState(() {
+                //Add input
+                price = double.parse(inputPrice.text);
+                category = inputCategory.text;
+                cost.add({'Expenditure': price, 'Category': category});
+              });
+            },
+            child: Text('Submit'),
+            backgroundColor: Colors.blue,
+          ),
+          Text('$cost'),
+        ]),
+      ),
     );
   }
 }
