@@ -121,69 +121,82 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(mainAxisSize: MainAxisSize.min, children: [
-          //Date
-          Text(
-            '${selectedDate.day}.${selectedDate.month}.${selectedDate.year}',
-          ),
-
-          //DatePicker
-          ElevatedButton(
-            onPressed: () async {
-              final DateTime? dateTime = await showDatePicker(
-                context: context,
-                initialDate: selectedDate,
-                firstDate: DateTime(2000),
-                lastDate: DateTime(2100),
-              );
-              if (dateTime != null) {
-                setState(() {
-                  selectedDate = dateTime;
-                });
-              }
-            },
-            child: const Text('Select Date'),
-          ),
-
-          //Price
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Price',
-              border: OutlineInputBorder(),
-            ),
-            controller: inputPrice,
-          ),
-
-          //Dropdown
-          DropdownButton(
-            hint: const Text('Choose a category'),
-            items: categories.map((value) {
-              return DropdownMenuItem(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            value: category,
-            onChanged: (selectedValue) {
-              setState(() {
-                category = selectedValue.toString();
-              });
-            },
-          ),
-
-          //Submit
-          FloatingActionButton(
-            onPressed: addExpenditure,
-            backgroundColor: Colors.blue,
-            isExtended: true,
-            child: const Text('Submit'),
-          ),
-          Text('$cost'),
-        ]),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Expenditure'),
+        backgroundColor: Colors.lightBlueAccent,
       ),
+      body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  const SizedBox(height: 16.0),
+                  //Date
+                  Text(
+                    DateFormat('dd.MM.yyyy').format(selectedDate),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontSize: 20.0),
+                  ),
+                  const SizedBox(height: 16.0),
+                  //DatePicker
+                  ElevatedButton(
+                    onPressed: () async {
+                      final DateTime? dateTime = await showDatePicker(
+                        context: context,
+                        initialDate: selectedDate,
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (dateTime != null) {
+                        setState(() {
+                          selectedDate = dateTime;
+                        });
+                      }
+                    },
+                    child: const Text('Select Date'),
+                  ),
+                  const SizedBox(height: 16.0),
+                  //Price
+                  TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Price',
+                      border: OutlineInputBorder(),
+                    ),
+                    controller: inputPrice,
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: 16.0),
+                  //Dropdown
+                  DropdownButton(
+                    alignment: AlignmentDirectional.centerStart,
+                    hint: const Text('Choose a category'),
+                    items: categories.map((value) {
+                      return DropdownMenuItem(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    value: category,
+                    onChanged: (selectedValue) {
+                      setState(() {
+                        category = selectedValue.toString();
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 16.0),
+                  //Submit
+                  FloatingActionButton.extended(
+                    onPressed: addExpenditure,
+                    backgroundColor: Colors.lightBlueAccent,
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add Expenditure'),
+                  ),
+                  const SizedBox(height: 16.0),
+                  Text('$cost'),
+                ]),
+          )),
     );
   }
 }
