@@ -58,17 +58,29 @@ class _MyAppState extends State<MyApp> {
   }
 }
 
-class ViewExpenditurePage extends StatelessWidget {
+class ViewExpenditurePage extends StatefulWidget {
   const ViewExpenditurePage({super.key});
   @override
-  Widget build(BuildContext context) {
-    return const Center(
-      //Add input
-      child: Text('View expenditure'),
-    );
-  }
+  State<ViewExpenditurePage> createState() => _ViewExpenditurePageState();
 }
 
+class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
+  
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold( 
+    appBar: AppBar(
+        title: const Text('View Expenditure'),
+        backgroundColor: Colors.lightBlueAccent,
+      ),
+    body: Center(
+      child: Text('Moin page'),
+    ),
+    
+    
+    );
+  }    
+}
 class AddExpenditurePage extends StatefulWidget {
   const AddExpenditurePage({super.key});
 
