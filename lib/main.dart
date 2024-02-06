@@ -110,9 +110,8 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
     setState(() {
       //Add input
       price = double.parse(inputPrice.text);
-      DateFormat('yyyy').format(selectedDate);
       cost.add({
-        'Date': selectedDate.toString(),
+        'Date': DateFormat('dd.MM.yyyy').format(selectedDate),
         'Expenditure': price,
         'Category': category
       });
