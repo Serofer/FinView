@@ -19,5 +19,12 @@ class Expenditure {
         required this.category;
         required this.date;
     });
+
+    Map<String, Object? toJson() => {
+        ExpenditureFields.id : id;
+        ExpenditureFields.amount : amount;
+        ExpenditureFields.category : category;
+        ExpenditureFields.datetime : datetime.toIso8601String(),
+    };
 }
 

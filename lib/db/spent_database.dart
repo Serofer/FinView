@@ -36,7 +36,13 @@ class SpentDatabase {
                 ${ExpenditureFields.category} $textType,
                 ${ExpenditureFields.date} $dateType
             )
-        ''')
+        ''');
+    }
+
+    Future<Expenditure> create(Expenditure expenditure) async {
+        final db = await instance.database;
+
+        final id = await db.insert(tableExpenditure, note.toJson());
     }
 
     Future close() async {
