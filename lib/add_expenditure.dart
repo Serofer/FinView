@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
 import 'package:fin_view/model/spent.dart';
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddExpenditurePage extends StatefulWidget {
@@ -12,11 +12,12 @@ class AddExpenditurePage extends StatefulWidget {
 
 class _AddExpenditurePageState extends State<AddExpenditurePage> {
   //set Variables for input
+  final _formKey = GlobalKey<FormState>();
   late TextEditingController inputPrice;
   late TextEditingController inputCategory;
-  DateTime selectedDate = DateTime.now();
-  double price = 0.0;
-  String? category;
+  late DateTime selectedDate = DateTime.now();
+  late double price = 0.0;
+  late String? category;
   List categories = ['Food', 'Event', 'Education', 'Other'];
 
   List<Map<String, dynamic>> cost = [
@@ -40,7 +41,14 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
   }
 
   //Add Expenditure
-  void addExpenditure() {
+  Future addExpenditure() async {
+    final expenditure = Expenditure(
+      amount: price,
+      category: category!,
+      date: selectedDate,
+    );
+
+    await SpentDatabase.instance.create(expenditure);
     setState(() {
       //Add input
       price = double.parse(inputPrice.text);

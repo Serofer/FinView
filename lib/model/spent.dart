@@ -1,4 +1,4 @@
-final String tableExpenditure = 'expenditure';
+const String tableExpenditure = 'expenditure';
 
 class ExpenditureFields {
   static final List<String> values = [
@@ -6,10 +6,10 @@ class ExpenditureFields {
     id, amount, category, date
   ];
 
-  static final String id = '_id';
-  static final String amount = 'amount';
-  static final String category = 'category';
-  static final String date = 'date';
+  static const String id = '_id';
+  static const String amount = 'amount';
+  static const String category = 'category';
+  static const String date = 'date';
 }
 
 class Expenditure {

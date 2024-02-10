@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:fin_view/model/spent.dart';
 
 class SpentDatabase {
@@ -25,10 +26,10 @@ class SpentDatabase {
 
   Future _createDB(Database db, int version) async {
     //https://dart.dev/codelabs/async-await
-    final idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    final doubleType = 'NUMERIC NOT NULL';
-    final textType = 'TEXT NOT NULL';
-    final dateType = 'DATE'; //format: YYY-MM-DD
+    const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    const doubleType = 'NUMERIC NOT NULL';
+    const textType = 'TEXT NOT NULL';
+    const dateType = 'DATE'; //format: YYY-MM-DD
 
     await db.execute('''
             CREATE TABLE $tableExpenditure (

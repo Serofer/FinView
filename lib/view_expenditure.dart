@@ -27,7 +27,7 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
 
   Future refreshExpenses() async {
     setState(() => isLoading = true);
-    this.expenses = await SpentDatabase.instance.readAllExpenditure();
+    expenses = await SpentDatabase.instance.readAllExpenditure();
     setState(() => isLoading = false);
   }
 

@@ -14,7 +14,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: const Text('Settings'),
         backgroundColor: Colors.lightBlueAccent,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
             'Delete some expenditure or save database on server with an account'),
       ),
