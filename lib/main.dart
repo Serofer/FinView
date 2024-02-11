@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fin_view/view_expenditure.dart';
 import 'package:fin_view/add_expenditure.dart';
 import 'package:fin_view/settings.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() {
   runApp(const MyApp());

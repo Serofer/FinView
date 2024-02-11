@@ -1,6 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:sqflite/sqlite_api.dart';
 import 'package:fin_view/model/spent.dart';
 
 class SpentDatabase {
@@ -76,10 +76,11 @@ class SpentDatabase {
   Future<List<Expenditure>> readAllExpenditure() async {
     final db = await instance.database;
 
-    //final result = await db.query('SELECT * FROM $tableExpenditure ORDER BY ${ExpenditureFields.date} ASC');
+    final result = await db.query(
+        'SELECT * FROM $tableExpenditure ORDER BY ${ExpenditureFields.date} ASC');
 
-    final result = await db.query(tableExpenditure,
-        orderBy: '${ExpenditureFields.date} ASC');
+    //final result = await db.query(tableExpenditure,
+    // orderBy: '${ExpenditureFields.date} ASC');
 
     return result.map((json) => Expenditure.fromJson(json)).toList();
   }

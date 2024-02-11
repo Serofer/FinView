@@ -17,7 +17,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
   late TextEditingController inputCategory;
   late DateTime selectedDate = DateTime.now();
   late double price = 0.0;
-  late String? category;
+  String? category;
   List categories = ['Food', 'Event', 'Education', 'Other'];
 
   List<Map<String, dynamic>> cost = [
@@ -119,7 +119,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
                         child: Text(value),
                       );
                     }).toList(),
-                    value: category,
+                    value: category, // as expected wrong
                     onChanged: (selectedValue) {
                       setState(() {
                         category = selectedValue.toString();
