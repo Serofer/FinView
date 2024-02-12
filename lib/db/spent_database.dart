@@ -27,7 +27,7 @@ class SpentDatabase {
   Future _createDB(Database db, int version) async {
     //https://dart.dev/codelabs/async-await
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    const doubleType = 'NUMERIC NOT NULL';
+    const doubleType = 'INTEGER NOT NULL';
     const textType = 'TEXT NOT NULL';
     const dateType = 'DATE'; //format: YYY-MM-DD
 
@@ -76,11 +76,11 @@ class SpentDatabase {
   Future<List<Expenditure>> readAllExpenditure() async {
     final db = await instance.database;
 
-    final result = await db.query(
-        'SELECT * FROM $tableExpenditure ORDER BY ${ExpenditureFields.date} ASC');
+    //final result = await db.query(
+    //  'SELECT * FROM $tableExpenditure ORDER BY ${ExpenditureFields.date} ASC');
 
-    //final result = await db.query(tableExpenditure,
-    // orderBy: '${ExpenditureFields.date} ASC');
+    final result = await db.query(tableExpenditure,
+        orderBy: '${ExpenditureFields.date} ASC');
 
     return result.map((json) => Expenditure.fromJson(json)).toList();
   }

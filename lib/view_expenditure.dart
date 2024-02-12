@@ -20,7 +20,7 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
 
   @override
   void dispose() {
-    SpentDatabase.instance.close();
+    //SpentDatabase.instance.close();
 
     super.dispose();
   }

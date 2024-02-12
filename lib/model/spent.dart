@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 const String tableExpenditure = 'expenditure';
 
 class ExpenditureFields {
@@ -14,7 +16,7 @@ class ExpenditureFields {
 
 class Expenditure {
   final int? id;
-  final double amount;
+  final int amount;
   final String category;
   final DateTime date;
 
@@ -27,7 +29,7 @@ class Expenditure {
 
   Expenditure copy({
     int? id,
-    double? amount,
+    int? amount,
     String? category,
     DateTime? date,
   }) =>
@@ -40,7 +42,7 @@ class Expenditure {
 
   static Expenditure fromJson(Map<String, Object?> json) => Expenditure(
         id: json[ExpenditureFields.id] as int?,
-        amount: json[ExpenditureFields.amount] as double,
+        amount: json[ExpenditureFields.amount] as int,
         category: json[ExpenditureFields.category] as String,
         date: DateTime.parse(json[ExpenditureFields.date] as String),
       );

@@ -43,7 +43,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
   //Add Expenditure
   Future addExpenditure() async {
     final expenditure = Expenditure(
-      amount: price,
+      amount: price.toInt(),
       category: category!,
       date: selectedDate,
     );
