@@ -12,13 +12,16 @@ class DatabaseHelper {
 
   static Database? _database;
 
-
   Future<Database> get database async => _database ??= await _initDatabase();
 
-  Future<Database> _initDatabase() asnyc {
-    Directory documentsDirectory = await getApplicationDocumentsDirectory(); 
+  Future<Database> _initDatabase() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, 'expenses.db');
-    return await openDatabase(path, version: 1, onCreate: _onCreate, );
+    return await openDatabase(
+      path,
+      version: 1,
+      onCreate: _onCreate,
+    );
   }
 
   Future _onCreate(Database db, int version) async {
@@ -32,22 +35,26 @@ class DatabaseHelper {
       )
     ''');
   }
+
   Future<List<Expenditure>> getExpenses() async {
     Database db = await instance.database;
     var expenses = await db.query('expenses', orderBy: 'date');
-    List<Expenditure> expensesList = expenses.isNotEmpty ? expenses.map((c) => Expenditure.fromMap(c)).toList() : [];
+    List<Expenditure> expensesList = expenses.isNotEmpty
+        ? expenses.map((c) => Expenditure.fromMap(c)).toList()
+        : [];
     return expensesList;
   }
 
   Future<int> add(Expenditure expenditure) async {
-    Database db = await instance.databse;
+    Database db = await instance.database;
     return await db.insert('expenses', expenditure.toMap());
   }
 
- /* Future<int> remove(int id) async {
+  void close() {}
+
+  /* Future<int> remove(int id) async {
     Dat
   }*/
-
 }
 
 /*

@@ -12,24 +12,24 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
   late List<Expenditure> expenses;
   bool isLoading = false;
 
-  @override
+  /*@override
   void initState() {
     super.initState();
     refreshExpenses();
   }
 
-  @override
+   @override
   void dispose() {
-    SpentDatabase.instance.close();
+    DatabaseHelper.instance.close();
 
     super.dispose();
   }
 
   Future refreshExpenses() async {
     setState(() => isLoading = true);
-    expenses = await SpentDatabase.instance.readAllExpenditure();
+    expenses = await DatabaseHelper.instance.readAllExpenditure();
     setState(() => isLoading = false);
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -40,26 +40,25 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
       ),
       body: Center(
         child: FutureBuilder<List<Expenditure>>(
-          future: DatabaseHelper.instance.getExpenses(),
-          builder:(BuildContext context, AsyncSnapshot<List<Expenditure>> snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text('Loading...'));
-            }
-            return snapshot.data!.isEmpty
-              ? Center(child: Text('No data to display.'))
-              : ListView(
-                children: snapshot.data!.map((expenditure){
-                  return Center(
-                    child: ListTile(
-                    title: Text(expenditure.amount),
-                    subtitle: Text(expenditure.category),
-                    
-                    ),
-                  );
-                }).toList(),
-            );
-          }
-        ),
+            future: DatabaseHelper.instance.getExpenses(),
+            builder: (BuildContext context,
+                AsyncSnapshot<List<Expenditure>> snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: Text('Loading...'));
+              }
+              return snapshot.data!.isEmpty
+                  ? Center(child: Text('No data to display.'))
+                  : ListView(
+                      children: snapshot.data!.map((expenditure) {
+                        return Center(
+                          child: ListTile(
+                            title: Text(expenditure.amount as String),
+                            subtitle: Text(expenditure.category),
+                          ),
+                        );
+                      }).toList(),
+                    );
+            }),
       ),
     );
   }
