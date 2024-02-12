@@ -42,13 +42,22 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
 
   //Add Expenditure
   Future addExpenditure() async {
-    final expenditure = Expenditure(
+    await DatabaseHelper.instance.add(
+      Expenditure(
       amount: price,
       category: category!,
-      date: selectedDate,
+      date: DateFormat('yyyy-mm-dd').format(selectedDate),//maybe here a bug
     );
+    setState(() {
+      selectedDate = DateTime.now();
+      price = 0.0;
+      category = 'Food';
+    });
 
-    await SpentDatabase.instance.create(expenditure);
+
+
+
+    /*await SpentDatabase.instance.create(expenditure);
     setState(() {
       //Add input
       price = double.parse(inputPrice.text);
@@ -57,7 +66,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
         'Expenditure': price,
         'Category': category
       });
-    });
+    });*/
   }
 
   @override

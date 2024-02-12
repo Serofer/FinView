@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:sqlfite/sqflite.dart';
+
 const String tableExpenditure = 'expenditure';
 
 class ExpenditureFields {
@@ -25,30 +28,19 @@ class Expenditure {
     required this.date,
   });
 
-  Expenditure copy({
-    int? id,
-    double? amount,
-    String? category,
-    DateTime? date,
-  }) =>
-      Expenditure(
-        id: id ?? this.id,
-        amount: amount ?? this.amount,
-        category: category ?? this.category,
-        date: date ?? this.date,
-      );
+  factory Expenditure.fromMap(Map<String, dynamic> json) => new Expenditure(
+    id: json['id'],
+    amount: json['amount'],
+    category: json['category'],
+    date: json['date'],
+  );
 
-  static Expenditure fromJson(Map<String, Object?> json) => Expenditure(
-        id: json[ExpenditureFields.id] as int?,
-        amount: json[ExpenditureFields.amount] as double,
-        category: json[ExpenditureFields.category] as String,
-        date: DateTime.parse(json[ExpenditureFields.date] as String),
-      );
-
-  Map<String, Object?> toJson() => {
-        ExpenditureFields.id: id,
-        ExpenditureFields.amount: amount,
-        ExpenditureFields.category: category,
-        ExpenditureFields.date: date.toIso8601String(),
-      };
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'amount': amount,
+      'category': category,
+      'date': date,
+    };
+  }
 }

@@ -5,6 +5,7 @@ import 'package:fin_view/settings.dart';
 import 'package:sqflite/sqflite.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

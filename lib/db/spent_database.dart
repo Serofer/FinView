@@ -1,35 +1,62 @@
 import 'package:path/path.dart';
+import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:fin_view/model/spent.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
-class SpentDatabase {
-  static final SpentDatabase instance = SpentDatabase._init();
+class DatabaseHelper {
+  DatabaseHelper._privateConstructor();
+  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   static Database? _database;
 
-  SpentDatabase._init();
 
-  Future<Database> get database async {
-    if (_database != null) return _database!;
+  Future<Database> get database async => _database ??= await _initDatabase();
 
-    _database = await _initDB('expenditure.db');
-    return _database!;
+  Future<Database> _initDatabase() asnyc {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory(); 
+    String path = join(documentsDirectory.path, 'expenses.db');
+    return await openDatabase(path, version: 1, onCreate: _onCreate, );
   }
 
-  Future<Database> _initDB(String filePath) async {
-    final dbPath = await getDatabasesPath(); //maybe package path_provider
-    final path = join(dbPath, filePath);
-
-    return await openDatabase(path, version: 1, onCreate: _createDB);
+  Future _onCreate(Database db, int version) async {
+    //Date has the format: YYYY-MM-DD
+    await db.execute('''
+      CREATE table expenses(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        amount NUMERIC NOT NULL,
+        category TEXT NOT NULL,
+        date DATE 
+      )
+    ''');
+  }
+  Future<List<Expenditure>> getExpenses() async {
+    Database db = await instance.database;
+    var expenses = await db.query('expenses', orderBy: 'date');
+    List<Expenditure> expensesList = expenses.isNotEmpty ? expenses.map((c) => Expenditure.fromMap(c)).toList() : [];
+    return expensesList;
   }
 
+  Future<int> add(Expenditure expenditure) async {
+    Database db = await instance.databse;
+    return await db.insert('expenses', expenditure.toMap());
+  }
+
+ /* Future<int> remove(int id) async {
+    Dat
+  }*/
+
+}
+
+/*
   Future _createDB(Database db, int version) async {
     //https://dart.dev/codelabs/async-await
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
     const doubleType = 'NUMERIC NOT NULL';
     const textType = 'TEXT NOT NULL';
-    const dateType = 'DATE'; //format: YYY-MM-DD
+    const dateType = 'DATE'; //format: YYYY-MM-DD
 
     await db.execute('''
             CREATE TABLE $tableExpenditure (
@@ -112,3 +139,4 @@ class SpentDatabase {
     db.close();
   }
 }
+*/

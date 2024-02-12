@@ -39,14 +39,27 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: Center(
-        child: isLoading
-            ? const CircularProgressIndicator()
-            : expenses.isEmpty
-                ? const Text(
-                    'No Expenditure',
-                    style: TextStyle(color: Colors.black, fontSize: 24),
-                  )
-                : showData(),
+        child: FutureBuilder<List<Expenditure>>(
+          future: DatabaseHelper.instance.getExpenses(),
+          builder:(BuildContext context, AsyncSnapshot<List<Expenditure>> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(child: Text('Loading...'));
+            }
+            return snapshot.data!.isEmpty
+              ? Center(child: Text('No data to display.'))
+              : ListView(
+                children: snapshot.data!.map((expenditure){
+                  return Center(
+                    child: ListTile(
+                    title: Text(expenditure.amount),
+                    subtitle: Text(expenditure.category),
+                    
+                    ),
+                  );
+                }).toList(),
+            );
+          }
+        ),
       ),
     );
   }
