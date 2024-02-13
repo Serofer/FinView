@@ -27,7 +27,7 @@ class SpentDatabase {
   Future _createDB(Database db, int version) async {
     //https://dart.dev/codelabs/async-await
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    const doubleType = 'INTEGER NOT NULL';
+    const doubleType = 'NUMERIC NOT NULL';
     const textType = 'TEXT NOT NULL';
     const dateType = 'DATE'; //format: YYY-MM-DD
 

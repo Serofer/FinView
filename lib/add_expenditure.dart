@@ -16,7 +16,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
   late TextEditingController inputPrice;
   late TextEditingController inputCategory;
   late DateTime selectedDate = DateTime.now();
-  late double price = 0.0;
+  double? price;
   String? category;
   List categories = ['Food', 'Event', 'Education', 'Other'];
 
@@ -43,7 +43,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
   //Add Expenditure
   Future addExpenditure() async {
     final expenditure = Expenditure(
-      amount: price.toInt(),
+      amount: price,
       category: category!,
       date: selectedDate,
     );
@@ -52,8 +52,9 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
     setState(() {
       //Add input
       price = double.parse(inputPrice.text);
+      print(price);
       cost.add({
-        'Date': DateFormat('dd.MM.yyyy').format(selectedDate),
+        'Date': DateFormat('yyyy-mm-dd').format(selectedDate),
         'Expenditure': price,
         'Category': category
       });

@@ -42,15 +42,15 @@ class Expenditure {
 
   static Expenditure fromJson(Map<String, Object?> json) => Expenditure(
         id: json[ExpenditureFields.id] as int?,
-        amount: json[ExpenditureFields.amount] as int,
+        amount: (json[ExpenditureFields.amount] as num?)?.toDouble() ?? 0.0,
         category: json[ExpenditureFields.category] as String,
-        date: DateTime.parse(json[ExpenditureFields.date] as String),
+        date: DateTime.parse(json[ExpenditureFields.date]),
       );
 
   Map<String, Object?> toJson() => {
         ExpenditureFields.id: id,
         ExpenditureFields.amount: amount,
         ExpenditureFields.category: category,
-        ExpenditureFields.date: date.toIso8601String(),
+        ExpenditureFields.date: date.toIso8601String()
       };
 }
