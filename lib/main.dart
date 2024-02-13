@@ -2,9 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:fin_view/view_expenditure.dart';
 import 'package:fin_view/add_expenditure.dart';
 import 'package:fin_view/settings.dart';
+import 'package:fin_view/db/spent_database.dart';
+import 'package:fin_view/model/spent.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SpentDatabase.instance.deleteAll();
   runApp(const MyApp());
 }
 

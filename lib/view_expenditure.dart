@@ -59,6 +59,7 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
             child: ListTile(
               title: Text(expenditure.category),
               trailing: Text(expenditure.amount.toString()),
+              subtitle: Text(expenditure.date.toString()),
             ),
           );
         },

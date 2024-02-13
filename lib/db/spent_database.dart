@@ -27,7 +27,7 @@ class SpentDatabase {
   Future _createDB(Database db, int version) async {
     //https://dart.dev/codelabs/async-await
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
-    const doubleType = 'NUMERIC NOT NULL';
+    const doubleType = 'DECIMAL(10, 2) NOT NULL';
     const textType = 'TEXT NOT NULL';
     const dateType = 'DATE'; //format: YYY-MM-DD
 
@@ -104,6 +104,12 @@ class SpentDatabase {
       where: '${ExpenditureFields.id} = ?',
       whereArgs: [id],
     );
+  }
+
+  Future<int> deleteAll() async {
+    final db = await instance.database;
+
+    return await db.delete(tableExpenditure);
   }
 
   Future close() async {

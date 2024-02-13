@@ -16,7 +16,7 @@ class ExpenditureFields {
 
 class Expenditure {
   final int? id;
-  final int amount;
+  final double? amount;
   final String category;
   final DateTime date;
 
@@ -29,7 +29,7 @@ class Expenditure {
 
   Expenditure copy({
     int? id,
-    int? amount,
+    double? amount,
     String? category,
     DateTime? date,
   }) =>
@@ -42,15 +42,16 @@ class Expenditure {
 
   static Expenditure fromJson(Map<String, Object?> json) => Expenditure(
         id: json[ExpenditureFields.id] as int?,
-        amount: (json[ExpenditureFields.amount] as num?)?.toDouble() ?? 0.0,
+        amount: (json[ExpenditureFields.amount] as num?)?.toDouble() ??
+            0.0, // Parse as double
         category: json[ExpenditureFields.category] as String,
-        date: DateTime.parse(json[ExpenditureFields.date]),
+        date: DateTime.parse(json[ExpenditureFields.date] as String),
       );
 
   Map<String, Object?> toJson() => {
         ExpenditureFields.id: id,
         ExpenditureFields.amount: amount,
         ExpenditureFields.category: category,
-        ExpenditureFields.date: date.toIso8601String()
+        ExpenditureFields.date: date.toString()
       };
 }

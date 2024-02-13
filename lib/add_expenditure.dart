@@ -42,17 +42,23 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
 
   //Add Expenditure
   Future addExpenditure() async {
+    price ??= 0;
+    category ??= 'Food';
+    if (inputPrice.text?.isNotEmpty == true) {
+      double number = double.parse(inputPrice.text);
+      String newText = number.toStringAsFixed(2);
+      price = double.parse(newText);
+    }
+
     final expenditure = Expenditure(
-      amount: price,
+      amount: price!,
       category: category!,
       date: selectedDate,
     );
 
     await SpentDatabase.instance.create(expenditure);
+    //Add input
     setState(() {
-      //Add input
-      price = double.parse(inputPrice.text);
-      print(price);
       cost.add({
         'Date': DateFormat('yyyy-mm-dd').format(selectedDate),
         'Expenditure': price,
@@ -105,8 +111,16 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
                     decoration: const InputDecoration(
                       hintText: 'Price',
                       border: OutlineInputBorder(),
+                      prefixIcon: Icon(Icons.attach_money),
                     ),
                     controller: inputPrice,
+                    onChanged: (value) {
+                      double newValue = double.parse(value);
+                      print("hello ${newValue}");
+                      String next = newValue.toStringAsFixed(2);
+                      price = double.parse(next);
+                      print("price ${price}");
+                    },
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16.0),
