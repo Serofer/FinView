@@ -41,12 +41,14 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
       appBar: AppBar(
         title: const Text('View Expenditure'),
         backgroundColor: Colors.lightBlueAccent,
-        /*actions: <Widget>[
-          icon:const Icon(Icons.add),
-          onPressed: (){
-            _showAddExpenditureModal(context);
-          },
-        ],*/
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () {
+              _showAddExpenditureModal(context);
+            },
+          )
+        ],
       ),
       body: //Column(children: [
           Center(
@@ -78,15 +80,15 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
         },
       );
 
-  /*void _showAddExpenditureModas(BuildContext context) {
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return Container(
-              height: 300, //Adjust height as needed
-              child: AddExpenditurePage(),
-            );
-          },
+  void _showAddExpenditureModal(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          height: 300, //Adjust height as needed
+          child: AddExpenditurePage(),
         );
-      } */
+      },
+    );
+  }
 }

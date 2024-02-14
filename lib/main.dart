@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SpentDatabase.instance.deleteAll();
+  //SpentDatabase.instance.deleteAll();
   runApp(const MyApp());
 }
 
