@@ -73,7 +73,9 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
           return Dismissible(
             key: Key(expenditure.id.toString()), // Unique key for each item
             onDismissed: (direction) {
-              // Handle item dismissal (deletion) here
+              // Delete the expenditure from the database
+              SpentDatabase.instance
+                  .delete(expenditure.id!); // Call your database function here
               setState(() {
                 // Remove the item from the list
                 expenses.removeAt(index);
