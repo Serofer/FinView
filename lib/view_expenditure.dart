@@ -70,11 +70,53 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
         itemCount: expenses.length,
         itemBuilder: (context, index) {
           final expenditure = expenses[index];
-          return Card(
-            child: ListTile(
-              title: Text(expenditure.category),
-              trailing: Text(expenditure.amount.toString()),
-              subtitle: Text(expenditure.date.toString()),
+          return Dismissible(
+            key: Key(expenditure.id.toString()), // Unique key for each item
+            onDismissed: (direction) {
+              // Handle item dismissal (deletion) here
+              setState(() {
+                // Remove the item from the list
+                expenses.removeAt(index);
+              });
+              // Optionally, show a snackbar or confirmation dialog
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text('Item deleted'),
+              ));
+            },
+            confirmDismiss: (direction) async {
+              // Optionally, show a confirmation dialog before deletion
+              return await showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Confirm'),
+                    content: Text('Are you sure you want to delete this item?'),
+                    actions: <Widget>[
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(false),
+                        child: Text('CANCEL'),
+                      ),
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(true),
+                        child: Text('DELETE'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 16.0),
+              child: Icon(Icons.delete, color: Colors.white),
+            ),
+            child: Card(
+              child: ListTile(
+                title: Text(expenditure.category),
+                trailing: Text(expenditure.amount.toString()),
+                subtitle: Text(expenditure.date.toString()),
+              ),
             ),
           );
         },

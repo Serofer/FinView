@@ -46,12 +46,12 @@ class _MyAppState extends State<MyApp> {
             onTap: _onItemTapped,
             items: const [
               BottomNavigationBarItem(
-                icon: Icon(Icons.bar_chart),
+                icon: Icon(Icons.data_saver_off),
                 label: 'View expenditure',
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.add_card),
-                label: 'Add expenditure',
+                icon: Icon(Icons.bar_chart),
+                label: 'View Charts',
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
