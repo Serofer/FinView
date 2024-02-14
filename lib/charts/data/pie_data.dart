@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
 import 'package:fin_view/model/spent.dart';
+
 /*
 class PieData {
-    final db = await instance.database;
+    
 
     List categories = ['Food', 'Event', 'Education', 'Other'];
     List percentages = [];
     //add logit to which timespan was given
-    final result = await db.query(tableExpenditure, orderBy: '${ExpenditureFields.date} ASC');
+    
 
     for (int i = 0; i < categories.length; i++)
     {
-        int countCat = await db.rawQuery("SELECT COUNT(_id) FROM expenditure WHERE category = '$categories[i]'");
+        List countCat = readCategory(categories[i]);
         int countAll = await db.rawQuery("SELECT COUNT(_id) FROM expenditure");
         int percentages[i] = (countCat / countAll) * 100; 
     }

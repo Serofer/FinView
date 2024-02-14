@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fin_view/view_charts.dart';
 import 'package:flutter/material.dart';
-//import 'package:fin_view/data/pie_data.dart';
+import 'package:fin_view/charts/data/pie_data.dart';
 /*
 List<PieChartSectionData> getSections() => PieData.data
     .asMap()

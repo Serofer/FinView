@@ -1,3 +1,4 @@
+import 'package:fin_view/charts/data/pie_data.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -83,6 +84,16 @@ class SpentDatabase {
         orderBy: '${ExpenditureFields.date} ASC');
 
     return result.map((json) => Expenditure.fromJson(json)).toList();
+  }
+
+  Future<List<dynamic>> readCategory(String category) async {
+    final db = await instance.database;
+
+    final List countCat = await db.rawQuery(
+        "SELECT COUNT(_id) FROM expenditure WHERE category = '$category'");
+    print(countCat);
+
+    return countCat;
   }
 
   Future<int> update(Expenditure expenditure) async {
