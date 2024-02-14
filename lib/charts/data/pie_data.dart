@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
-import 'package:fin_view/mode/spent.dart';
-
+import 'package:fin_view/model/spent.dart';
+/*
 class PieData {
     final db = await instance.database;
 
@@ -34,4 +34,4 @@ class Data {
     final Color color;
 
     Data({this.name, this.percent, this.color});
-}
+}*/

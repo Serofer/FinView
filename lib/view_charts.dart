@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
 import 'package:fin_view/model/spent.dart';
-import 'package:fin_view/charts/pie_charts_sections.dart';
-
+import 'package:fin_view/charts/pie_chart_sections.dart';
+import 'package:fl_chart/fl_chart.dart';
+/*
 class ViewChartsPage extends StatefulWidget {
-    const ViewChartsPage({super.key});
-    @override
-    State<VieChartsPage> createState() => _ViewChartsPageState();
+  const ViewChartsPage({super.key});
+  @override
+  State<ViewChartsPage> createState() => _ViewChartsPageState();
 }
 
 class _ViewChartsPageState extends State<ViewChartsPage> {
-
-
-   /* @override
+  /* @override
     void initState() {
         super.initState();
         refreshExpenses();
@@ -31,20 +30,20 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         setState(() => isLoading = false);
     }
     */
-    @override
-    Widget build(BuildContext context) {
-        return Scaffold(
-            appBar: AppBar(
-                title: const Text('View Charts'),
-                backgroundColor: Colors.lightBlueAccent,
-            ),
-            body: Center(
-                child: PieChart(
-                    PieChartData(
-                        sections: getSections(),
-                    ),
-                ),
-            ),
-        );
-    }
-}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('View Charts'),
+        backgroundColor: Colors.lightBlueAccent,
+      ),
+      body: Center(
+        child: PieChart(
+          PieChartData(
+            sections: getSections(),
+          ),
+        ),
+      ),
+    );
+  }
+}*/

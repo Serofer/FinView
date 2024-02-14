@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
 import 'package:fin_view/model/spent.dart';
-import 'package:fin_view/add_expenditure.dart'
-
+import 'package:fin_view/add_expenditure.dart';
 
 class ViewExpenditurePage extends StatefulWidget {
   const ViewExpenditurePage({super.key});
@@ -11,9 +10,8 @@ class ViewExpenditurePage extends StatefulWidget {
 }
 
 class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
-  
   /*showOverlay(BuildContext context) async {
-    OverlayState overlayState = Overla.of(context);
+    OverlayState overlayState = Overlay.of(context);
   }*/
   late List<Expenditure> expenses;
   bool isLoading = false;
@@ -50,9 +48,8 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
           },
         ],*/
       ),
-      body: Column(
-      children: [
-      Center(
+      body: //Column(children: [
+          Center(
         child: isLoading
             ? const CircularProgressIndicator()
             : expenses.isEmpty
@@ -62,11 +59,8 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
                   )
                 : showData(),
       ),
-      Center(
-
-      ),
-      ]
-      ),
+      //Center(),
+      //]),
     );
   }
 
@@ -84,10 +78,10 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
         },
       );
 
-      /*void _showAddExpenditureModas(BuildContext context) {
+  /*void _showAddExpenditureModas(BuildContext context) {
         showModalBottomSheet(
           context: context,
-          builder: (BuildCjontext context) {
+          builder: (BuildContext context) {
             return Container(
               height: 300, //Adjust height as needed
               child: AddExpenditurePage(),
