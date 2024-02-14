@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class AddExpenditurePage extends StatefulWidget {
-  const AddExpenditurePage({super.key});
+  const AddExpenditurePage({super.key}); //maybe remove super.key
 
   @override
   State<AddExpenditurePage> createState() => _AddExpenditurePageState();
 }
 
-class _AddExpenditurePageState extends State<AddExpenditurePage> {
+class _AddExpenditurePageState extends State<AddExpenditurePage> { //maybe replace AddExpenditurePage with ViewExpenditurePage
   //set Variables for input
   final _formKey = GlobalKey<FormState>();
   late TextEditingController inputPrice;
@@ -68,7 +68,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) { //remove AppBar and maybe change scaffold
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Expenditure'),
