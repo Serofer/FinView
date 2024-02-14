@@ -85,10 +85,16 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
       context: context,
       builder: (BuildContext context) {
         return Container(
-          height: 300, //Adjust height as needed
+          height: 500, //Adjust height as needed
           child: AddExpenditurePage(),
         );
       },
-    );
+    ).then((value) {
+      if (value == true) {
+        setState(() {
+          refreshExpenses();
+        });
+      }
+    });
   }
 }

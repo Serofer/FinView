@@ -10,7 +10,8 @@ class AddExpenditurePage extends StatefulWidget {
   State<AddExpenditurePage> createState() => _AddExpenditurePageState();
 }
 
-class _AddExpenditurePageState extends State<AddExpenditurePage> { //maybe replace AddExpenditurePage with ViewExpenditurePage
+class _AddExpenditurePageState extends State<AddExpenditurePage> {
+  //maybe replace AddExpenditurePage with ViewExpenditurePage
   //set Variables for input
   final _formKey = GlobalKey<FormState>();
   late TextEditingController inputPrice;
@@ -65,10 +66,12 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> { //maybe repla
         'Category': category
       });
     });
+    Navigator.pop(context, true);
   }
 
   @override
-  Widget build(BuildContext context) { //remove AppBar and maybe change scaffold
+  Widget build(BuildContext context) {
+    //remove AppBar and maybe change scaffold
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Expenditure'),
