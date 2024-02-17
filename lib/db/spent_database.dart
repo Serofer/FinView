@@ -160,10 +160,10 @@ class SpentDatabase {
       List countAll = await SpentDatabase.instance.readAmount();
       double totAmount = countAll[0]['SUM(amount)'] ?? 0.0;
       double toAdd = (spentCat / totAmount) * 100;
-      percentages.add(toAdd);
+      String percent = toAdd.toStringAsFixed(2);
+      double percentNum = double.parse(percent);
+      percentages.add(percentNum);
     }
-
-    print(percentages);
 
     return percentages;
   }
