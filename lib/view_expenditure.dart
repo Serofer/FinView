@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
 import 'package:fin_view/model/spent.dart';
 import 'package:fin_view/add_expenditure.dart';
+import 'package:intl/intl.dart';
 
 class ViewExpenditurePage extends StatefulWidget {
   const ViewExpenditurePage({super.key});
@@ -117,7 +118,9 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
               child: ListTile(
                 title: Text(expenditure.category),
                 trailing: Text(expenditure.amount.toString()),
-                subtitle: Text(expenditure.date.toString()),
+                subtitle: Text(DateFormat('dd.MM.yyyy')
+                    .format(expenditure.date)
+                    .toString()),
               ),
             ),
           );

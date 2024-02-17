@@ -3,7 +3,7 @@ import 'package:fin_view/db/spent_database.dart';
 import 'package:fin_view/model/spent.dart';
 import 'package:fin_view/charts/pie_chart_sections.dart';
 import 'package:fl_chart/fl_chart.dart';
-/*
+
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
   @override
@@ -47,4 +47,3 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     );
   }
 }
-*/

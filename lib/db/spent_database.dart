@@ -81,7 +81,7 @@ class SpentDatabase {
     //  'SELECT * FROM $tableExpenditure ORDER BY ${ExpenditureFields.date} ASC');
 
     final result = await db.query(tableExpenditure,
-        orderBy: '${ExpenditureFields.date} ASC');
+        orderBy: '${ExpenditureFields.date} DESC');
 
     return result.map((json) => Expenditure.fromJson(json)).toList();
   }
@@ -89,11 +89,22 @@ class SpentDatabase {
   Future<List<dynamic>> readCategory(String category) async {
     final db = await instance.database;
 
-    final List countCat = await db.rawQuery(
-        "SELECT COUNT(_id) FROM expenditure WHERE category = '$category'");
-    print(countCat);
+    final List spentOnCat = await db.rawQuery(
+        "SELECT SUM(amount) FROM expenditure WHERE category = '$category'");
+    print(spentOnCat);
 
-    return countCat;
+    return spentOnCat;
+  }
+
+  Future<List> readAmount() async {
+    final db = await instance.database;
+
+    final List tot_amount =
+        await db.rawQuery("SELECT SUM(amount) FROM expenditure");
+
+    print(tot_amount);
+
+    return tot_amount;
   }
 
   Future<int> update(Expenditure expenditure) async {
