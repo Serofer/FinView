@@ -1,4 +1,3 @@
-import 'package:fin_view/charts/data/pie_data.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
@@ -91,18 +90,15 @@ class SpentDatabase {
 
     final List spentOnCat = await db.rawQuery(
         "SELECT SUM(amount) FROM expenditure WHERE category = '$category'");
-    print(spentOnCat);
 
     return spentOnCat;
   }
 
-  Future<List> readAmount() async {
+  Future<List<dynamic>> readAmount() async {
     final db = await instance.database;
 
     final List tot_amount =
         await db.rawQuery("SELECT SUM(amount) FROM expenditure");
-
-    print(tot_amount);
 
     return tot_amount;
   }
@@ -138,5 +134,37 @@ class SpentDatabase {
     final db = await instance.database;
 
     db.close();
+  }
+
+//calculate percentages
+  Future<List<dynamic>> calculatePercentages() async {
+    List categories = ['Food', 'Event', 'Education', 'Other'];
+    List percentages = [];
+    dynamic sumAmount;
+    double spentCat = 0.0;
+    late List<Expenditure> expenses;
+    expenses = await SpentDatabase.instance.readAllExpenditure();
+    for (int i = 0; i < categories.length; i++) {
+      List<dynamic> spentOnCat =
+          await SpentDatabase.instance.readCategory(categories[i]);
+      print(i.toString());
+      sumAmount = spentOnCat[0]['SUM(amount)'] ?? 0;
+
+      //convert always to double:
+      if (sumAmount is int) {
+        spentCat = sumAmount.toDouble();
+      } else {
+        spentCat = sumAmount;
+      }
+      print('Category: ' + categories[i] + ' ' + spentCat.toString());
+      List countAll = await SpentDatabase.instance.readAmount();
+      double totAmount = countAll[0]['SUM(amount)'] ?? 0.0;
+      double toAdd = (spentCat / totAmount) * 100;
+      percentages.add(toAdd);
+    }
+
+    print(percentages);
+
+    return percentages;
   }
 }

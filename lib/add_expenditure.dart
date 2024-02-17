@@ -13,7 +13,7 @@ class AddExpenditurePage extends StatefulWidget {
 class _AddExpenditurePageState extends State<AddExpenditurePage> {
   //maybe replace AddExpenditurePage with ViewExpenditurePage
   //set Variables for input
-  final _formKey = GlobalKey<FormState>();
+  //final _formKey = GlobalKey<FormState>();
   late TextEditingController inputPrice;
   late TextEditingController inputCategory;
   late DateTime selectedDate = DateTime.now();
@@ -45,7 +45,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
   Future addExpenditure() async {
     price ??= 0;
     category ??= 'Food';
-    if (inputPrice.text?.isNotEmpty == true) {
+    if (inputPrice.text.isNotEmpty == true) {
       double number = double.parse(inputPrice.text);
       String newText = number.toStringAsFixed(2);
       price = double.parse(newText);
@@ -119,17 +119,14 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
                     controller: inputPrice,
                     onChanged: (value) {
                       double newValue = double.parse(value);
-                      print("hello ${newValue}");
                       String next = newValue.toStringAsFixed(2);
                       price = double.parse(next);
-                      print("price ${price}");
                     },
                     keyboardType: TextInputType.number,
                   ),
                   const SizedBox(height: 16.0),
                   //Dropdown
                   DropdownButton(
-                    //TODO: align the Button in the middle
                     hint: const Text('Choose a category'),
                     items: categories.map((value) {
                       return DropdownMenuItem(

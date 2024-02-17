@@ -3,6 +3,7 @@ import 'package:fin_view/db/spent_database.dart';
 import 'package:fin_view/model/spent.dart';
 import 'package:fin_view/charts/pie_chart_sections.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:fin_view/charts/data/pie_data.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -11,25 +12,40 @@ class ViewChartsPage extends StatefulWidget {
 }
 
 class _ViewChartsPageState extends State<ViewChartsPage> {
-  /* @override
-    void initState() {
-        super.initState();
-        refreshExpenses();
-    }
+  late List<PieChartSectionData> sections;
+  late List<Expenditure> expenses;
+  bool isLoading = false;
+  bool pieLoading = false;
 
-    @override
-    void dispose() {
-        //SpentDatabse.instance.close();
+  @override
+  void initState() {
+    super.initState();
+    refreshExpenses();
+    loadPieChartData();
+  }
 
-        super.dispose();
-    }
+  @override
+  void dispose() {
+    //SpentDatabse.instance.close();
 
-    Future refreshExpenses() async {
-        setState(() => isLoading = true);
-        expenses = await SpentDatabase.instance.readAllExpenditure();
-        setState(() => isLoading = false);
-    }
-    */
+    super.dispose();
+  }
+
+  Future refreshExpenses() async {
+    setState(() => isLoading = true);
+    expenses = await SpentDatabase.instance.readAllExpenditure();
+    setState(() => isLoading = false);
+  }
+
+  Future loadPieChartData() async {
+    //Initialize PieData and call calculate
+    PieData pieData = PieData();
+    setState(() => pieLoading = true);
+    await pieData.calculate();
+    sections = getSections();
+    setState(() => pieLoading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,12 +54,9 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: Center(
-        child: PieChart(
-          PieChartData(
-            sections: getSections(),
-          ),
-        ),
-      ),
+          child: pieLoading
+              ? const CircularProgressIndicator()
+              : PieChart(PieChartData(sections: sections))),
     );
   }
 }
