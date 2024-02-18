@@ -1,7 +1,7 @@
 import 'package:fin_view/charts/data/pie_data.dart';
 import 'package:flutter/material.dart';
 import 'package:fin_view/view_charts.dart';
-/*
+
 Widget buildIndicator({
   required Color color,
   required String text,
@@ -22,4 +22,4 @@ Widget buildIndicator({
         text,
         style: TextStyle(color: textColor, fontSize: 16),
       )
-    ]);*/
+    ]);
