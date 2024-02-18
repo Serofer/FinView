@@ -5,7 +5,7 @@ import 'package:fin_view/view_charts.dart';
 Widget buildIndicator({
   required Color color,
   required String text,
-  bool isSquare = false,
+  bool isSquare = true,
   double size = 16,
   Color textColor = const Color(0xff505050),
 }) =>
@@ -15,6 +15,7 @@ Widget buildIndicator({
         height: size,
         decoration: BoxDecoration(
           shape: isSquare ? BoxShape.rectangle : BoxShape.circle,
+          color: color,
         ),
       ),
       const SizedBox(width: 8),
