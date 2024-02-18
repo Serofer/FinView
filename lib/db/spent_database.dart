@@ -147,7 +147,7 @@ class SpentDatabase {
     for (int i = 0; i < categories.length; i++) {
       List<dynamic> spentOnCat =
           await SpentDatabase.instance.readCategory(categories[i]);
-      print(i.toString());
+      //print(i.toString());
       sumAmount = spentOnCat[0]['SUM(amount)'] ?? 0;
 
       //convert always to double:
@@ -156,7 +156,7 @@ class SpentDatabase {
       } else {
         spentCat = sumAmount;
       }
-      print('Category: ' + categories[i] + ' ' + spentCat.toString());
+      //print('Category: ' + categories[i] + ' ' + spentCat.toString());
       List countAll = await SpentDatabase.instance.readAmount();
       double totAmount = countAll[0]['SUM(amount)'] ?? 0.0;
       double toAdd = (spentCat / totAmount) * 100;

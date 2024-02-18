@@ -5,7 +5,7 @@ import 'package:fin_view/charts/pie_chart_sections.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fin_view/charts/data/pie_data.dart';
 import 'package:fin_view/charts/indicators_widget.dart';
-import 'package:fin_view/charts/data/pie_data.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -44,9 +44,13 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     //Initialize PieData and call calculate
     PieData pieData = PieData();
     setState(() => pieLoading = true);
+
+    await Future.delayed(Duration(seconds: 1));
     await pieData.calculate();
-    sections = getSections(touchedIndex);
+    sections = getSections();
+    await Future.delayed(Duration(seconds: 1));
     setState(() => pieLoading = false);
+    print(pieLoading);
   }
 
   @override
@@ -56,12 +60,20 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         title: const Text('View Charts'),
         backgroundColor: Colors.lightBlueAccent,
       ),
-      body: pieLoading ? CircularProgressIndicator() : _buildChildren(),
+      body: Column(
+        children: <Widget>[
+          pieLoading
+              ? Center(child: const CircularProgressIndicator())
+              : _buildPie(),
+          Text("hello"),
+        ],
+      ),
     );
   }
 
-  Widget _buildChildren() {
-    return Center(
+  Widget _buildPie() {
+    return Container(
+      height: 500,
       //change to staggered view
       child: Card(
         child: Padding(

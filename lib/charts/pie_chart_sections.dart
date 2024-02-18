@@ -2,7 +2,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:fin_view/charts/data/pie_data.dart';
 
-List<PieChartSectionData> getSections(int touchedIndex) => PieData.data
+List<PieChartSectionData> getSections() => PieData.data
     .asMap()
     .map<int, PieChartSectionData>((index, data) {
       /*final isTouched = index == touchedIndex;
