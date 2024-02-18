@@ -18,6 +18,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<Expenditure> expenses;
   bool isLoading = false;
   bool pieLoading = false;
+  int touchedIndex = 0;
 
   @override
   void initState() {
@@ -44,7 +45,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     PieData pieData = PieData();
     setState(() => pieLoading = true);
     await pieData.calculate();
-    sections = getSections();
+    sections = getSections(touchedIndex);
     setState(() => pieLoading = false);
   }
 
@@ -55,35 +56,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         title: const Text('View Charts'),
         backgroundColor: Colors.lightBlueAccent,
       ),
-      body: pieLoading ? const CircularProgressIndicator() : _buildChildren(),
-      /*PieChart(
-                PieChartData(
-                  borderData: FlBorderData(show: false),
-                  sectionsSpace: 0,
-                  centerSpaceRadius: 40,
-                  sections: sections,
-                ),
-              ),*/
-      /*Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: PieData.data
-                              .map(
-                                (data) => Container(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 2),
-                                    child: buildIndicator(
-                                        color: data.color, text: data.name)),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                    ],
-                  ),*/
+      body: pieLoading ? CircularProgressIndicator() : _buildChildren(),
     );
   }
 
