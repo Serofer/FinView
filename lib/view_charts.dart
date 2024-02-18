@@ -89,33 +89,46 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
 
   Widget _buildChildren() {
     return Center(
-      child: PieChart(
-        PieChartData(
-          borderData: FlBorderData(show: false),
-          sectionsSpace: 0,
-          centerSpaceRadius: 40,
-          sections: sections,
-        ),
-      ),
-      /* Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+      //change to staggered view
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: PieData.data
-                      .map(
-                        (data) => Container(
-                            padding: const EdgeInsets.symmetric(vertical: 2),
-                            child: buildIndicator(
-                                color: data.color, text: data.name)),
-                      )
-                      .toList(),
+              Expanded(
+                child: PieChart(
+                  PieChartData(
+                    borderData: FlBorderData(show: false),
+                    sectionsSpace: 0,
+                    centerSpaceRadius: 40,
+                    sections: sections,
+                  ),
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: PieData.data
+                          .map(
+                            (data) => Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 2),
+                                child: buildIndicator(
+                                    color: data.color, text: data.name)),
+                          )
+                          .toList(),
+                    ),
+                  ),
+                ],
+              ),
             ],
-          ),*/
+          ),
+        ),
+      ),
     );
   }
 }
