@@ -18,6 +18,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<Expenditure> expenses;
   bool isLoading = false;
   bool pieLoading = false;
+  bool LineLoading = false;
   int touchedIndex = 0;
 
   @override
@@ -25,6 +26,8 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     super.initState();
     refreshExpenses();
     loadPieChartData();
+    loadLineChartData();
+    
   }
 
   @override
@@ -53,8 +56,16 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     print(pieLoading);
   }
 
+  Future loadLineChartData() async {
+    setState(() => LineLoading = true);
+    //reference to needed functions
+    await barData.createBarData();
+    setState(() => LineLoading = false);
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {//maybe scrollable widget
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('View Charts'),
@@ -116,4 +127,45 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       ),
     );
   }
+
+  Widget _buildBar() {
+    return Container(
+      height: 500,
+      child: Card(
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: BarChartWidget(),
+        ),
+      ),
+    );
+  }
+/*
+  Widget _buildLine () {
+    return Container(
+      height: 500,
+      child: Card(
+        child: Linechart(
+          LineChartData( //according to filter
+            minX: 0,
+            maxX: 11,
+            minY: 0,
+            maxX: 3,
+            lineBarsData: [
+              LineChartBarData(
+                spots: [
+                  FlSpot(0, 30),
+                  FlSpot(2, 40),
+
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }*/
 }

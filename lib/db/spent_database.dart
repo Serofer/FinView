@@ -167,4 +167,43 @@ class SpentDatabase {
 
     return percentages;
   }
+
+  Future<List<dynamic>> queryForBar(String timeframe) async {
+    late int sections;
+    List barData = [];
+    final db = await instance.database;
+    final now = DateTime.now();
+    final currentYear = now.year;
+    final currentMonth = now.month;
+    final currentWeek = now.week;
+    DateTime firstDay = DateTime(currentYear, currentMonth, 1);
+    final currentDate = firstDay;
+
+    if (timeframe == "month")
+    {
+      final result = await db.rawQuery("SELECT amount, category, date FROM expenditure
+      WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?", ['$currentYear', '$currentMonth']
+      );
+      sections = 10;
+    }
+
+    //loop over array 10 times and assign a date to each 
+
+    for (int i = 0; i < sections; i++) {
+      if (result[i]['date'] < currentDate) {
+        
+      }
+
+      currentDate = currentDate.add(Duration(days: 3));
+
+    }
+    print(result);
+
+
+
+
+
+
+    return barData;
+  }
 }
