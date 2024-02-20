@@ -2,6 +2,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:fin_view/model/spent.dart';
+import 'package:fin_view/charts/data/bar_data.dart'
 
 class SpentDatabase {
   static final SpentDatabase instance = SpentDatabase._init();
@@ -170,7 +171,7 @@ class SpentDatabase {
 
   Future<List<dynamic>> queryForBar(String timeframe) async {
     late int sections;
-    List barData = [];
+    late List<Data> barData;
     final db = await instance.database;
     final now = DateTime.now();
     final currentYear = now.year;
@@ -201,10 +202,13 @@ class SpentDatabase {
       }
       //add sparation per bar depending on category
       currentDate = currentDate.add(Duration(days: 3));
-      barData[index]['id'] = index;
+
+      barData.add(Date(id: index, name: "None", y: sectoinValues[index], color: Color(0xff19bfff)));
+
+      /*barData[index]['id'] = index;
       barData[index]['name'] = "none";
       barData[index]['y'] = sectionValues[index];
-      barData[index]['color'] = Color(0xff19bfff);
+      barData[index]['color'] = Color(0xff19bfff);*/
       index++;
 
     }

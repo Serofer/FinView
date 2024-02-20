@@ -1,22 +1,15 @@
 import 'package:flutter/material.dart';
 
 class BarData {
-    static int interval = 5;
+    static int interval = 10; //change according to max bar
     late List<dynamic> dataFromBase;
     static late List<Data> barData;
-    String timeframe = "month"
+    String timeframe = "month";
 
     Future<void> createBarData(timeframe) async {
         dataFromBase = await SpentDatabase.instance.queryForBar();
 
-        barData = [
-            Data(
-                id: 0,
-                name: 'Mon',
-                y: 15,
-                color: Color(0xff19bfff),
-            ),
-        ];
+        barData = queryForBar();
 
     }
     //calculate each Data -> array with values: id, name, color...
@@ -33,7 +26,7 @@ class Data [
     final double y;
     final Color color;
 
-    const Data({
+    const bar_Data({
         required this.id,
         required this.name,
         required this.y,
