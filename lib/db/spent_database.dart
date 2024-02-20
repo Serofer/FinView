@@ -177,32 +177,40 @@ class SpentDatabase {
     final currentMonth = now.month;
     final currentWeek = now.week;
     DateTime firstDay = DateTime(currentYear, currentMonth, 1);
-    final currentDate = firstDay;
-
+    late int timeshift;
+    
+    int index = 0;
+    
+  //change variables according to selected timeframe
     if (timeframe == "month")
     {
       final result = await db.rawQuery("SELECT amount, category, date FROM expenditure
       WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?", ['$currentYear', '$currentMonth']
       );
       sections = 10;
+      timeshift = 3;
     }
 
+    final currentDate = firstDay.add(Duration(days: 3));
+    List sectionValues = List.generate(sections, (index) => 0.0);
     //loop over array 10 times and assign a date to each 
 
     for (int i = 0; i < sections; i++) {
       if (result[i]['date'] < currentDate) {
-        
+        sectionValues[index] += result[i]['amount'];
       }
-
+      //add sparation per bar depending on category
       currentDate = currentDate.add(Duration(days: 3));
+      barData[index]['id'] = index;
+      barData[index]['name'] = "none";
+      barData[index]['y'] = sectionValues[index];
+      barData[index]['color'] = Color(0xff19bfff);
+      index++;
 
     }
     print(result);
-
-
-
-
-
+    print(secionValues);
+    print(barData);
 
     return barData;
   }
