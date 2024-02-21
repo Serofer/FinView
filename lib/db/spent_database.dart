@@ -169,8 +169,9 @@ class SpentDatabase {
     return percentages;
   }
 
-  Future<List<dynamic>> queryForBar(String timeframe) async {
+  Future<List<Data, dynamic>> queryForBar(String timeframe) async {
     late int sections;
+    late int dataPerSection;
     late List<Data> barData;
     final db = await instance.database;
     final now = DateTime.now();
@@ -188,7 +189,8 @@ class SpentDatabase {
       final result = await db.rawQuery("SELECT amount, category, date FROM expenditure
       WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?", ['$currentYear', '$currentMonth']
       );
-      sections = 10;
+      sections = 7;
+      dataPerSection = 3;
       timeshift = 3;
     }
 
@@ -203,7 +205,9 @@ class SpentDatabase {
       //add sparation per bar depending on category
       currentDate = currentDate.add(Duration(days: 3));
 
-      barData.add(Date(id: index, name: "None", y: sectoinValues[index], color: Color(0xff19bfff)));
+      barData.add(Date(id: index, name: "None", y: sectionValues[index], color: Color(0xff19bfff)));
+
+      //barData.add(Date(id: index, name: "$Week {index}", rodData: ));
 
       /*barData[index]['id'] = index;
       barData[index]['name'] = "none";
