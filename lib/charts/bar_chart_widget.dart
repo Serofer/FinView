@@ -29,10 +29,36 @@ class BarChartWidget extends StatelessWidget {
                     ),
                 },
             ),
-            barGroups: BarData.BarData.map(
+            barGroups: BarData.barData.map(
+                /*barData has this format: barData = [{id: x, name: week, BarChartRodData: {
+                            barHeight: barHeight, rodStackItems: [{minY: value, maxY: value, color: widget.normal}, {...}]
+                        },
+                    },
+                ]
+                
+                Code test:
+                barGroups: BarData.barData.map(
+                    (data) => BarChartGroupData(
+                        x: data.id,
+                        barRods: BarChartRodData.map(
+                            (rodData) => BarChartRodData(
+                                toY: rodData.barHeight
+                                rodStackItems: rotStackItems.map(
+                                    (rodItem) => BarChartRodStackItem(
+                                        rodItem.minY,
+                                        rodItem.maxY,
+                                        rodItem.color
+                                    ),
+                                ).toList();
+                            ),
+                        ).toList();
+                    ),
+                ).toList();
+                */
                 (data) => BarChartGroupData(
                     x: data.id,
-                    barRods: [
+                    barRods: [ //map again over every inner list
+
                         BarChartRodData(
                             y: data.y,
                             width: barWidth,

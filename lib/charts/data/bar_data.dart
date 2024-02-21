@@ -20,16 +20,53 @@ class BarData {
 
 
 
-class Data [
+class Data {
     final int id;
     final String name;
     final double y;
     final Color color;
 
-    const bar_Data({
+    const Data({
         required this.id,
         required this.name,
         required this.y,
         required this.color,
     });
-]
+}
+
+/*
+class Data {
+  final int id;
+  final String name;
+  final BarChartRodData rodData;
+
+  const Data({
+    required this.id,
+    required this.name,
+    required this.rodData,
+  });
+}
+
+class BarChartRodData {
+  final int barHeight;
+  final RodStackItems rodItem;
+
+  const BarChartRodData({
+    required this.barHeight,
+    required this.rodItem,
+  });
+}
+
+class RodStackItems {
+  final double minY;
+  final double maxY;
+  final Color color;
+
+  const RodStackItems({
+    required this.minY,
+    required this.maxY,
+    required this.color,
+  });
+}
+
+*/
