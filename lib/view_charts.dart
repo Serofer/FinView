@@ -6,6 +6,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:fin_view/charts/data/pie_data.dart';
 import 'package:fin_view/charts/indicators_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:fin_view/charts/table_widget.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -139,6 +140,19 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         child: Padding(
           padding: const EdgeInsets.only(top: 16),
           child: BarChartWidget(),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTable() {
+    return Container(
+      height: 500,
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: TableWidget()
         ),
       ),
     );
