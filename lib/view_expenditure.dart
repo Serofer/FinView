@@ -82,7 +82,7 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
                 expenses.removeAt(index);
               });
               // Optionally, show a snackbar or confirmation dialog
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                 content: Text('Item deleted'),
               ));
             },

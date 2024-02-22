@@ -48,8 +48,8 @@ class BarChartWidget extends StatelessWidget {
               checkToShowHorizontalLine: (value) =>
                   value % BarData.interval == 0,
               getDrawingHorizontalLine: (value) {
-                return FlLine(
-                  color: const Color(0xff2a7747),
+                return const FlLine(
+                  color: Color(0xff2a7747),
                   strokeWidth: 0.8,
                 );
               },
@@ -90,7 +90,7 @@ class BarChartWidget extends StatelessWidget {
                         toY: data.y,
                         width: barWidth,
                         color: data.color,
-                        borderRadius: BorderRadius.only(
+                        borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(6),
                           topRight: Radius.circular(6),
                         ),
