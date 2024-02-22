@@ -3,7 +3,8 @@ import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:fin_view/model/spent.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
-import 'package:fin_view/charts/data/table_data.dart';
+import 'package:flutter/material.dart';
+//import 'package:fin_view/charts/data/table_data.dart';
 
 class SpentDatabase {
   static final SpentDatabase instance = SpentDatabase._init();
@@ -170,7 +171,7 @@ class SpentDatabase {
     return percentages;
   }
 
-  Future<List<Data, dynamic>> queryForBar(String timeframe) async {
+  Future<List<Data>> queryForBar(String timeframe) async {
     late int sections;
     late int dataPerSection;
     late List<Data> barData;
@@ -178,27 +179,31 @@ class SpentDatabase {
     final now = DateTime.now();
     final currentYear = now.year;
     final currentMonth = now.month;
-    final currentWeek = now.week;
+    final currentWeek = now.weekday;
+    late DateTime currentDate;
+    late List result;
     DateTime firstDay = DateTime(currentYear, currentMonth, 1);
     late int timeshift;
-    
+
     int index = 0;
-    
-  //change variables according to selected timeframe
-    if (timeframe == "month")
-    {
-      final result = await db.rawQuery("SELECT amount, category, date FROM expenditure
-      WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?", ['$currentYear', '$currentMonth']
-      );
+
+    result = await db.rawQuery(
+        "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
+        ['$currentYear', '$currentMonth']);
+    //change variables according to selected timeframe
+    if (timeframe == "month") {
+      result = await db.rawQuery(
+          "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
+          ['$currentYear', '$currentMonth']);
       sections = 7;
       dataPerSection = 3;
       timeshift = 3;
     }
 
-    final currentDate = firstDay.add(Duration(days: 3));
+    currentDate = firstDay.add(Duration(days: 3));
     List sectionValues = List.generate(sections, (index) => 0.0);
-    List<TableData> table_data = List.generate(sections, (index) => null);
-    //loop over array 10 times and assign a date to each 
+    //List<TableData> table_data = List.generate(sections, (index) => null);
+    //loop over array 10 times and assign a date to each
 
     for (int i = 0; i < sections; i++) {
       if (result[i]['date'] < currentDate) {
@@ -207,23 +212,30 @@ class SpentDatabase {
       //add sparation per bar depending on category
       currentDate = currentDate.add(Duration(days: 3));
 
-      barData.add(Date(id: index, name: "None", y: sectionValues[index], color: Color(0xff19bfff)));
+      BarData.barData.add(
+        Data(
+          id: index,
+          name: "None",
+          y: sectionValues[index],
+          color: Color(
+              0xff19bfff), // Example color, replace with your desired color
+        ),
+      );
 
       //barData.add(Date(id: index, name: "$Week {index}", rodData: ));
 
-      table_data.append(TableData(time: "$Week{index}", food: ))
+      //table_data.append(TableData(time: "$Week{index}", food: ))
 
       /*barData[index]['id'] = index;
       barData[index]['name'] = "none";
       barData[index]['y'] = sectionValues[index];
       barData[index]['color'] = Color(0xff19bfff);*/
       index++;
-
     }
     print(result);
-    print(secionValues);
-    print(barData);
+    //print(secionValues);
+    //print(barData);
 
-    return barData;
+    return BarData.barData;
   }
 }

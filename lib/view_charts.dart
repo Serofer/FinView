@@ -7,6 +7,8 @@ import 'package:fin_view/charts/data/pie_data.dart';
 import 'package:fin_view/charts/indicators_widget.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fin_view/charts/table_widget.dart';
+import 'package:fin_view/charts/bar_chart_widget.dart';
+import 'package:fin_view/charts/data/bar_data.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -28,7 +30,6 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     refreshExpenses();
     loadPieChartData();
     loadLineChartData();
-    
   }
 
   @override
@@ -59,13 +60,15 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
 
   Future loadLineChartData() async {
     setState(() => LineLoading = true);
+    BarData barData = BarData();
     //reference to needed functions
-    await barData.createBarData();
+    await barData.createBarData("month");
     setState(() => LineLoading = false);
   }
 
   @override
-  Widget build(BuildContext context) {//maybe scrollable widget
+  Widget build(BuildContext context) {
+    //maybe scrollable widget
 
     return Scaffold(
       appBar: AppBar(
@@ -144,7 +147,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       ),
     );
   }
-
+/*
   Widget _buildTable() {
     return Container(
       height: 500,
@@ -156,7 +159,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         ),
       ),
     );
-  }
+  }*/
 /*
   Widget _buildLine () {
     return Container(
