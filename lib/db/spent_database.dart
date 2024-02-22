@@ -2,7 +2,8 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:sqflite/sqlite_api.dart';
 import 'package:fin_view/model/spent.dart';
-import 'package:fin_view/charts/data/bar_data.dart'
+import 'package:fin_view/charts/data/bar_data.dart';
+import 'package:fin_view/charts/data/table_data.dart';
 
 class SpentDatabase {
   static final SpentDatabase instance = SpentDatabase._init();
@@ -196,6 +197,7 @@ class SpentDatabase {
 
     final currentDate = firstDay.add(Duration(days: 3));
     List sectionValues = List.generate(sections, (index) => 0.0);
+    List<TableData> table_data = List.generate(sections, (index) => null);
     //loop over array 10 times and assign a date to each 
 
     for (int i = 0; i < sections; i++) {
@@ -208,6 +210,8 @@ class SpentDatabase {
       barData.add(Date(id: index, name: "None", y: sectionValues[index], color: Color(0xff19bfff)));
 
       //barData.add(Date(id: index, name: "$Week {index}", rodData: ));
+
+      table_data.append(TableData(time: "$Week{index}", food: ))
 
       /*barData[index]['id'] = index;
       barData[index]['name'] = "none";
