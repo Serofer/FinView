@@ -21,7 +21,8 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<Expenditure> expenses;
   bool isLoading = false;
   bool pieLoading = false;
-  bool LineLoading = false;
+  bool lineLoading = false;
+  bool barLoading = false;
   int touchedIndex = 0;
 
   @override
@@ -29,7 +30,8 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     super.initState();
     refreshExpenses();
     loadPieChartData();
-    loadLineChartData();
+    loadBarChartData();
+    //loadLineChartData();
   }
 
   @override
@@ -58,30 +60,42 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     print(pieLoading);
   }
 
+/*
   Future loadLineChartData() async {
     setState(() => LineLoading = true);
     BarData barData = BarData();
     //reference to needed functions
     await barData.createBarData("month");
     setState(() => LineLoading = false);
+  }*/
+  Future loadBarChartData() async {
+    setState(() => barLoading = true);
+    BarData barData = BarData();
+    await Future.delayed(Duration(seconds: 1));
+    await barData.createBarData("month");
+    setState(() => barLoading = false);
   }
 
   @override
   Widget build(BuildContext context) {
-    //maybe scrollable widget
-
+    // Wrap the Column with a SingleChildScrollView
     return Scaffold(
       appBar: AppBar(
         title: const Text('View Charts'),
         backgroundColor: Colors.lightBlueAccent,
       ),
-      body: Column(
-        children: <Widget>[
-          pieLoading
-              ? Center(child: const CircularProgressIndicator())
-              : _buildPie(),
-          Text("hello"),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            pieLoading
+                ? Center(child: const CircularProgressIndicator())
+                : _buildPie(),
+            Text("hello"),
+            barLoading
+                ? Center(child: const CircularProgressIndicator())
+                : _buildBar(),
+          ],
+        ),
       ),
     );
   }

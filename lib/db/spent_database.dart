@@ -174,7 +174,7 @@ class SpentDatabase {
   Future<List<Data>> queryForBar(String timeframe) async {
     late int sections;
     late int dataPerSection;
-    late List<Data> barData;
+    List<Data> barData = [];
     final db = await instance.database;
     final now = DateTime.now();
     final currentYear = now.year;
@@ -187,18 +187,22 @@ class SpentDatabase {
 
     int index = 0;
 
-    result = await db.rawQuery(
-        "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
-        ['$currentYear', '$currentMonth']);
+    result =
+        await db.rawQuery("SELECT amount, category, date FROM expenditure");
     //change variables according to selected timeframe
-    if (timeframe == "month") {
-      result = await db.rawQuery(
+    /*if (timeframe == "month") {
+
+      /*result = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
-          ['$currentYear', '$currentMonth']);
+          ['$currentYear', '$currentMonth']);*/
       sections = 7;
       dataPerSection = 3;
       timeshift = 3;
-    }
+    }*/
+
+    sections = 7;
+    dataPerSection = 3;
+    //timeshift = 3;
 
     currentDate = firstDay.add(Duration(days: 3));
     List sectionValues = List.generate(sections, (index) => 0.0);
@@ -206,21 +210,41 @@ class SpentDatabase {
     //loop over array 10 times and assign a date to each
 
     for (int i = 0; i < sections; i++) {
-      if (result[i]['date'] < currentDate) {
-        sectionValues[index] += result[i]['amount'];
-      }
-      //add sparation per bar depending on category
-      currentDate = currentDate.add(Duration(days: 3));
+      DateTime dateFromDatabase = DateTime.parse(result[i]['date']);
 
-      BarData.barData.add(
-        Data(
+      if (i == sections - 1) {
+        sectionValues[index] += result[i]['amount'];
+        //last bar
+        barData.add(Data(
           id: index,
           name: "None",
           y: sectionValues[index],
-          color: Color(
-              0xff19bfff), // Example color, replace with your desired color
-        ),
-      );
+          color: Color(0xff19bfff),
+        ));
+      }
+
+      if (dateFromDatabase.isBefore(currentDate)) {
+        sectionValues[index] += result[i]['amount'];
+        print(sectionValues[index]);
+      }
+      //add sparation per bar depending on category
+      else if (dateFromDatabase.isAfter(currentDate)) {
+        currentDate = currentDate.add(Duration(days: 4));
+
+        barData.add(
+          //in this code, the function breaks
+          Data(
+            id: index,
+            name: "None",
+            y: sectionValues[index],
+            color: Color(
+                0xff19bfff), // Example color, replace with your desired color
+          ),
+        );
+        index++;
+      }
+
+      print(currentDate);
 
       //barData.add(Date(id: index, name: "$Week {index}", rodData: ));
 
@@ -230,12 +254,10 @@ class SpentDatabase {
       barData[index]['name'] = "none";
       barData[index]['y'] = sectionValues[index];
       barData[index]['color'] = Color(0xff19bfff);*/
-      index++;
     }
-    print(result);
-    //print(secionValues);
-    //print(barData);
 
-    return BarData.barData;
+    print(sectionValues);
+
+    return barData;
   }
 }
