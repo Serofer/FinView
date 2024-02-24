@@ -57,7 +57,6 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     sections = getSections();
     await Future.delayed(Duration(seconds: 1));
     setState(() => pieLoading = false);
-    print(pieLoading);
   }
 
 /*

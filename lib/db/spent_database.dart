@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite/sqlite_api.dart';
 import 'package:fin_view/model/spent.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
 import 'package:flutter/material.dart';
@@ -150,7 +149,6 @@ class SpentDatabase {
     for (int i = 0; i < categories.length; i++) {
       List<dynamic> spentOnCat =
           await SpentDatabase.instance.readCategory(categories[i]);
-      //print(i.toString());
       sumAmount = spentOnCat[0]['SUM(amount)'] ?? 0;
 
       //convert always to double:
@@ -159,7 +157,6 @@ class SpentDatabase {
       } else {
         spentCat = sumAmount;
       }
-      //print('Category: ' + categories[i] + ' ' + spentCat.toString());
       List countAll = await SpentDatabase.instance.readAmount();
       double totAmount = countAll[0]['SUM(amount)'] ?? 0.0;
       double toAdd = (spentCat / totAmount) * 100;
@@ -174,7 +171,7 @@ class SpentDatabase {
   Future<List<Data>> queryForBar(String timeframe) async {
     late int dataPerSection;
     List categories = ['Food', 'Event', 'Education', 'Other'];
-    List categoryValues = List.generate(categories.length, (index) => 0.0);
+
     List categoryColors = [
       Colors.black,
       Colors.blue,
@@ -249,15 +246,16 @@ class SpentDatabase {
         late var nextData;
         late DateTime nextDate;
         double barHeight = 0.0;
+        List categoryValues = List.generate(categories.length, (index) => 0.0);
 
-        //check if data is available
+        //check if data is still available
         if (dataIndex < result.length) {
           thisData = result[dataIndex];
         } else {
           break;
         }
 
-        if (j < dataPerSection - 1 && dataIndex < result.length - 1) {
+        if (dataIndex < result.length - 1) {
           nextData = new Map();
           nextData = result[dataIndex + 1];
           nextDate = DateTime.parse(nextData['date']);
@@ -269,29 +267,35 @@ class SpentDatabase {
           barHeight += thisData['amount'];
           categoryValues[categories.indexOf(thisData['category'])] +=
               thisData['amount'];
+          print(categoryValues);
           j--;
-          if (j < dataPerSection - 1 && nextDate.isAfter(currentDate)) {
-            //if the next data is after the current date, set the barHeight
-            j++;
-            barData[i].rodData[j].barHeight = barHeight;
-            double y = 0.0;
+          if (dataIndex < result.length - 1) {
+            if (nextDate.isAfter(currentDate)) {
+              //if the next data is after the current date, set the barHeight
+              j++;
+              barData[i].rodData[j].barHeight = barHeight;
+              double y = 0.0;
 
-            for (int k = 0; k < categories.length; k++) {
-              if (categoryValues[k] > 0) {
-                //set the rodItems
-                barData[i].rodData[j].rodItems[k].minY = y;
-                y += categoryValues[k];
-                barData[i].rodData[j].rodItems[k].maxY = y;
-                barData[i].rodData[j].rodItems[k].color = categoryColors[k];
-                print('inside the bar function');
+              for (int k = 0; k < categories.length; k++) {
+                if (categoryValues[k] > 0) {
+                  //set the rodItems
+                  print(y);
+                  barData[i].rodData[j].rodItems[k].minY = y;
+                  y += categoryValues[k];
+                  print(y);
+                  barData[i].rodData[j].rodItems[k].maxY = y;
+                  barData[i].rodData[j].rodItems[k].color = categoryColors[k];
+                }
+              }
+
+              currentDate = currentDate.add(Duration(days: timeshift));
+              if (j == dataPerSection - 2) {
+                currentDate = currentDate.add(Duration(days: shiftCorrect));
               }
             }
-
-            currentDate = currentDate.add(Duration(days: timeshift));
-            if (j == dataPerSection - 2) {
-              currentDate = currentDate.add(Duration(days: shiftCorrect));
-            }
           }
+
+          dataIndex++;
         } else {
           //if the data is after the current date
           currentDate = currentDate.add(Duration(days: timeshift));
@@ -299,7 +303,6 @@ class SpentDatabase {
             currentDate = currentDate.add(Duration(days: shiftCorrect));
           }
         }
-        dataIndex++;
       }
     }
     //List<TableData> table_data = List.generate(sections, (index) => null);
@@ -352,7 +355,7 @@ class SpentDatabase {
       barData[index]['color'] = Color(0xff19bfff);*/
     }*/
 
-    print(sectionValues);
+    //print(sectionValues);
 
     return barData;
   }
