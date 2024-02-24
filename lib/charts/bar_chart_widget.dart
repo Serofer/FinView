@@ -54,33 +54,41 @@ class BarChartWidget extends StatelessWidget {
                 );
               },
             ),
-            barGroups: BarData.barData
-                .map(
-                  /*barData has this format: barData = [{id: x, name: week, BarChartRodData: {
+
+            /*barData has this format: barData = [{id: x, BarChartRodData: [{
                             barHeight: barHeight, rodStackItems: [{minY: value, maxY: value, color: widget.normal}, {...}]
+                            ],
                         },
                     },
                 ]
                 
-                Code test:
-                barGroups: BarData.barData.map(
-                    (data) => BarChartGroupData(
-                        x: data.id,
-                        barRods: BarChartRodData.map(
-                            (rodData) => BarChartRodData(
-                                toY: rodData.barHeight
-                                rodStackItems: rotStackItems.map(
-                                    (rodItem) => BarChartRodStackItem(
-                                        rodItem.minY,
-                                        rodItem.maxY,
-                                        rodItem.color
-                                    ),
-                                ).toList();
-                            ),
-                        ).toList();
-                    ),
-                ).toList();
-                */
+                Code test:*/
+            barGroups: BarData.barData
+                .map(
+                  (data) => BarChartGroupData(
+                    x: data.id,
+                    barsSpace: 0,
+                    barRods: data.rodData
+                        .map(
+                          (rodData) => BarChartRodData(
+                            toY: rodData.barHeight,
+                            rodStackItems: rodData.rodItems
+                                .map(
+                                  (rodItem) => BarChartRodStackItem(
+                                      rodItem.minY,
+                                      rodItem.maxY,
+                                      rodItem.color),
+                                )
+                                .toList(),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                )
+                .toList()),
+
+        /*barGroups: BarData.barData
+                .map(
                   (data) => BarChartGroupData(
                     x: data.id,
                     barRods: [
@@ -98,6 +106,6 @@ class BarChartWidget extends StatelessWidget {
                     ],
                   ),
                 )
-                .toList()),
+                .toList()),*/
       );
 }

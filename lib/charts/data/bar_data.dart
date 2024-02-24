@@ -14,7 +14,7 @@ class BarData {
   //createBarData();
   //calculate each Data -> array with values: id, name, color...
 }
-
+/*
 class Data {
   final int id;
   final String name;
@@ -27,41 +27,38 @@ class Data {
     required this.y,
     required this.color,
   });
-}
+}*/
 
-/*
 class Data {
   final int id;
   final String name;
-  final BarChartRodData rodData;
+  List<BarChartRodDataClass> rodData;
 
-  const Data({
+  Data({
     required this.id,
     required this.name,
     required this.rodData,
   });
 }
 
-class BarChartRodData {
-  final int barHeight;
-  final RodStackItems rodItem;
+class BarChartRodDataClass {
+  double barHeight;
+  List<RodStackItemsClass> rodItems;
 
-  const BarChartRodData({
+  BarChartRodDataClass({
     required this.barHeight,
-    required this.rodItem,
+    required this.rodItems,
   });
 }
 
-class RodStackItems {
-  final double minY;
-  final double maxY;
-  final Color color;
+class RodStackItemsClass {
+  double minY;
+  double maxY;
+  Color color;
 
-  const RodStackItems({
+  RodStackItemsClass({
     required this.minY,
     required this.maxY,
     required this.color,
   });
 }
-
-*/

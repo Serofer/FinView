@@ -172,8 +172,15 @@ class SpentDatabase {
   }
 
   Future<List<Data>> queryForBar(String timeframe) async {
-    late int sections;
     late int dataPerSection;
+    List categories = ['Food', 'Event', 'Education', 'Other'];
+    List categoryValues = List.generate(categories.length, (index) => 0.0);
+    List categoryColors = [
+      Colors.black,
+      Colors.blue,
+      Colors.red,
+      Colors.yellow
+    ];
     List<Data> barData = [];
     final db = await instance.database;
     final now = DateTime.now();
@@ -182,10 +189,12 @@ class SpentDatabase {
     final currentWeek = now.weekday;
     late DateTime currentDate;
     late List result;
-    DateTime firstDay = DateTime(currentYear, currentMonth, 1);
     late int timeshift;
+    late int shiftCorrect;
+    DateTime firstDay = DateTime(currentYear, currentMonth, 1);
+    late int groupedSections;
 
-    int index = 0;
+    int dataIndex = 0;
 
     result = await db.rawQuery(
         "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
@@ -200,15 +209,102 @@ class SpentDatabase {
       timeshift = 3;
     }*/
 
-    sections = 7;
-    dataPerSection = 3;
-    //timeshift = 3;
+    //currentDate = firstDay.add(Duration(days: 3));
+    //List sectionValues = List.generate(groupedSections, (index) => 0.0);
 
-    currentDate = firstDay.add(Duration(days: 3));
-    List sectionValues = List.generate(sections, (index) => 0.0);
+    if (timeframe == "month") {
+      groupedSections = 4;
+      dataPerSection = 3;
+      timeshift = 2;
+      currentDate = firstDay.add(Duration(days: timeshift));
+      shiftCorrect = 1;
+    }
+
+    List sectionValues = List.generate(dataPerSection, (index) => 0.0);
+
+    for (int i = 0; i < groupedSections; i++) {
+      //define an almost empty listElement of the barData
+      barData.add(Data(
+        id: i,
+        name: 'Week ${i.toString()}',
+        rodData: List.generate(
+          dataPerSection,
+          (index) => BarChartRodDataClass(
+            barHeight: 0.0,
+            rodItems: List.generate(
+              categories.length,
+              (index) => RodStackItemsClass(
+                minY: 0.0,
+                maxY: 0.0,
+                color: Color(0xff19bfff),
+              ),
+            ),
+          ),
+        ),
+      ));
+
+      for (int j = 0; j < dataPerSection; j++) {
+        //define some variables
+        var thisData = new Map();
+        late var nextData;
+        late DateTime nextDate;
+        double barHeight = 0.0;
+
+        //check if data is available
+        if (dataIndex < result.length) {
+          thisData = result[dataIndex];
+        } else {
+          break;
+        }
+
+        if (j < dataPerSection - 1 && dataIndex < result.length - 1) {
+          nextData = new Map();
+          nextData = result[dataIndex + 1];
+          nextDate = DateTime.parse(nextData['date']);
+        }
+
+        DateTime dateFromDatabase = DateTime.parse(thisData['date']);
+
+        if (dateFromDatabase.isBefore(currentDate)) {
+          barHeight += thisData['amount'];
+          categoryValues[categories.indexOf(thisData['category'])] +=
+              thisData['amount'];
+          j--;
+          if (j < dataPerSection - 1 && nextDate.isAfter(currentDate)) {
+            //if the next data is after the current date, set the barHeight
+            j++;
+            barData[i].rodData[j].barHeight = barHeight;
+            double y = 0.0;
+
+            for (int k = 0; k < categories.length; k++) {
+              if (categoryValues[k] > 0) {
+                //set the rodItems
+                barData[i].rodData[j].rodItems[k].minY = y;
+                y += categoryValues[k];
+                barData[i].rodData[j].rodItems[k].maxY = y;
+                barData[i].rodData[j].rodItems[k].color = categoryColors[k];
+                print('inside the bar function');
+              }
+            }
+
+            currentDate = currentDate.add(Duration(days: timeshift));
+            if (j == dataPerSection - 2) {
+              currentDate = currentDate.add(Duration(days: shiftCorrect));
+            }
+          }
+        } else {
+          //if the data is after the current date
+          currentDate = currentDate.add(Duration(days: timeshift));
+          if (j == dataPerSection - 2) {
+            currentDate = currentDate.add(Duration(days: shiftCorrect));
+          }
+        }
+        dataIndex++;
+      }
+    }
     //List<TableData> table_data = List.generate(sections, (index) => null);
     //loop over array 10 times and assign a date to each
-
+/*
     for (int i = 0; i < sections; i++) {
       DateTime dateFromDatabase = DateTime.parse(result[i]['date']);
 
@@ -254,7 +350,7 @@ class SpentDatabase {
       barData[index]['name'] = "none";
       barData[index]['y'] = sectionValues[index];
       barData[index]['color'] = Color(0xff19bfff);*/
-    }
+    }*/
 
     print(sectionValues);
 
