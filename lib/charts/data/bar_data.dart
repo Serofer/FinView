@@ -9,7 +9,6 @@ class BarData {
 
   Future<void> createBarData(timeframe) async {
     barData = await SpentDatabase.instance.queryForBar(timeframe);
-    print('data should be created');
   }
 
   //createBarData();

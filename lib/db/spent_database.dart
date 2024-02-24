@@ -187,8 +187,8 @@ class SpentDatabase {
 
     int index = 0;
 
-    result =
-        await db.rawQuery("SELECT amount, category, date FROM expenditure");
+    result = await db.rawQuery(
+        "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
     //change variables according to selected timeframe
     /*if (timeframe == "month") {
 
