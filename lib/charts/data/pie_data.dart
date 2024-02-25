@@ -4,18 +4,34 @@ import 'package:fin_view/db/spent_database.dart';
 class PieData {
   //add logic to which time period was given
   late List<dynamic> percentages;
-  static late List<Data> data;
+  static List<Data> data = [];
+  List categoryColors = [
+    Color(0xff0293ee),
+    Color(0xfff8b250),
+    Color(0xff845bef),
+    Color(0xff13d38e)
+  ];
+  List categories = ['Food', 'Event', 'Education', 'Other'];
 
   Future<void> calculate() async {
+    data = [];
+    for (int i = 0; i < categories.length; i++) {
+      data.add(Data(
+        name: categories[i],
+        percent: 0.0, // You can set any initial value here
+        color: categoryColors[i],
+      ));
+    }
+    //calculate percentages
     percentages = await SpentDatabase.instance.calculatePercentages();
 
-    data = [
-      Data(name: 'Food', percent: percentages[0], color: Color(0xff0293ee)),
-      Data(name: 'Event', percent: percentages[1], color: Color(0xfff8b250)),
-      Data(
-          name: 'Education', percent: percentages[2], color: Color(0xff845bef)),
-      Data(name: 'Other', percent: percentages[3], color: Color(0xff13d38e)),
-    ];
+    for (int i = 0; i < categories.length; i++) {
+      data[i] = (Data(
+        name: categories[i],
+        percent: percentages[i],
+        color: categoryColors[i],
+      ));
+    }
   }
 }
 

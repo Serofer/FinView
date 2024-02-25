@@ -12,7 +12,7 @@ class BarChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => BarChart(
         BarChartData(
-            alignment: BarChartAlignment.center,
+            //alignment: BarChartAlignment.center,
             maxY: barHeight,
             minY: 0,
             groupsSpace: groupSpace,

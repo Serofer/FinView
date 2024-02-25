@@ -12,6 +12,8 @@ class SpentDatabase {
 
   SpentDatabase._init();
 
+  //Beginning of database functions
+
   Future<Database> get database async {
     if (_database != null) return _database!;
 
@@ -20,7 +22,7 @@ class SpentDatabase {
   }
 
   Future<Database> _initDB(String filePath) async {
-    final dbPath = await getDatabasesPath(); //maybe package path_provider
+    final dbPath = await getDatabasesPath();
     final path = join(dbPath, filePath);
 
     return await openDatabase(path, version: 1, onCreate: _createDB);
@@ -158,7 +160,10 @@ class SpentDatabase {
         spentCat = sumAmount;
       }
       List countAll = await SpentDatabase.instance.readAmount();
-      double totAmount = countAll[0]['SUM(amount)'] ?? 0.0;
+      double totalAmount = countAll[0]['SUM(amount)'] is int
+          ? (countAll[0]['SUM(amount)'] as int).toDouble()
+          : countAll[0]['SUM(amount)'];
+      double totAmount = totalAmount ?? 0.0;
       double toAdd = (spentCat / totAmount) * 100;
       String percent = toAdd.toStringAsFixed(2);
       double percentNum = double.parse(percent);
@@ -173,10 +178,10 @@ class SpentDatabase {
     List categories = ['Food', 'Event', 'Education', 'Other'];
 
     List categoryColors = [
-      Colors.black,
-      Colors.blue,
-      Colors.red,
-      Colors.yellow
+      Color(0xff0293ee),
+      Color(0xfff8b250),
+      Color(0xff845bef),
+      Color(0xff13d38e)
     ];
     List<Data> barData = [];
     final db = await instance.database;
@@ -220,6 +225,8 @@ class SpentDatabase {
     List sectionValues = List.generate(dataPerSection, (index) => 0.0);
 
     for (int i = 0; i < groupedSections; i++) {
+      List categoryValues = List.generate(categories.length, (index) => 0.0);
+      double barHeight = 0.0;
       //define an almost empty listElement of the barData
       barData.add(Data(
         id: i,
@@ -245,8 +252,6 @@ class SpentDatabase {
         var thisData = new Map();
         late var nextData;
         late DateTime nextDate;
-        double barHeight = 0.0;
-        List categoryValues = List.generate(categories.length, (index) => 0.0);
 
         //check if data is still available
         if (dataIndex < result.length) {
@@ -254,44 +259,48 @@ class SpentDatabase {
         } else {
           break;
         }
-
         if (dataIndex < result.length - 1) {
           nextData = new Map();
           nextData = result[dataIndex + 1];
           nextDate = DateTime.parse(nextData['date']);
+          nextDate = nextDate.add(const Duration(seconds: 1));
+        } else {
+          nextDate = DateTime.now();
         }
 
         DateTime dateFromDatabase = DateTime.parse(thisData['date']);
+        dateFromDatabase = dateFromDatabase.add(const Duration(seconds: 1));
 
         if (dateFromDatabase.isBefore(currentDate)) {
           barHeight += thisData['amount'];
           categoryValues[categories.indexOf(thisData['category'])] +=
               thisData['amount'];
-          print(categoryValues);
           j--;
-          if (dataIndex < result.length - 1) {
-            if (nextDate.isAfter(currentDate)) {
-              //if the next data is after the current date, set the barHeight
-              j++;
-              barData[i].rodData[j].barHeight = barHeight;
-              double y = 0.0;
 
-              for (int k = 0; k < categories.length; k++) {
-                if (categoryValues[k] > 0) {
-                  //set the rodItems
-                  print(y);
-                  barData[i].rodData[j].rodItems[k].minY = y;
-                  y += categoryValues[k];
-                  print(y);
-                  barData[i].rodData[j].rodItems[k].maxY = y;
-                  barData[i].rodData[j].rodItems[k].color = categoryColors[k];
-                }
-              }
+          //this is wrong
+          if (nextDate.isAfter(currentDate)) {
+            print(currentDate);
+            j++;
+            barData[i].rodData[j].barHeight = barHeight;
+            barHeight = 0;
 
-              currentDate = currentDate.add(Duration(days: timeshift));
-              if (j == dataPerSection - 2) {
-                currentDate = currentDate.add(Duration(days: shiftCorrect));
+            double y = 0.0;
+
+            for (int k = 0; k < categories.length; k++) {
+              if (categoryValues[k] > 0) {
+                //set the rodItems
+                barData[i].rodData[j].rodItems[k].minY = y;
+                y += categoryValues[k];
+                barData[i].rodData[j].rodItems[k].maxY = y;
+                barData[i].rodData[j].rodItems[k].color = categoryColors[k];
+                //reset the categoryValues
+                categoryValues[k] = 0.0;
               }
+            }
+
+            currentDate = currentDate.add(Duration(days: timeshift));
+            if (j == dataPerSection - 2) {
+              currentDate = currentDate.add(Duration(days: shiftCorrect));
             }
           }
 
