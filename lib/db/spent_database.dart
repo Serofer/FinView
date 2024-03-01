@@ -141,6 +141,7 @@ class SpentDatabase {
   }
 
 //calculate percentages
+//has to access the selected timeframe
   Future<List<dynamic>> calculatePercentages() async {
     List categories = ['Food', 'Event', 'Education', 'Other'];
     List percentages = [];
