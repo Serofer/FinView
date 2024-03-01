@@ -197,29 +197,48 @@ class SpentDatabase {
     late int groupedSections;
 
     int dataIndex = 0;
-
-    result = await db.rawQuery(
-        "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
     //change variables according to selected timeframe
-    /*if (timeframe == "month") {
-
-      /*result = await db.rawQuery(
-          "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
-          ['$currentYear', '$currentMonth']);*/
-      sections = 7;
-      dataPerSection = 3;
-      timeshift = 3;
-    }*/
-
-    //currentDate = firstDay.add(Duration(days: 3));
-    //List sectionValues = List.generate(groupedSections, (index) => 0.0);
-
-    if (timeframe == "month") {
+    if (timeframe == "This Month") {
       groupedSections = 4;
       dataPerSection = 3;
       timeshift = 2;
       currentDate = firstDay.add(Duration(days: timeshift));
       shiftCorrect = 1;
+      result = await db.rawQuery(
+          "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
+          ['$currentYear', '$currentMonth']);
+    }
+    if (timeframe == "Last 7 days") {
+      groupedSections = 7;
+      dataPerSection = 1;
+      timeshift = 1;
+      currentDate = now.subtract(Duration(days: 7));
+      String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
+
+// Query to select data from the last seven days
+result = await db.rawQuery(
+  "SELECT amount, category, date FROM expenditure WHERE date >= ?",
+  [formattedDate],
+);
+    }
+    if (timeframe == "This Year") {
+      groupedSections = 12;
+      dataPerSection = 3;
+      timeshift = 10;
+      //shiftCorrect = 1;
+      currentDate = = DateTime(currentYear, 1, 1);
+     int currentYear = DateTime.now().year;
+
+// Query to select data for the current year
+result = await db.rawQuery(
+  "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ?",
+  ['$currentYear'],
+);
+    }
+    if (timeframe == "All Time") {
+      //calculate somehow
+      result = await db.rawQuery(
+        "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
     }
 
     List sectionValues = List.generate(dataPerSection, (index) => 0.0);

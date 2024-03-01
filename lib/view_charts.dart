@@ -9,6 +9,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fin_view/charts/table_widget.dart';
 import 'package:fin_view/charts/bar_chart_widget.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
+import 'package:fin_view/filter_charts.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -67,11 +68,11 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     await barData.createBarData("month");
     setState(() => LineLoading = false);
   }*/
-  Future loadBarChartData() async {
+  Future loadBarChartData(String timeframe) async {
     setState(() => barLoading = true);
     BarData barData = BarData();
     await Future.delayed(Duration(seconds: 1));
-    await barData.createBarData("month");
+    await barData.createBarData(timeframe);
     setState(() => barLoading = false);
   }
 
@@ -82,6 +83,14 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       appBar: AppBar(
         title: const Text('View Charts'),
         backgroundColor: Colors.lightBlueAccent,
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.filter_alt),
+            onPressed: () {
+              _showFilterModal(context);
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -160,6 +169,45 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       ),
     );
   }
+
+  void _showFilterModal(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Select Filter'),
+        content: DropdownButton<String>(
+          value: 'This Month', // Set initial value
+          onChanged: (String? newValue) {
+            // Implement logic to handle selected value
+            print(newValue);
+          },
+          items: <String>[
+            'This Month',
+            'This Year',
+            'All Time',
+            'Last 7 Days',
+          ].map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              // Load bar chart data and close the dialog
+              loadBarChartData(value); // Modify this line
+              Navigator.of(context).pop(); // Close the dialog
+            },
+            child: Text('Close'),
+          ),
+        ],
+      );
+    },
+  );
+}
 /*
   Widget _buildTable() {
     return Container(
