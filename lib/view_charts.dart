@@ -20,6 +20,7 @@ class ViewChartsPage extends StatefulWidget {
 class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<PieChartSectionData> sections;
   late List<Expenditure> expenses;
+  String selectedTimeFrame = 'This Month';
   bool isLoading = false;
   bool pieLoading = false;
   bool lineLoading = false;
@@ -31,7 +32,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     super.initState();
     refreshExpenses();
     loadPieChartData();
-    loadBarChartData();
+    loadBarChartData("This Month");
     //loadLineChartData();
   }
 
@@ -171,43 +172,48 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }
 
   void _showFilterModal(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Select Filter'),
-        content: DropdownButton<String>(
-          value: 'This Month', // Set initial value
-          onChanged: (String? newValue) {
-            // Implement logic to handle selected value
-            print(newValue);
-          },
-          items: <String>[
-            'This Month',
-            'This Year',
-            'All Time',
-            'Last 7 Days',
-          ].map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () {
-              // Load bar chart data and close the dialog
-              loadBarChartData(value); // Modify this line
-              Navigator.of(context).pop(); // Close the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select Filter'),
+          content: DropdownButton<String>(
+            value: 'This Month', // Set initial value
+            onChanged: (String? newValue) {
+              // Implement logic to handle selected value
+              print(newValue);
             },
-            child: Text('Close'),
+            items: <String>[
+              'This Month',
+              'This Year',
+              'All Time',
+              'Last 7 Days',
+            ].map<DropdownMenuItem<String>>((String value) {
+              setState() {
+                selectedTimeFrame = value;
+              }
+
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
-        ],
-      );
-    },
-  );
-}
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                // Load bar chart data and close the dialog
+
+                loadBarChartData(selectedTimeFrame); // Modify this line
+                Navigator.of(context).pop(); // Close the dialog
+              },
+              child: Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 /*
   Widget _buildTable() {
     return Container(

@@ -3,6 +3,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:fin_view/model/spent.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 //import 'package:fin_view/charts/data/table_data.dart';
 
 class SpentDatabase {
@@ -217,29 +218,29 @@ class SpentDatabase {
       String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
 
 // Query to select data from the last seven days
-result = await db.rawQuery(
-  "SELECT amount, category, date FROM expenditure WHERE date >= ?",
-  [formattedDate],
-);
+      result = await db.rawQuery(
+        "SELECT amount, category, date FROM expenditure WHERE date >= ?",
+        [formattedDate],
+      );
     }
     if (timeframe == "This Year") {
       groupedSections = 12;
       dataPerSection = 3;
       timeshift = 10;
       //shiftCorrect = 1;
-      currentDate = = DateTime(currentYear, 1, 1);
-     int currentYear = DateTime.now().year;
+      currentDate = DateTime(now.year, 1, 1);
+      int currentYear = DateTime.now().year;
 
 // Query to select data for the current year
-result = await db.rawQuery(
-  "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ?",
-  ['$currentYear'],
-);
+      result = await db.rawQuery(
+        "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ?",
+        ['$currentYear'],
+      );
     }
     if (timeframe == "All Time") {
       //calculate somehow
       result = await db.rawQuery(
-        "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
+          "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
     }
 
     List sectionValues = List.generate(dataPerSection, (index) => 0.0);
