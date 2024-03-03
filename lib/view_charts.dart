@@ -106,7 +106,6 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
             pieLoading
                 ? Center(child: const CircularProgressIndicator())
                 : _buildPie(),
-            Text("hello"),
             barLoading
                 ? Center(child: const CircularProgressIndicator())
                 : _buildBar(),
