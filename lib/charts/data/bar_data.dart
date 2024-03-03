@@ -7,7 +7,7 @@ class BarData {
   static late List<Data> barData;
   String timeframe = "month";
 
-  Future<void> createBarData(timeframe) async {
+  Future<void> createBarData(String? timeframe) async {
     barData = await SpentDatabase.instance.queryForBar(timeframe);
   }
 

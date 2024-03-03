@@ -20,7 +20,14 @@ class ViewChartsPage extends StatefulWidget {
 class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<PieChartSectionData> sections;
   late List<Expenditure> expenses;
-  String selectedTimeFrame = 'This Month';
+  String? selectedTimeframe;
+  List timeframes = [
+    'Last 7 Days',
+    'Last 30 Days',
+    'This Month',
+    'This Year',
+    'All Time'
+  ];
   bool isLoading = false;
   bool pieLoading = false;
   bool lineLoading = false;
@@ -31,8 +38,8 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   void initState() {
     super.initState();
     refreshExpenses();
-    loadPieChartData();
-    loadBarChartData("This Month");
+    loadPieChartData("Last 30 Days");
+    loadBarChartData("Last 30 Days");
     //loadLineChartData();
   }
 
@@ -49,7 +56,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     setState(() => isLoading = false);
   }
 
-  Future loadPieChartData() async {
+  Future loadPieChartData(String? timeframe) async {
     //Initialize PieData and call calculate
     PieData pieData = PieData();
     setState(() => pieLoading = true);
@@ -69,7 +76,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     await barData.createBarData("month");
     setState(() => LineLoading = false);
   }*/
-  Future loadBarChartData(String timeframe) async {
+  Future loadBarChartData(String? timeframe) async {
     setState(() => barLoading = true);
     BarData barData = BarData();
     await Future.delayed(Duration(seconds: 1));
@@ -177,37 +184,31 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text('Select Filter'),
-          content: DropdownButton<String>(
-            value: 'This Month', // Set initial value
-            onChanged: (String? newValue) {
-              // Implement logic to handle selected value
-              print(newValue);
-            },
-            items: <String>[
-              'This Month',
-              'This Year',
-              'All Time',
-              'Last 7 Days',
-            ].map<DropdownMenuItem<String>>((String value) {
-              setState() {
-                selectedTimeFrame = value;
-              }
-
-              return DropdownMenuItem<String>(
+          content: DropdownButton(
+            hint: const Text('Choose a category'),
+            items: timeframes.map((value) {
+              return DropdownMenuItem(
                 value: value,
                 child: Text(value),
               );
             }).toList(),
+            value: selectedTimeframe, // as expected wrong
+            onChanged: (selectedValue) {
+              setState(() {
+                selectedTimeframe = selectedValue.toString();
+              });
+            },
           ),
           actions: <Widget>[
             TextButton(
               onPressed: () {
                 // Load bar chart data and close the dialog
-
-                loadBarChartData(selectedTimeFrame); // Modify this line
-                Navigator.of(context).pop(); // Close the dialog
+                selectedTimeframe ??= 'All Time';
+                loadBarChartData(selectedTimeframe); // Modify this line
+                Navigator.of(context).pop();
+                print(selectedTimeframe); // Close the dialog
               },
-              child: Text('Close'),
+              child: Text('Filter'),
             ),
           ],
         );

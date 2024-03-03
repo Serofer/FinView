@@ -175,7 +175,7 @@ class SpentDatabase {
     return percentages;
   }
 
-  Future<List<Data>> queryForBar(String timeframe) async {
+  Future<List<Data>> queryForBar(String? timeframe) async {
     late int dataPerSection;
     List categories = ['Food', 'Event', 'Education', 'Other'];
 
@@ -209,6 +209,7 @@ class SpentDatabase {
       result = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
           ['$currentYear', '$currentMonth']);
+      print(result);
     }
     if (timeframe == "Last 7 days") {
       groupedSections = 7;
@@ -218,6 +219,20 @@ class SpentDatabase {
       String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
 
 // Query to select data from the last seven days
+      result = await db.rawQuery(
+        "SELECT amount, category, date FROM expenditure WHERE date >= ?",
+        [formattedDate],
+      );
+    }
+    if (timeframe == "Last 30 Days") {
+      groupedSections = 5;
+      dataPerSection = 2;
+      timeshift = 3;
+      shiftCorrect = 0;
+      currentDate = now.subtract(Duration(days: 30));
+      String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
+
+// Query to select data from the last thirty days
       result = await db.rawQuery(
         "SELECT amount, category, date FROM expenditure WHERE date >= ?",
         [formattedDate],
@@ -241,8 +256,10 @@ class SpentDatabase {
       //calculate somehow
       result = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
+      print(result);
+      print('query all time');
     }
-
+    print(timeframe);
     List sectionValues = List.generate(dataPerSection, (index) => 0.0);
 
     for (int i = 0; i < groupedSections; i++) {
