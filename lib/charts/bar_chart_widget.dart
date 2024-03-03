@@ -5,8 +5,10 @@ import 'package:fin_view/charts/bar_titles.dart';
 
 class BarChartWidget extends StatelessWidget {
   final double barWidth = 22;
-  final double barHeight =
-      100; //calculate barHeight based on max spent in timeframe
+  final double barHeight;
+  BarChartWidget()
+      : barHeight = BarData
+            .barHeight; //calculate barHeight based on max spent in timeframe
   final double groupSpace = 12; //is the space between the bars
 
   @override

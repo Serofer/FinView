@@ -142,7 +142,7 @@ class SpentDatabase {
   }
 
 //calculate percentages
-//has to access the selected timeframe
+//has to access the selected timeframe, during IFASS
   Future<List<dynamic>> calculatePercentages() async {
     List categories = ['Food', 'Event', 'Education', 'Other'];
     List percentages = [];
@@ -176,6 +176,8 @@ class SpentDatabase {
   }
 
   Future<List<Data>> queryForBar(String? timeframe) async {
+    //change according to max bar,
+
     late int dataPerSection;
     List categories = ['Food', 'Event', 'Education', 'Other'];
 
@@ -195,7 +197,8 @@ class SpentDatabase {
     late List result;
     late int timeshift;
     late int shiftCorrect;
-    DateTime firstDay = DateTime(currentYear, currentMonth, 1);
+    DateTime firstDay = DateTime(
+        currentYear, currentMonth, 1); //change to first day in database
     late int groupedSections;
 
     int dataIndex = 0;
@@ -209,7 +212,6 @@ class SpentDatabase {
       result = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
           ['$currentYear', '$currentMonth']);
-      print(result);
     }
     if (timeframe == "Last 7 days") {
       groupedSections = 7;
@@ -230,6 +232,7 @@ class SpentDatabase {
       timeshift = 3;
       shiftCorrect = 0;
       currentDate = now.subtract(Duration(days: 30));
+      print('current date: $currentDate');
       String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
 
 // Query to select data from the last thirty days
@@ -254,6 +257,11 @@ class SpentDatabase {
     }
     if (timeframe == "All Time") {
       //calculate somehow
+      groupedSections = 1;
+      dataPerSection = 1;
+      timeshift = 0;
+      currentDate = firstDay;
+
       result = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
       print(result);
@@ -317,6 +325,7 @@ class SpentDatabase {
 
           //this is wrong
           if (nextDate.isAfter(currentDate)) {
+            print(dateFromDatabase);
             print(currentDate);
             j++;
             barData[i].rodData[j].barHeight = barHeight;

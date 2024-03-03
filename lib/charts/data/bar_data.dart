@@ -5,29 +5,22 @@ class BarData {
   static int interval = 10; //change according to max bar
   late List<dynamic> dataFromBase;
   static late List<Data> barData;
-  String timeframe = "month";
+  static double barHeight = 0.0;
 
   Future<void> createBarData(String? timeframe) async {
     barData = await SpentDatabase.instance.queryForBar(timeframe);
+    for (int i = 0; i < barData.length; i++) {
+      for (int j = 0; j < barData[i].rodData.length; j++) {
+        barHeight = barData[i].rodData[j].barHeight > barHeight
+            ? ((barData[i].rodData[j].barHeight / 10).ceil() * 10).toDouble()
+            : barHeight;
+      }
+    }
   }
 
   //createBarData();
   //calculate each Data -> array with values: id, name, color...
 }
-/*
-class Data {
-  final int id;
-  final String name;
-  final double y;
-  final Color color;
-
-  const Data({
-    required this.id,
-    required this.name,
-    required this.y,
-    required this.color,
-  });
-}*/
 
 class Data {
   final int id;
