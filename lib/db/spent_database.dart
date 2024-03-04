@@ -158,11 +158,12 @@ class SpentDatabase {
       switch (timeframe) {
     case 'Last 7 Days':
       // Get data from the last seven days
-      timefilter = DateTime.now().subtract(Duration(days: 7));
+      timefilter = DateTime.now().subtract(Duration(days: 7)).subtract(Duration(seconds: 1));
       break;
     case 'Last 30 Days':
       // Get data from the last thirty days
-      DateTime thirtyDaysAgo = DateTime.now().subtract(Duration(days: 30));
+      DateTime thirtyDaysAgo = DateTime.now().subtract(Duration(days: 30)).subtract(Duration(seconds: 1));
+
       List spentOnCat = await db.rawQuery(
         "SELECT SUM(amount) FROM expenditure WHERE category = '$categories[i]' AND date >= ?",[thirtyDaysAgo.toIso8601String()] );
       break;
