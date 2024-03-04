@@ -362,56 +362,6 @@ class SpentDatabase {
       }
     }
     //List<TableData> table_data = List.generate(sections, (index) => null);
-    //loop over array 10 times and assign a date to each
-/*
-    for (int i = 0; i < sections; i++) {
-      DateTime dateFromDatabase = DateTime.parse(result[i]['date']);
-
-      if (i == sections - 1) {
-        sectionValues[index] += result[i]['amount'];
-        //last bar
-        barData.add(Data(
-          id: index,
-          name: "None",
-          y: sectionValues[index],
-          color: Color(0xff19bfff),
-        ));
-      }
-
-      if (dateFromDatabase.isBefore(currentDate)) {
-        sectionValues[index] += result[i]['amount'];
-        print(sectionValues[index]);
-      }
-      //add sparation per bar depending on category
-      else if (dateFromDatabase.isAfter(currentDate)) {
-        currentDate = currentDate.add(Duration(days: 4));
-
-        barData.add(
-          //in this code, the function breaks
-          Data(
-            id: index,
-            name: "None",
-            y: sectionValues[index],
-            color: Color(
-                0xff19bfff), // Example color, replace with your desired color
-          ),
-        );
-        index++;
-      }
-
-      print(currentDate);
-
-      //barData.add(Date(id: index, name: "$Week {index}", rodData: ));
-
-      //table_data.append(TableData(time: "$Week{index}", food: ))
-
-      /*barData[index]['id'] = index;
-      barData[index]['name'] = "none";
-      barData[index]['y'] = sectionValues[index];
-      barData[index]['color'] = Color(0xff19bfff);*/
-    }*/
-
-    //print(sectionValues);
 
     return barData;
   }
