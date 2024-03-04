@@ -176,7 +176,6 @@ class SpentDatabase {
   }
 
   Future<List<Data>> queryForBar(String? timeframe) async {
-    //change according to max bar,
 
     late int dataPerSection;
     List categories = ['Food', 'Event', 'Education', 'Other'];
@@ -197,23 +196,72 @@ class SpentDatabase {
     late List result;
     late int timeshift;
     late int shiftCorrect;
-    DateTime firstDay = DateTime(
-        currentYear, currentMonth, 1); //change to first day in database
+     //change to first day in database
     late int groupedSections;
 
     int dataIndex = 0;
     //change variables according to selected timeframe
+    if (timeframe == "All Time") {
+      //calculate somehow
+      groupedSections = 1;
+      dataPerSection = 1;
+      timeshift = 0;
+
+      result = await db.rawQuery(
+          "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
+      currentDate = reult[0]['date'];
+      
+      DateTime sevenDays = now.subtract(Duration(days: 7));
+      DateTime thisMonth = DateTime(
+        currentYear, currentMonth, 1);
+      int targetMonth = currentMonth - 3;
+      int targetYear = currentYear;
+      int startYear = currentDate.year;
+      int years = currentYear - startYear;
+
+      if (targetMonth < 1) {
+        targetMonth += 12; // Wrap around to December of the previous year
+        targetYear -= 1; // Adjust the year
+      }
+      DateTime threeMonths = DateTime(targetYear, targetMonth, 1);
+
+      if (currentDate.isAfter(sevenDays)) {
+        timeframe = "Last 7 Days";
+      }
+
+      else if (currentDate.isAfter(thisMonth)) {
+        timeframe = "This Month";
+      }
+      else if (currentDate.isAfter(threeMonths)) {
+        groupedSections = 12
+        dataPerSection = 1;
+        timeshift = 3;
+      }
+      else if (years == 0) {
+        timeframe = "This Year";
+      }
+      else {
+        groupedSections = years* 12;
+        dataPerSection = 3;
+        timeshift = 10;
+        shiftCorrect = 0;
+      }
+      
+      print(result);
+      print('query all time');
+  }
     if (timeframe == "This Month") {
       groupedSections = 4;
       dataPerSection = 3;
       timeshift = 2;
-      currentDate = firstDay.add(Duration(days: timeshift));
+      currentDate = DateTime(
+        currentYear, currentMonth, 1);
       shiftCorrect = 1;
       result = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
           ['$currentYear', '$currentMonth']);
     }
-    if (timeframe == "Last 7 days") {
+    if (timeframe == "Last 7 Days") {
       groupedSections = 7;
       dataPerSection = 1;
       timeshift = 1;
@@ -248,6 +296,7 @@ class SpentDatabase {
       //shiftCorrect = 1;
       currentDate = DateTime(now.year, 1, 1);
       int currentYear = DateTime.now().year;
+      
 
 // Query to select data for the current year
       result = await db.rawQuery(
@@ -255,18 +304,7 @@ class SpentDatabase {
         ['$currentYear'],
       );
     }
-    if (timeframe == "All Time") {
-      //calculate somehow
-      groupedSections = 1;
-      dataPerSection = 1;
-      timeshift = 0;
-      currentDate = firstDay;
-
-      result = await db.rawQuery(
-          "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
-      print(result);
-      print('query all time');
-    }
+    
     print(timeframe);
     List sectionValues = List.generate(dataPerSection, (index) => 0.0);
 
