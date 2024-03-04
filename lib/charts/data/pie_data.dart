@@ -13,7 +13,7 @@ class PieData {
   ];
   List categories = ['Food', 'Event', 'Education', 'Other'];
 
-  Future<void> calculate() async {
+  Future<void> calculate(String? timeframe) async {
     data = [];
     for (int i = 0; i < categories.length; i++) {
       data.add(Data(
@@ -23,7 +23,7 @@ class PieData {
       ));
     }
     //calculate percentages
-    percentages = await SpentDatabase.instance.calculatePercentages();
+    percentages = await SpentDatabase.instance.calculatePercentages(timeframe);
 
     for (int i = 0; i < categories.length; i++) {
       data[i] = (Data(

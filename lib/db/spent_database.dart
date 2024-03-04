@@ -90,7 +90,7 @@ class SpentDatabase {
     return result.map((json) => Expenditure.fromJson(json)).toList();
   }
 
-  Future<List<dynamic>> readCategory(String category) async {
+  /*Future<List<dynamic>> readCategory(String category) async {
     final db = await instance.database;
 
     final List spentOnCat = await db.rawQuery(
@@ -106,7 +106,7 @@ class SpentDatabase {
         await db.rawQuery("SELECT SUM(amount) FROM expenditure");
 
     return tot_amount;
-  }
+  }*/
 
   Future<int> update(Expenditure expenditure) async {
     final db = await instance.database;
@@ -143,16 +143,56 @@ class SpentDatabase {
 
 //calculate percentages
 //has to access the selected timeframe, during IFASS
-  Future<List<dynamic>> calculatePercentages() async {
+  Future<List<dynamic>> calculatePercentages(String? timeframe) async {
+    final db = await instance.database;
     List categories = ['Food', 'Event', 'Education', 'Other'];
     List percentages = [];
     dynamic sumAmount;
     double spentCat = 0.0;
     late List<Expenditure> expenses;
+    late List spentOnCat;
+    late DateTime timefilter;
     expenses = await SpentDatabase.instance.readAllExpenditure();
+  
     for (int i = 0; i < categories.length; i++) {
-      List<dynamic> spentOnCat =
-          await SpentDatabase.instance.readCategory(categories[i]);
+      switch (timeframe) {
+    case 'Last 7 Days':
+      // Get data from the last seven days
+      timefilter = DateTime.now().subtract(Duration(days: 7));
+      break;
+    case 'Last 30 Days':
+      // Get data from the last thirty days
+      DateTime thirtyDaysAgo = DateTime.now().subtract(Duration(days: 30));
+      List spentOnCat = await db.rawQuery(
+        "SELECT SUM(amount) FROM expenditure WHERE category = '$categories[i]' AND date >= ?",[thirtyDaysAgo.toIso8601String()] );
+      break;
+    case 'This Month':
+      // Get data for the current month
+      int currentYear = DateTime.now().year;
+      int currentMonth = DateTime.now().month;
+      String timefilter = '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
+      break;
+    case 'This Year':
+      // Get data for the current year
+      int currentYear = DateTime.now().year;
+      String timefilter = '$currentYear-01-01';
+      break;
+    case 'All Time':
+      // Get all data
+      DateTime now = DateTime.now();
+      timefilter = DateTime(now.year - 100, now.month, now.day);
+
+      break;
+    default:
+      // Invalid timeframe
+      throw ArgumentError('Invalid timeframe: $timeframe');
+  }
+
+      spentOnCat = await db.rawQuery(
+        "SELECT SUM(amount) FROM expenditure WHERE category = '$categories[i]' AND date >= ?",[timefilter.toIso8601String()] );
+
+      //List<dynamic> spentOnCat =
+          //await SpentDatabase.instance.readCategory(categories[i]);
       sumAmount = spentOnCat[0]['SUM(amount)'] ?? 0;
 
       //convert always to double:
@@ -161,7 +201,10 @@ class SpentDatabase {
       } else {
         spentCat = sumAmount;
       }
-      List countAll = await SpentDatabase.instance.readAmount();
+      //List countAll = await SpentDatabase.instance.readAmount();
+      final List countAll =
+        await db.rawQuery("SELECT SUM(amount) FROM expenditure WHERE date >= ?", [timefilter.toIso8601String()]);
+      
       double totalAmount = countAll[0]['SUM(amount)'] is int
           ? (countAll[0]['SUM(amount)'] as int).toDouble()
           : countAll[0]['SUM(amount)'];
