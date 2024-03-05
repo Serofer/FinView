@@ -220,7 +220,7 @@ class SpentDatabase {
     return percentages;
   }
 
-  Future<List<Data>> queryForBar(String? timeframe) async {
+  Future<dynamic> queryForBar(String? timeframe, bool bar) async {
 
     late int dataPerSection;
     List categories = ['Food', 'Event', 'Education', 'Other'];
@@ -232,12 +232,14 @@ class SpentDatabase {
       Color(0xff13d38e)
     ];
     List<Data> barData = [];
+    List<TableData> tableData = [];
+    Map<String, dynamic> timeData = {};
     final db = await instance.database; //delete unnecessary stuff
     final now = DateTime.now();
     final currentYear = now.year;
     final currentMonth = now.month;
     final currentWeek = now.weekday;
-    Map<String, dynamic> timeData = {};
+    
 
     late DateTime currentDate;
     late List result;
@@ -261,6 +263,10 @@ class SpentDatabase {
     for (int i = 0; i < groupedSections; i++) {
       List categoryValues = List.generate(categories.length, (index) => 0.0);
       double barHeight = 0.0;
+      tableData.add(TableData(
+              time: '',
+              food: '',
+            ));
       //define an almost empty listElement of the barData
       barData.add(Data(
         id: i,
@@ -317,6 +323,7 @@ class SpentDatabase {
             print(currentDate);
             j++;
             barData[i].rodData[j].barHeight = barHeight;
+            
             barHeight = 0;
 
             double y = 0.0;
@@ -350,16 +357,45 @@ class SpentDatabase {
       }
     }
     //List<TableData> table_data = List.generate(sections, (index) => null);
+    if(bar) {
+      return barData;
+    }
 
-    return barData;
+    else {
+      return tableData;
+    }
+    
   }
 
-  Future<List<TableData>> queryForTable(String? timeframe) async {
+  /*Future<List<TableData>> queryForTable(String? timeframe) async {
     Map<String, dynamic> timeData = {};
 
+    List<TableData> tableData = [];
+
+    late DateTime currentDate;
+    late List result;
+    late int timeshift;
+    late int shiftCorrect;
+    late int groupedSections;
+    int dataIndex = 0;
+    
     timeData = getTimeData(timeframe);
-    return 0;
-  }
+
+    groupedSections = timeData['groupedSections'];
+    dataPerSection = timeData['dataPerSection'];
+    timeshift = timeData['timeshift'];
+    shiftCorrect = timeData['shiftCorrect'];
+    currentDate = timeData['currentDate']; //maybe change dataType
+    result = timeData['result'];
+
+    //all the logic
+
+
+    return tableData;
+  }*/
+
+
+
 
 
 

@@ -8,7 +8,7 @@ class BarData {
   static double barHeight = 0.0;
 
   Future<void> createBarData(String? timeframe) async {
-    barData = await SpentDatabase.instance.queryForBar(timeframe);
+    barData = await SpentDatabase.instance.queryForBar(timeframe, true);
     for (int i = 0; i < barData.length; i++) {
       for (int j = 0; j < barData[i].rodData.length; j++) {
         barHeight = barData[i].rodData[j].barHeight > barHeight

@@ -4,7 +4,7 @@ class DataForTable {
   static late List<TableData> tableData;
 
   Future<void> createTableData(String? timeframe) async {
-    tableData = await SpentDatabase.instance.queryForTable(timeframe); 
+    tableData = await SpentDatabase.instance.queryForBar(timeframe, false); 
   }
 }
 
