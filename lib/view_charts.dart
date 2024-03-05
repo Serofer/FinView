@@ -79,6 +79,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }*/
   Future loadBarChartData(String? timeframe) async {
     setState(() => barLoading = true);
+    await Future.delayed(Duration(seconds: 1));
     BarData barData = BarData();
     await Future.delayed(Duration(seconds: 1));
     await barData.createBarData(timeframe);
