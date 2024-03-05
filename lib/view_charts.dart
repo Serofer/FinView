@@ -9,7 +9,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fin_view/charts/table_widget.dart';
 import 'package:fin_view/charts/bar_chart_widget.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
-import 'package:fin_view/filter_charts.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -31,6 +30,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   bool isLoading = false;
   bool pieLoading = false;
   bool lineLoading = false;
+  bool tableLoading = false;
   bool barLoading = false;
   int touchedIndex = 0;
 
@@ -40,7 +40,8 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     refreshExpenses();
     loadPieChartData("Last 30 Days");
     loadBarChartData("Last 30 Days");
-    //loadLineChartData();
+    //loadLineChartData("Last 30 Days");
+    //loadTableData("Last 30 Days");
   }
 
   @override
@@ -70,11 +71,11 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
 
 /*
   Future loadLineChartData() async {
-    setState(() => LineLoading = true);
+    setState(() => lineLoading = true);
     BarData barData = BarData();
     //reference to needed functions
     await barData.createBarData("month");
-    setState(() => LineLoading = false);
+    setState(() => lineLoading = false);
   }*/
   Future loadBarChartData(String? timeframe) async {
     setState(() => barLoading = true);
@@ -83,6 +84,13 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     await barData.createBarData(timeframe);
     setState(() => barLoading = false);
   }
+
+  /*Future loadTableData(String? timeframe) async {
+    setState(() => tableLoading = true);
+    DataForTable tableData = DataForTable();
+    await tableData.createTableData(timeframe)
+    setState(() => tableLoading = false);
+  } */
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +117,9 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
             barLoading
                 ? Center(child: const CircularProgressIndicator())
                 : _buildBar(),
+            /*tableLoading
+                ? Center(child: const CircularProgressIndicator())
+                : _buildTable(), */
           ],
         ),
       ),
@@ -203,7 +214,9 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
               onPressed: () {
                 // Load bar chart data and close the dialog
                 selectedTimeframe ??= 'All Time';
-                loadBarChartData(selectedTimeframe); // Modify this line
+                loadBarChartData(selectedTimeframe);
+                //loadTableData(selectedTimeframe);
+                //loadPieChartData(selectedTimeframe);
                 Navigator.of(context).pop();
                 print(selectedTimeframe); // Close the dialog
               },

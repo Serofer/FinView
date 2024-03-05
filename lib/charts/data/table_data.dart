@@ -1,5 +1,13 @@
 import 'package:flutter/material.dart';
 
+class DataForTable {
+  static late List<TableData> tableData;
+
+  Future<void> createTableData(String? timeframe) async {
+    tableData = await SpentDatabase.instance.queryForTable(timeframe);
+  }
+}
+
 class TableData {
   //change dynamically on user decision
   final String time;
