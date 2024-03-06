@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fin_view/db/spent_database.dart';
 
 class DataForTable {
   static late List<TableData> tableData;
@@ -7,8 +8,8 @@ class DataForTable {
   Future<void> createTableData(String? timeframe) async {
     /*final Map<String, double> fields = Map.fromIterable(categories,
       key: (category) => category,
-      value: (_) => 0.0); // Initialize with default value*/ 
-    tableData = await SpentDatabase.instance.queryForBar(timeframe, false); 
+      value: (_) => 0.0); // Initialize with default value*/
+    tableData = await SpentDatabase.instance.queryForBar(timeframe, false);
     print(tableData);
   }
 
@@ -19,11 +20,11 @@ class DataForTable {
 }
 
 class TableData {
-    String time;
-    Map<String, double> categoryData;
+  String time;
+  Map<String, double> categoryData;
 
-    TableData({
-      required this.time,
-      required this.categoryData,
-    });
-  }
+  TableData({
+    required this.time,
+    required this.categoryData,
+  });
+}
