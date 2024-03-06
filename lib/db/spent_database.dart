@@ -232,7 +232,6 @@ class SpentDatabase {
       Color(0xff13d38e)
     ];
     List<Data> barData = [];
-    List<TableData> tableData = [];
     Map<String, dynamic> timeData = {};
     final db = await instance.database; //delete unnecessary stuff
     final now = DateTime.now();
@@ -259,15 +258,23 @@ class SpentDatabase {
     result = timeData['result'];
 
     List sectionValues = List.generate(timeData['dataPerSection'], (index) => 0.0);
+    
+    List<TableData> tableData = List.generate(groupedSections, (index) {
+    // Generate TableData for each index
+    return TableData(
+      time: '', // Example: Time value
+      categoryData: Map.fromIterable(categories,
+          key: (category) => category,
+          value: (_) => 0.0), // Initialize with default value
+    );
+  });
 
     for (int i = 0; i < groupedSections; i++) {
       List categoryValues = List.generate(categories.length, (index) => 0.0);
       double barHeight = 0.0;
-      tableData.add(TableData(
-              time: '',
-              food: '',
-            ));
+      
       //define an almost empty listElement of the barData
+      tableData[i].time = 'Week ${i.toString()}';
       barData.add(Data(
         id: i,
         name: 'Week ${i.toString()}',
@@ -330,6 +337,8 @@ class SpentDatabase {
 
             for (int k = 0; k < categories.length; k++) {
               if (categoryValues[k] > 0) {
+                tableData[i].categoryData[categories[i]] = categoryValues[k];
+                //tableData[i][categories[k]] = categoryValues[k];//set the key and value for table
                 //set the rodItems
                 barData[i].rodData[j].rodItems[k].minY = y;
                 y += categoryValues[k];
