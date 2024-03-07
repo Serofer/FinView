@@ -271,7 +271,7 @@ class SpentDatabase {
     List<TableData> tableData = List.generate(groupedSections, (index) {
       // Generate TableData for each index
       return TableData(
-        time: '', // Example: Time value
+        time: '', 
         categoryData: Map.fromIterable(categories,
             key: (category) => category,
             value: (_) => 0.0), // Initialize with default value
