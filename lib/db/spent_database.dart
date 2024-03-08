@@ -233,6 +233,8 @@ class SpentDatabase {
   Future<dynamic> queryForBar(String? timeframe, bool bar) async {
     late int dataPerSection;
     List categories = ['Food', 'Event', 'Education', 'Other'];
+    List categoriesExtra = categories.toList();
+    categoriesExtra.add('Total');
 
     List categoryColors = [
       Color(0xff0293ee),
@@ -268,11 +270,11 @@ class SpentDatabase {
     List sectionValues =
         List.generate(timeData['dataPerSection'], (index) => 0.0);
 
-    List<TableData> tableData = List.generate(groupedSections, (index) {
+    List<TableData> tableData = List.generate(groupedSections + 1, (index) {
       // Generate TableData for each index
       return TableData(
         time: '', 
-        categoryData: Map.fromIterable(categories,
+        categoryData: Map.fromIterable(categoriesExtra,
             key: (category) => category,
             value: (_) => 0.0), // Initialize with default value
       );
@@ -343,10 +345,12 @@ class SpentDatabase {
             barHeight = 0;
 
             double y = 0.0;
+            double total = 0.0;
 
             for (int k = 0; k < categories.length; k++) {
               if (categoryValues[k] > 0) {
                 tableData[i].categoryData[categories[i]] = categoryValues[k];
+                total += categoryValues[k];
                 //tableData[i][categories[k]] = categoryValues[k];//set the key and value for table
                 //set the rodItems
                 barData[i].rodData[j].rodItems[k].minY = y;
@@ -357,6 +361,7 @@ class SpentDatabase {
                 categoryValues[k] = 0.0;
               }
             }
+            tableData[i].categoryData['Total'] = total;
 
             currentDate = currentDate.add(Duration(days: timeshift));
             if (j == dataPerSection - 2) {
@@ -374,6 +379,9 @@ class SpentDatabase {
         }
       }
     }
+
+    //assign the total values in the tableData
+    //tableData[gropuedSections].categoryValues['Food'] = 
     //List<TableData> table_data = List.generate(sections, (index) => null);
     if (bar) {
       return barData;
