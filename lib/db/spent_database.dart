@@ -374,7 +374,8 @@ class SpentDatabase {
           dataIndex++;
         } else {
           //if the data is after the current date
-          currentDate = currentDate.add(Duration(days: timeshift));
+          currentDate =
+              currentDate.add(Duration(days: timeshift)); //change this
           if (j == dataPerSection - 2) {
             currentDate = currentDate.add(Duration(days: shiftCorrect));
           }
