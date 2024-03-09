@@ -235,6 +235,7 @@ class SpentDatabase {
     List categories = ['Food', 'Event', 'Education', 'Other'];
     List categoriesExtra = categories.toList();
     categoriesExtra.add('Total');
+    List totalCategoryValues = List.generate(categories.length, (index) => 0.0);
 
     List categoryColors = [
       Color(0xff0293ee),
@@ -267,13 +268,13 @@ class SpentDatabase {
     currentDate = timeData['currentDate']; //maybe change dataType
     result = timeData['result'];
 
-    List sectionValues =
-        List.generate(timeData['dataPerSection'], (index) => 0.0);
+    //List sectionValues =
+    //List.generate(timeData['dataPerSection'], (index) => 0.0);
 
     List<TableData> tableData = List.generate(groupedSections + 1, (index) {
       // Generate TableData for each index
       return TableData(
-        time: '', 
+        time: '',
         categoryData: Map.fromIterable(categoriesExtra,
             key: (category) => category,
             value: (_) => 0.0), // Initialize with default value
@@ -282,6 +283,8 @@ class SpentDatabase {
 
     for (int i = 0; i < groupedSections; i++) {
       List categoryValues = List.generate(categories.length, (index) => 0.0);
+
+      double total = 0.0;
       double barHeight = 0.0;
 
       //define an almost empty listElement of the barData
@@ -342,15 +345,15 @@ class SpentDatabase {
             j++;
             barData[i].rodData[j].barHeight = barHeight;
 
-            barHeight = 0;
+            barHeight = 0.0;
 
             double y = 0.0;
-            double total = 0.0;
 
             for (int k = 0; k < categories.length; k++) {
               if (categoryValues[k] > 0) {
                 tableData[i].categoryData[categories[i]] = categoryValues[k];
                 total += categoryValues[k];
+                totalCategoryValues[k] += categoryValues[k];
                 //tableData[i][categories[k]] = categoryValues[k];//set the key and value for table
                 //set the rodItems
                 barData[i].rodData[j].rodItems[k].minY = y;
@@ -361,7 +364,6 @@ class SpentDatabase {
                 categoryValues[k] = 0.0;
               }
             }
-            tableData[i].categoryData['Total'] = total;
 
             currentDate = currentDate.add(Duration(days: timeshift));
             if (j == dataPerSection - 2) {
@@ -376,12 +378,21 @@ class SpentDatabase {
           if (j == dataPerSection - 2) {
             currentDate = currentDate.add(Duration(days: shiftCorrect));
           }
+          tableData[i].categoryData['Total'] = total;
         }
       }
     }
+    double allAdded = 0.0;
+    tableData[groupedSections].time = 'All';
+    for (int i = 0; i < categories.length; i++) {
+      tableData[groupedSections].categoryData[categories[i]] =
+          totalCategoryValues[i];
+      allAdded += totalCategoryValues[i];
+    }
 
+    tableData[groupedSections].categoryData['Total'] = allAdded;
     //assign the total values in the tableData
-    //tableData[gropuedSections].categoryValues['Food'] = 
+    //tableData[gropuedSections].categoryValues['Food'] =
     //List<TableData> table_data = List.generate(sections, (index) => null);
     if (bar) {
       return barData;
