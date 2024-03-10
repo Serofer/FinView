@@ -273,7 +273,7 @@ class SpentDatabase {
 
     //List sectionValues =
     //List.generate(timeData['dataPerSection'], (index) => 0.0);
-
+    List totalTimeValues = List.generate(groupedSections, (index) => 0.0);
     List<TableData> tableData = List.generate(groupedSections + 1, (index) {
       // Generate TableData for each index
       return TableData(
@@ -373,7 +373,7 @@ class SpentDatabase {
               currentDate = currentDate.add(Duration(days: shiftCorrect));
             }
           }
-
+          tableData[i].categoryData['Total'] = total;
           dataIndex++;
         } else {
           //if the data is after the current date
@@ -382,7 +382,6 @@ class SpentDatabase {
           if (j == dataPerSection - 2) {
             currentDate = currentDate.add(Duration(days: shiftCorrect));
           }
-          tableData[i].categoryData['Total'] = total;
         }
       }
     }
