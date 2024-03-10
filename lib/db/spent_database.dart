@@ -146,6 +146,7 @@ class SpentDatabase {
 //has to access the selected timeframe, during IFASS
   Future<List<dynamic>> calculatePercentages(String? timeframe) async {
     final db = await instance.database;
+
     List categories = ['Food', 'Event', 'Education', 'Other'];
     List percentages = [];
     dynamic sumAmount;
@@ -153,58 +154,60 @@ class SpentDatabase {
     late List<Expenditure> expenses;
     late List spentOnCat;
     late DateTime timefilter;
-    expenses = await SpentDatabase.instance.readAllExpenditure();
+    //expenses = await SpentDatabase.instance.readAllExpenditure();
+    spentOnCat = await db.rawQuery("SELECT SUM(amount) FROM expenditure");
+    List result = await db.rawQuery("SELECT amount, category FROM expenditure");
+    print(result);
+    print(spentOnCat);
+    switch (timeframe) {
+      case 'Last 7 Days':
+        // Get data from the last seven days
+        timefilter = DateTime.now()
+            .subtract(Duration(days: 7))
+            .subtract(Duration(seconds: 1));
+        break;
+      case 'Last 30 Days':
+        // Get data from the last thirty days
+        timefilter = DateTime.now()
+            .subtract(Duration(days: 30))
+            .subtract(Duration(seconds: 1));
+
+        break;
+      case 'This Month':
+        // Get data for the current month
+        int currentYear = DateTime.now().year;
+        int currentMonth = DateTime.now().month;
+        String timefilterString =
+            '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
+        timefilter = DateTime.parse(timefilterString); //maybe bug
+        break;
+      case 'This Year':
+        // Get data for the current year
+        int currentYear = DateTime.now().year;
+        String timefilterString = '$currentYear-01-01';
+        DateTime timefilter = DateTime.parse(timefilterString);
+        break;
+      case 'All Time':
+        // Get all data
+        DateTime now = DateTime.now();
+        timefilter = DateTime(now.year - 100, now.month, now.day);
+
+        break;
+      default:
+        // Invalid timeframe
+        throw ArgumentError('Invalid timeframe: $timeframe');
+    }
 
     for (int i = 0; i < categories.length; i++) {
-      switch (timeframe) {
-        case 'Last 7 Days':
-          // Get data from the last seven days
-          timefilter = DateTime.now()
-              .subtract(Duration(days: 7))
-              .subtract(Duration(seconds: 1));
-          break;
-        case 'Last 30 Days':
-          // Get data from the last thirty days
-          DateTime thirtyDaysAgo = DateTime.now()
-              .subtract(Duration(days: 30))
-              .subtract(Duration(seconds: 1));
-
-          List spentOnCat = await db.rawQuery(
-              "SELECT SUM(amount) FROM expenditure WHERE category = '$categories[i]' AND date >= ?",
-              [thirtyDaysAgo.toIso8601String()]);
-          break;
-        case 'This Month':
-          // Get data for the current month
-          int currentYear = DateTime.now().year;
-          int currentMonth = DateTime.now().month;
-          String timefilterString =
-              '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
-          DateTime timefilter = DateTime.parse(timefilterString); //maybe bug
-          break;
-        case 'This Year':
-          // Get data for the current year
-          int currentYear = DateTime.now().year;
-          String timefilterString = '$currentYear-01-01';
-          DateTime timefilter = DateTime.parse(timefilterString);
-          break;
-        case 'All Time':
-          // Get all data
-          DateTime now = DateTime.now();
-          timefilter = DateTime(now.year - 100, now.month, now.day);
-
-          break;
-        default:
-          // Invalid timeframe
-          throw ArgumentError('Invalid timeframe: $timeframe');
-      }
-
+      print(i.toString());
       spentOnCat = await db.rawQuery(
-          "SELECT SUM(amount) FROM expenditure WHERE category = '$categories[i]' AND date >= ?",
+          "SELECT SUM(amount) FROM expenditure WHERE category = '${categories[i]}' AND date >= ?",
           [timefilter.toIso8601String()]);
+      print(spentOnCat);
 
       //List<dynamic> spentOnCat =
       //await SpentDatabase.instance.readCategory(categories[i]);
-      sumAmount = spentOnCat[0]['SUM(amount)'] ?? 0;
+      sumAmount = spentOnCat[0]['SUM(amount)'] ?? 0.0;
 
       //convert always to double:
       if (sumAmount is int) {
@@ -226,6 +229,8 @@ class SpentDatabase {
       double percentNum = double.parse(percent);
       percentages.add(percentNum);
     }
+
+    print(percentages);
 
     return percentages;
   }
@@ -257,7 +262,6 @@ class SpentDatabase {
     late int shiftCorrect;
     late int groupedSections;
     int dataIndex = 0;
-    print(timeframe);
 
     timeData = await getTimeData(timeframe);
 
@@ -265,6 +269,7 @@ class SpentDatabase {
     dataPerSection = timeData['dataPerSection'];
     timeshift = timeData['timeshift'];
     shiftCorrect = timeData['shiftCorrect'];
+    print(timeData['currentDate']);
     currentDate = timeData['currentDate']; //maybe change dataType
     result = timeData['result'];
 
@@ -340,8 +345,8 @@ class SpentDatabase {
 
           //this is wrong
           if (nextDate.isAfter(currentDate)) {
-            print(dateFromDatabase);
-            print(currentDate);
+            //print(dateFromDatabase);
+            //print(currentDate);
             j++;
             barData[i].rodData[j].barHeight = barHeight;
 
@@ -351,7 +356,7 @@ class SpentDatabase {
 
             for (int k = 0; k < categories.length; k++) {
               if (categoryValues[k] > 0) {
-                tableData[i].categoryData[categories[i]] = categoryValues[k];
+                tableData[i].categoryData[categories[k]] = categoryValues[k];
                 total += categoryValues[k];
                 totalCategoryValues[k] += categoryValues[k];
                 //tableData[i][categories[k]] = categoryValues[k];//set the key and value for table
@@ -448,7 +453,7 @@ class SpentDatabase {
 
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
-      timeData['currentDate'] = timeData['result'][0]['date'];
+      timeData['currentDate'] = DateTime.parse(timeData['result'][0]['date']);
       currentDate = timeData['currentDate'];
 
       DateTime sevenDays = now.subtract(Duration(days: 7));
@@ -481,8 +486,8 @@ class SpentDatabase {
         timeData['shiftCorrect'] = 0;
       }
 
-      print(timeData['result']);
-      print('query all time');
+      //print(timeData['result']);
+      //print('query all time');
     }
     if (timeframe == "This Month") {
       timeData['groupedSections'] = 4;

@@ -203,7 +203,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
                 child: Text(value),
               );
             }).toList(),
-            value: selectedTimeframe, // as expected wrong
+            value: selectedTimeframe,
             onChanged: (selectedValue) {
               setState(() {
                 selectedTimeframe = selectedValue.toString();
@@ -216,8 +216,9 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
                 // Load bar chart data and close the dialog
                 selectedTimeframe ??= 'All Time';
                 loadBarChartData(selectedTimeframe);
+
                 //loadTableData(selectedTimeframe);
-                //loadPieChartData(selectedTimeframe);
+                loadPieChartData(selectedTimeframe);
                 Navigator.of(context).pop();
                 print(selectedTimeframe); // Close the dialog
               },
@@ -228,19 +229,17 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       },
     );
   }
-/*
+
   Widget _buildTable() {
     return Container(
       height: 500,
       child: Card(
         elevation: 4,
         child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: TableWidget()
-        ),
+            padding: const EdgeInsets.only(top: 16), child: TableWidget()),
       ),
     );
-  }*/
+  }
 /*
   Widget _buildLine () {
     return Container(
