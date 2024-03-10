@@ -19,7 +19,7 @@ class ViewChartsPage extends StatefulWidget {
 class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<PieChartSectionData> sections;
   late List<Expenditure> expenses;
-  String? selectedTimeframe;
+  String selectedTimeframe = 'Last 30 Days';
   List timeframes = [
     'Last 7 Days',
     'Last 30 Days',
