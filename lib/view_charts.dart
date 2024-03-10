@@ -9,6 +9,8 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fin_view/charts/table_widget.dart';
 import 'package:fin_view/charts/bar_chart_widget.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
+import 'package:fin_view/charts/data/table_data.dart';
+import 'package:fin_view/charts/table_widget.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -41,7 +43,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     loadPieChartData("Last 30 Days");
     loadBarChartData("Last 30 Days");
     //loadLineChartData("Last 30 Days");
-    //loadTableData("Last 30 Days");
+    loadTableData("Last 30 Days");
   }
 
   @override
@@ -86,12 +88,12 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     setState(() => barLoading = false);
   }
 
-  /*Future loadTableData(String? timeframe) async {
+  Future loadTableData(String? timeframe) async {
     setState(() => tableLoading = true);
     DataForTable tableData = DataForTable();
-    await tableData.createTableData(timeframe)
+    await tableData.createTableData(timeframe);
     setState(() => tableLoading = false);
-  } */
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -118,9 +120,9 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
             barLoading
                 ? Center(child: const CircularProgressIndicator())
                 : _buildBar(),
-            /*tableLoading
+            tableLoading
                 ? Center(child: const CircularProgressIndicator())
-                : _buildTable(), */
+                : _buildTable(),
           ],
         ),
       ),
@@ -217,7 +219,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
                 selectedTimeframe ??= 'All Time';
                 loadBarChartData(selectedTimeframe);
 
-                //loadTableData(selectedTimeframe);
+                loadTableData(selectedTimeframe);
                 loadPieChartData(selectedTimeframe);
                 Navigator.of(context).pop();
                 print(selectedTimeframe); // Close the dialog
@@ -236,7 +238,9 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       child: Card(
         elevation: 4,
         child: Padding(
-            padding: const EdgeInsets.only(top: 16), child: TableWidget()),
+          padding: const EdgeInsets.only(top: 16),
+          child: TableWidget(),
+        ),
       ),
     );
   }

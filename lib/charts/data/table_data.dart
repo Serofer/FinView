@@ -7,10 +7,9 @@ class DataForTable {
 
   Future<void> createTableData(String? timeframe) async {
     /*final Map<String, double> fields = Map.fromIterable(categories,
-      key: (category) => category,
-      value: (_) => 0.0); // Initialize with default value*/
+        key: (category) => category,
+        value: (_) => 0.0); */ // Initialize with default value
     tableData = await SpentDatabase.instance.queryForBar(timeframe, false);
-    print(tableData);
   }
 
   /*final TableData tableData = TableData(time: '2024-01-27', categoryData: fields);

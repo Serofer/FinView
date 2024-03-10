@@ -157,8 +157,6 @@ class SpentDatabase {
     //expenses = await SpentDatabase.instance.readAllExpenditure();
     spentOnCat = await db.rawQuery("SELECT SUM(amount) FROM expenditure");
     List result = await db.rawQuery("SELECT amount, category FROM expenditure");
-    print(result);
-    print(spentOnCat);
     switch (timeframe) {
       case 'Last 7 Days':
         // Get data from the last seven days
@@ -199,11 +197,11 @@ class SpentDatabase {
     }
 
     for (int i = 0; i < categories.length; i++) {
-      print(i.toString());
+      //print(i.toString());
       spentOnCat = await db.rawQuery(
           "SELECT SUM(amount) FROM expenditure WHERE category = '${categories[i]}' AND date >= ?",
           [timefilter.toIso8601String()]);
-      print(spentOnCat);
+      //print(spentOnCat);
 
       //List<dynamic> spentOnCat =
       //await SpentDatabase.instance.readCategory(categories[i]);
@@ -269,7 +267,7 @@ class SpentDatabase {
     dataPerSection = timeData['dataPerSection'];
     timeshift = timeData['timeshift'];
     shiftCorrect = timeData['shiftCorrect'];
-    print(timeData['currentDate']);
+    //print(timeData['currentDate']);
     currentDate = timeData['currentDate']; //maybe change dataType
     result = timeData['result'];
 
