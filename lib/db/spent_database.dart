@@ -239,6 +239,7 @@ class SpentDatabase {
     List categoriesExtra = categories.toList();
     categoriesExtra.add('Total');
     List totalCategoryValues = List.generate(categories.length, (index) => 0.0);
+    
 
     List categoryColors = [
       Color(0xff0293ee),
@@ -291,7 +292,7 @@ class SpentDatabase {
       double barHeight = 0.0;
 
       //define an almost empty listElement of the barData
-      tableData[i].time = 'Week ${i.toString()}';
+      tableData[i].time = 'Week ${(i + 1).toString()}'; //month: Week, 7 days: Day, Year: array with Months
       barData.add(Data(
         id: i,
         name: 'Week ${i.toString()}',
@@ -434,6 +435,7 @@ class SpentDatabase {
   Future<Map<String, dynamic>> getTimeData(String? timeframe) async {
     Map<String, dynamic> timeData = {};
     final db = await instance.database;
+    List months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
     final now = DateTime.now();
     final currentYear = now.year;
@@ -447,6 +449,7 @@ class SpentDatabase {
       timeData['groupedSections'] = 1;
       timeData['dataPerSection'] = 1;
       timeData['timeshift'] = 0;
+    
 
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
