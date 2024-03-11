@@ -449,7 +449,7 @@ class SpentDatabase {
       timeData['groupedSections'] = 1;
       timeData['dataPerSection'] = 1;
       timeData['timeshift'] = 0;
-    
+      
 
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
