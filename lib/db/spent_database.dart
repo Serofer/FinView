@@ -405,32 +405,7 @@ class SpentDatabase {
     }
   }
 
-  /*Future<List<TableData>> queryForTable(String? timeframe) async {
-    Map<String, dynamic> timeData = {};
 
-    List<TableData> tableData = [];
-
-    late DateTime currentDate;
-    late List result;
-    late int timeshift;
-    late int shiftCorrect;
-    late int groupedSections;
-    int dataIndex = 0;
-    
-    timeData = getTimeData(timeframe);
-
-    groupedSections = timeData['groupedSections'];
-    dataPerSection = timeData['dataPerSection'];
-    timeshift = timeData['timeshift'];
-    shiftCorrect = timeData['shiftCorrect'];
-    currentDate = timeData['currentDate']; //maybe change dataType
-    result = timeData['result'];
-
-    //all the logic
-
-
-    return tableData;
-  }*/
 
   Future<Map<String, dynamic>> getTimeData(String? timeframe) async {
     Map<String, dynamic> timeData = {};
