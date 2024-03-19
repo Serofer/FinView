@@ -275,8 +275,9 @@ class SpentDatabase {
     timeshift = timeData['timeshift'];
     shiftCorrect = timeData['shiftCorrect'];
     //print(timeData['currentDate']);
-    currentDate = timeData['currentDate']; //maybe change dataType
-    result = timeData['result'];
+    currentDate = timeData['currentDate']; 
+    print(currentDate);//print the startDate
+    result = timeData['result']; //
 
     //List sectionValues =
     //List.generate(timeData['dataPerSection'], (index) => 0.0);
@@ -330,6 +331,7 @@ class SpentDatabase {
         if (dataIndex < result.length) {
           thisData = result[dataIndex];
         } else {
+          print('end of data');
           break;
         }
         if (dataIndex < result.length - 1) {
@@ -338,17 +340,18 @@ class SpentDatabase {
           nextDate = DateTime.parse(nextData['date']);
           nextDate = nextDate.add(const Duration(seconds: 1));
         } else {
-          nextDate = DateTime.now();
+          nextDate = now.add(const Duration(Days: 1));
         }
 
         DateTime dateFromDatabase = DateTime.parse(thisData['date']);
         dateFromDatabase = dateFromDatabase.add(const Duration(seconds: 1));
+        print(dateFromDatabase);
 
-        if (dateFromDatabase.isBefore(currentDate)) {
+        if (dateFromDatabase.isBefore(currentDate)) {//if the date from the database is before the currentDate
           barHeight += thisData['amount'];
           categoryValues[categories.indexOf(thisData['category'])] +=
               thisData['amount'];
-          j--;
+          j--;//reset, so that the dataPerSection can be increased
 
           //this is wrong
           if (nextDate.isAfter(currentDate)) {
