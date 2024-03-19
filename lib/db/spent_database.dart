@@ -498,9 +498,11 @@ class SpentDatabase {
       timeData['timeshift'] = 2;
       timeData['currentDate'] = DateTime(currentYear, currentMonth, 2, 0, 0, 0);
       timeData['shiftCorrect'] = 1;
+      String currentYearString = currentYear.toString();
+      String currentMonthString = currentMonth.toString();
       timeData['result'] = await db.rawQuery(
-          "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
-          ['$currentYear', '$currentMonth']);
+          "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?",
+          [currentYearString, currentMonthString]); //doesn't work
     }
     if (timeframe == "Last 7 Days") {
       timeData['groupedSections'] = 8;
