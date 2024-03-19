@@ -240,7 +240,13 @@ class SpentDatabase {
     categoriesExtra.add('Total');
     List totalCategoryValues = List.generate(categories.length, (index) => 0.0);
     
-
+    Map<String, String> labeling = {
+      'Last 30 Days': 'Week', 
+      'This Month': 'Week',
+      'Last 7 Days': 'Day',
+      'This Year': 'Month',
+      'All Time': 'Month' //wrong, if not multiple months
+    }
     List categoryColors = [
       Color(0xff0293ee),
       Color(0xfff8b250),
@@ -285,6 +291,8 @@ class SpentDatabase {
       );
     });
 
+    
+
     for (int i = 0; i < groupedSections; i++) {
       List categoryValues = List.generate(categories.length, (index) => 0.0);
 
@@ -292,7 +300,7 @@ class SpentDatabase {
       double barHeight = 0.0;
 
       //define an almost empty listElement of the barData
-      tableData[i].time = 'Week ${(i + 1).toString()}'; //month: Week, 7 days: Day, Year: array with Months
+      tableData[i].time = '${labeling[timeframe]} ${(i + 1).toString()}'; //month: Week, 7 days: Day, Year: array with Months
       barData.add(Data(
         id: i,
         name: 'Week ${i.toString()}',
