@@ -43,7 +43,7 @@ class TableWidget extends StatelessWidget {
                   ...categoriesExtra.map((category) {
                     final value = data.categoryData[category] ??
                         ''; // Get the value from categoryData map
-                    return DataCell(Text(value.toStringAsFixed(2),
+                    return DataCell(Text(value.toString(),
                         style: const TextStyle(
                             fontSize: 8))); // Display the value in a DataCell
                   }),

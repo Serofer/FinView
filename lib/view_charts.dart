@@ -21,7 +21,7 @@ class ViewChartsPage extends StatefulWidget {
 class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<PieChartSectionData> sections;
   late List<Expenditure> expenses;
-  String selectedTimeframe = 'Last 30 Days';
+  String selectedTimeframe = 'Last 7 Days';
   List timeframes = [
     'Last 7 Days',
     'Last 30 Days',
@@ -40,10 +40,10 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   void initState() {
     super.initState();
     refreshExpenses();
-    loadPieChartData("Last 30 Days");
-    loadBarChartData("Last 30 Days");
+    loadPieChartData("Last 7 Days");
+    loadBarChartData("Last 7 Days");
     //loadLineChartData("Last 30 Days");
-    loadTableData("Last 30 Days");
+    loadTableData("Last 7 Days");
   }
 
   @override

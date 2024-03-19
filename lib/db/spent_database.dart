@@ -239,14 +239,14 @@ class SpentDatabase {
     List categoriesExtra = categories.toList();
     categoriesExtra.add('Total');
     List totalCategoryValues = List.generate(categories.length, (index) => 0.0);
-    
+
     Map<String, String> labeling = {
-      'Last 30 Days': 'Week', 
+      'Last 30 Days': 'Week',
       'This Month': 'Week',
       'Last 7 Days': 'Day',
       'This Year': 'Month',
       'All Time': 'Month' //wrong, if not multiple months
-    }
+    };
     List categoryColors = [
       Color(0xff0293ee),
       Color(0xfff8b250),
@@ -275,9 +275,9 @@ class SpentDatabase {
     timeshift = timeData['timeshift'];
     shiftCorrect = timeData['shiftCorrect'];
     //print(timeData['currentDate']);
-    currentDate = timeData['currentDate']; 
-    print(currentDate);//print the startDate
-    result = timeData['result']; //
+    currentDate = timeData['currentDate'];
+    result = timeData['result'];
+    print(result);
 
     //List sectionValues =
     //List.generate(timeData['dataPerSection'], (index) => 0.0);
@@ -292,8 +292,6 @@ class SpentDatabase {
       );
     });
 
-    
-
     for (int i = 0; i < groupedSections; i++) {
       List categoryValues = List.generate(categories.length, (index) => 0.0);
 
@@ -301,7 +299,8 @@ class SpentDatabase {
       double barHeight = 0.0;
 
       //define an almost empty listElement of the barData
-      tableData[i].time = '${labeling[timeframe]} ${(i + 1).toString()}'; //month: Week, 7 days: Day, Year: array with Months
+      tableData[i].time =
+          '${labeling[timeframe]} ${(i + 1).toString()}'; //month: Week, 7 days: Day, Year: array with Months
       barData.add(Data(
         id: i,
         name: 'Week ${i.toString()}',
@@ -340,21 +339,25 @@ class SpentDatabase {
           nextDate = DateTime.parse(nextData['date']);
           nextDate = nextDate.add(const Duration(seconds: 1));
         } else {
-          nextDate = now.add(const Duration(Days: 1));
+          nextDate = now.add(const Duration(days: 1));
         }
 
         DateTime dateFromDatabase = DateTime.parse(thisData['date']);
         dateFromDatabase = dateFromDatabase.add(const Duration(seconds: 1));
-        print(dateFromDatabase);
+        print('Date from database: $dateFromDatabase');
+        print('reference date: ${currentDate}');
 
-        if (dateFromDatabase.isBefore(currentDate)) {//if the date from the database is before the currentDate
+        if (dateFromDatabase.isBefore(currentDate)) {
+          print('isBefore');
+          //if the date from the database is before the currentDate
           barHeight += thisData['amount'];
           categoryValues[categories.indexOf(thisData['category'])] +=
               thisData['amount'];
-          j--;//reset, so that the dataPerSection can be increased
+          j--; //reset, so that the dataPerSection can be increased
 
           //this is wrong
           if (nextDate.isAfter(currentDate)) {
+            print('head on');
             //print(dateFromDatabase);
             //print(currentDate);
             j++;
@@ -391,6 +394,8 @@ class SpentDatabase {
           //if the data is after the current date
           currentDate =
               currentDate.add(Duration(days: timeshift)); //change this
+          print('should increase');
+
           if (j == dataPerSection - 2) {
             currentDate = currentDate.add(Duration(days: shiftCorrect));
           }
@@ -416,14 +421,27 @@ class SpentDatabase {
     }
   }
 
-
-
   Future<Map<String, dynamic>> getTimeData(String? timeframe) async {
     Map<String, dynamic> timeData = {};
     final db = await instance.database;
-    List months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    List months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ];
 
     final now = DateTime.now();
+    DateTime currentDateAtMidnight =
+        DateTime(now.year, now.month, now.day, 0, 0, 0);
     final currentYear = now.year;
     final currentMonth = now.month;
     final currentWeek = now.weekday;
@@ -435,14 +453,13 @@ class SpentDatabase {
       timeData['groupedSections'] = 1;
       timeData['dataPerSection'] = 1;
       timeData['timeshift'] = 0;
-      
 
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
       timeData['currentDate'] = DateTime.parse(timeData['result'][0]['date']);
       currentDate = timeData['currentDate'];
 
-      DateTime sevenDays = now.subtract(Duration(days: 7));
+      DateTime sevenDays = currentDateAtMidnight.subtract(Duration(days: 7));
       DateTime thisMonth = DateTime(currentYear, currentMonth, 1);
       int targetMonth = currentMonth - 3;
       int targetYear = currentYear;
@@ -479,19 +496,21 @@ class SpentDatabase {
       timeData['groupedSections'] = 4;
       timeData['dataPerSection'] = 3;
       timeData['timeshift'] = 2;
-      timeData['currentDate'] = DateTime(currentYear, currentMonth, 1);
+      timeData['currentDate'] = DateTime(currentYear, currentMonth, 2, 0, 0, 0);
       timeData['shiftCorrect'] = 1;
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure WHERE strftime ('%Y', date) = ? AND strftime('%m', date) = ?",
           ['$currentYear', '$currentMonth']);
     }
     if (timeframe == "Last 7 Days") {
-      timeData['groupedSections'] = 7;
+      timeData['groupedSections'] = 8;
       timeData['dataPerSection'] = 1;
       timeData['timeshift'] = 1;
-      timeData['currentDate'] = now.subtract(Duration(days: 7));
+      timeData['currentDate'] =
+          currentDateAtMidnight.subtract(Duration(days: 6));
       currentDate = timeData['currentDate'];
-      String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
+      String formattedDate = DateFormat('yyyy-MM-dd')
+          .format(currentDate.subtract(Duration(days: 1)));
 
 // Query to select data from the last seven days
       timeData['result'] = await db.rawQuery(
@@ -503,9 +522,11 @@ class SpentDatabase {
       timeData['groupedSections'] = 5;
       timeData['dataPerSection'] = 2;
       timeData['timeshift'] = 3;
-      timeData['currentDate'] = now.subtract(Duration(days: 30));
+      timeData['currentDate'] =
+          currentDateAtMidnight.subtract(Duration(days: 29));
       currentDate = timeData['currentDate'];
-      String formattedDate = DateFormat('yyyy-MM-dd').format(currentDate);
+      String formattedDate = DateFormat('yyyy-MM-dd')
+          .format(currentDate.subtract(Duration(days: 1)));
 
 // Query to select data from the last thirty days
       timeData['result'] = await db.rawQuery(

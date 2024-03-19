@@ -118,7 +118,10 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
                     ),
                     controller: inputPrice,
                     onChanged: (value) {
-                      double newValue = double.parse(value);
+                      double newValue = 0.0;
+                      if (value != null) {
+                        double? newValue = double.tryParse(value);
+                      }
                       String next = newValue.toStringAsFixed(2);
                       price = double.parse(next);
                     },
