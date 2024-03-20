@@ -177,7 +177,7 @@ class SpentDatabase {
         int currentMonth = DateTime.now().month;
         String timefilterString =
             '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
-        timefilter = DateTime.parse(timefilterString); //maybe bug
+        timefilter = DateTime.parse(timefilterString); 
         break;
       case 'This Year':
         // Get data for the current year
@@ -246,6 +246,20 @@ class SpentDatabase {
       'Last 7 Days': 'Day',
       'This Year': 'Month',
       'All Time': 'Month' //wrong, if not multiple months
+    };
+    Map<int, int> DaysPerMonth = {
+      1: 31,
+      2: 28,//Leap year
+      3: 31,
+      4: 30,
+      5: 31,
+      6: 30,
+      7: 31,
+      8: 31,
+      9: 30,
+      10: 31,
+      11: 30,
+      12: 31
     };
     List categoryColors = [
       Color(0xff0293ee),
@@ -489,8 +503,6 @@ class SpentDatabase {
         timeData['shiftCorrect'] = 0;
       }
 
-      //print(timeData['result']);
-      //print('query all time');
     }
     if (timeframe == "This Month") {
       timeData['groupedSections'] = 4;
@@ -498,11 +510,14 @@ class SpentDatabase {
       timeData['timeshift'] = 2;
       timeData['currentDate'] = DateTime(currentYear, currentMonth, 2, 0, 0, 0);
       timeData['shiftCorrect'] = 1;
-      String currentYearString = currentYear.toString();
-      String currentMonthString = currentMonth.toString();
+      int currentYear = DateTime.now().year;
+      int currentMonth = DateTime.now().month;
+      String timefilterString =
+            '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
+        timefilter = DateTime.parse(timefilterString);
       timeData['result'] = await db.rawQuery(
-          "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ? AND strftime('%m', date) = ?",
-          [currentYearString, currentMonthString]); //doesn't work
+          "SELECT amount, category, date FROM expenditure WHERE date >= ?",
+          [timefilter]); //to BE TESTED
     }
     if (timeframe == "Last 7 Days") {
       timeData['groupedSections'] = 8;
@@ -521,9 +536,9 @@ class SpentDatabase {
       );
     }
     if (timeframe == "Last 30 Days") {
-      timeData['groupedSections'] = 5;
-      timeData['dataPerSection'] = 2;
-      timeData['timeshift'] = 3;
+      timeData['groupedSections'] = 31;
+      timeData['dataPerSection'] = 1;
+      timeData['timeshift'] = 1;
       timeData['currentDate'] =
           currentDateAtMidnight.subtract(Duration(days: 29));
       currentDate = timeData['currentDate'];
@@ -547,7 +562,7 @@ class SpentDatabase {
 // Query to select data for the current year
       timeData['result'] = await db.rawQuery(
         "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ?",
-        ['$currentYear'],
+        ['$currentYear'], //maybe doesn't work
       );
     }
     return timeData;
