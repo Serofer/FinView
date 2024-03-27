@@ -161,7 +161,7 @@ class SpentDatabase {
       case 'Last 7 Days':
         // Get data from the last seven days
         timefilter = DateTime.now()
-            .subtract(Duration(days: 7))
+            .subtract(Duration(days: 8))
             .subtract(Duration(seconds: 1));
         break;
       case 'Last 30 Days':
