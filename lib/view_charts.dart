@@ -195,38 +195,41 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Select Filter'),
-          content: DropdownButton(
-            hint: const Text('Choose a category'),
-            items: timeframes.map((value) {
-              return DropdownMenuItem(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            value: selectedTimeframe,
-            onChanged: (selectedValue) {
-              setState(() {
-                selectedTimeframe = selectedValue.toString();
-              });
-            },
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                // Load bar chart data and close the dialog
-                selectedTimeframe ??= 'All Time';
-                loadBarChartData(selectedTimeframe);
-
-                loadTableData(selectedTimeframe);
-                loadPieChartData(selectedTimeframe);
-                Navigator.of(context).pop();
-                print(selectedTimeframe); // Close the dialog
-              },
-              child: Text('Filter'),
-            ),
-          ],
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            // Use StatefulBuilder to rebuild the dialog's UI when the state changes
+            return AlertDialog(
+              title: Text('Select Filter'),
+              content: DropdownButton(
+                hint: const Text('Choose a category'),
+                items: timeframes.map((value) {
+                  return DropdownMenuItem(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+                value: selectedTimeframe,
+                onChanged: (selectedValue) {
+                  setState(() {
+                    selectedTimeframe = selectedValue.toString();
+                    // Update data immediately when an item is selected
+                    loadBarChartData(selectedTimeframe);
+                    loadTableData(selectedTimeframe);
+                    loadPieChartData(selectedTimeframe);
+                  });
+                },
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    // Close the dialog
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Close'),
+                ),
+              ],
+            );
+          },
         );
       },
     );

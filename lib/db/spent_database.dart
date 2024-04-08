@@ -158,9 +158,8 @@ class SpentDatabase {
     spentOnCat = await db.rawQuery("SELECT SUM(amount) FROM expenditure");
     List result = await db.rawQuery("SELECT amount, category FROM expenditure");
 
-    Map<String, dynamic> timeData = getTimeData(timeframe);
+    //Map<String, dynamic> timeData = getTimeData(timeframe);
 
-    
     switch (timeframe) {
       case 'Last 7 Days':
         // Get data from the last seven days
@@ -187,7 +186,8 @@ class SpentDatabase {
         // Get data for the current year
         int currentYear = DateTime.now().year;
         String timefilterString = '$currentYear-01-01';
-        DateTime timefilter = DateTime.parse(timefilterString);
+        timefilter = DateTime.parse(timefilterString);
+
         break;
       case 'All Time':
         // Get all data
