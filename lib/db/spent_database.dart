@@ -428,9 +428,10 @@ class SpentDatabase {
         }
         if (incraseDate) {
           currentDate = currentDate.add(Duration(days: timeshift));
-          if (timeframe == "This Month" &&
-              i == timeData['groupedSections'] - 1 &&
-              DaysPerMonth[currentMonth]! > 29) {
+          if (((timeframe == "This Month" &&
+                      DaysPerMonth[currentMonth]! > 29) ||
+                  timeframe == "Last 30 Days") &&
+              i == timeData['groupedSections'] - 1) {
             //if it is a longer month and the last gropuedSection
 
             currentDate =
@@ -439,7 +440,9 @@ class SpentDatabase {
           if (j == dataPerSection - 2) {
             //next iteration will be the last one for this section
             currentDate = currentDate.add(Duration(days: shiftCorrect));
-            if (timeframe == "This Month" && DaysPerMonth[currentMonth] == 30) {
+            if ((timeframe == "This Month" &&
+                    DaysPerMonth[currentMonth] == 30) ||
+                timeframe == "Last 30 Days") {
               //month has only 30 days so 3*7 + 3*3 = 30
               currentDate = currentDate.subtract(Duration(days: 1));
             }
@@ -574,9 +577,10 @@ class SpentDatabase {
       );
     }
     if (timeframe == "Last 30 Days") {
-      timeData['groupedSections'] = 31;
-      timeData['dataPerSection'] = 1;
-      timeData['timeshift'] = 1;
+      timeData['groupedSections'] = 4;
+      timeData['dataPerSection'] = 3;
+      timeData['timeshift'] = 2;
+      timeData['timeshiftCorrect'] = 1;
       timeData['currentDate'] =
           currentDateAtMidnight.subtract(Duration(days: 29));
       currentDate = timeData['currentDate'];
