@@ -279,6 +279,8 @@ class SpentDatabase {
     final currentMonth = now.month;
     final currentWeek = now.weekday;
 
+    bool incraseDate = false;
+
     late DateTime currentDate;
     late List result;
     late int timeshift;
@@ -344,6 +346,8 @@ class SpentDatabase {
         late var nextData;
         late DateTime nextDate;
 
+        incraseDate = false;
+
         //check if data is still available
         if (dataIndex < result.length) {
           thisData = result[dataIndex];
@@ -375,7 +379,9 @@ class SpentDatabase {
 
           //this is wrong
           if (nextDate.isAfter(currentDate)) {
+            //if the nextDate is after this one
             print('head on');
+            incraseDate = true; //date has to be increased
             //print(dateFromDatabase);
             //print(currentDate);
             j++;
@@ -406,46 +412,50 @@ class SpentDatabase {
 
             //function to step further
 
-            currentDate = currentDate.add(Duration(days: timeshift));
-            if (timeframe == "This Month" &&
-                i == timeData['groupedSections'] - 1 &&
-                DaysPerMonth[currentMonth]! > 29) {
-              //if it is a longer month and the last gropuedSection
-
-              currentDate = currentDate
-                  .add(Duration(days: 1)); //increase to set of 3 days
-            }
-            if (j == dataPerSection - 2) {
-              //next iteration will be the last one for this section
-              currentDate = currentDate.add(Duration(days: shiftCorrect));
-              if (timeframe == "This Month" &&
-                  DaysPerMonth[currentMonth] == 30) {
-                //month has only 30 days so 3*7 + 3*3 = 30
-                currentDate = currentDate.subtract(Duration(days: 1));
-              }
-              if (timeframe == "This Month" &&
-                  currentMonth == 2 &&
-                  currentYear % 4 == 0 &&
-                  currentYear % 100 != 0) {
-                //if it is a leap year than add one day so 3*7 + 2*2 + 1*4 = 29
-                currentDate = currentDate.add(Duration(days: 1));
-              }
-            }
             tableData[i].categoryData['Total'] = total;
             dataIndex++;
           }
         } else {
+          incraseDate = true;
           //if the data is after the current date
-          currentDate =
+          /*currentDate =
               currentDate.add(Duration(days: timeshift)); //change this
           print('should increase');
 
           if (j == dataPerSection - 2) {
             currentDate = currentDate.add(Duration(days: shiftCorrect));
+          }*/
+        }
+        if (incraseDate) {
+          currentDate = currentDate.add(Duration(days: timeshift));
+          if (timeframe == "This Month" &&
+              i == timeData['groupedSections'] - 1 &&
+              DaysPerMonth[currentMonth]! > 29) {
+            //if it is a longer month and the last gropuedSection
+
+            currentDate =
+                currentDate.add(Duration(days: 1)); //increase to set of 3 days
+          }
+          if (j == dataPerSection - 2) {
+            //next iteration will be the last one for this section
+            currentDate = currentDate.add(Duration(days: shiftCorrect));
+            if (timeframe == "This Month" && DaysPerMonth[currentMonth] == 30) {
+              //month has only 30 days so 3*7 + 3*3 = 30
+              currentDate = currentDate.subtract(Duration(days: 1));
+            }
+            if (timeframe == "This Month" &&
+                currentMonth == 2 &&
+                currentYear % 4 == 0 &&
+                currentYear % 100 != 0) {
+              //if it is a leap year than add one day so 3*7 + 2*2 + 1*4 = 29
+              currentDate = currentDate.add(Duration(days: 1));
+            }
           }
         }
-      }
-    }
+      } //loop of sectionPerData is over
+    } //loop of groupedSections is over
+
+    //assign the total values in the tableData
     double allAdded = 0.0;
     tableData[groupedSections].time = 'All';
     for (int i = 0; i < categories.length; i++) {

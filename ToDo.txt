@@ -1,3 +1,10 @@
 last 7 days work; last Thirty days in Groups....
 
 round and view problem in table, 
+
+
+Calculations for the Month filter:::
+28 days = 4*(2+2+3) = 28
+29 days = 3*(2+2+3) + (2+2+4) = 21 + 8
+30 days = 3*(2+2+3) + (3*3) = 21 + 9
+31 days = 3*(2+2+3) + (3+3+4) = 21 + 10
