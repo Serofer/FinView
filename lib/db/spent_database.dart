@@ -386,6 +386,7 @@ class SpentDatabase {
             double y = 0.0;
 
             for (int k = 0; k < categories.length; k++) {
+              //insert data in table and barChart
               if (categoryValues[k] > 0) {
                 tableData[i].categoryData[categories[k]] = categoryValues[k];
                 total += categoryValues[k];
@@ -400,14 +401,39 @@ class SpentDatabase {
                 categoryValues[k] = 0.0;
               }
             }
+            print(currentDate);
+            //correct the timeshift
+
+            //function to step further
 
             currentDate = currentDate.add(Duration(days: timeshift));
-            if (j == dataPerSection - 2) {
-              currentDate = currentDate.add(Duration(days: shiftCorrect));
+            if (timeframe == "This Month" &&
+                i == timeData['groupedSections'] - 1 &&
+                DaysPerMonth[currentMonth]! > 29) {
+              //if it is a longer month and the last gropuedSection
+
+              currentDate = currentDate
+                  .add(Duration(days: 1)); //increase to set of 3 days
             }
+            if (j == dataPerSection - 2) {
+              //next iteration will be the last one for this section
+              currentDate = currentDate.add(Duration(days: shiftCorrect));
+              if (timeframe == "This Month" &&
+                  DaysPerMonth[currentMonth] == 30) {
+                //month has only 30 days so 3*7 + 3*3 = 30
+                currentDate = currentDate.subtract(Duration(days: 1));
+              }
+              if (timeframe == "This Month" &&
+                  currentMonth == 2 &&
+                  currentYear % 4 == 0 &&
+                  currentYear % 100 != 0) {
+                //if it is a leap year than add one day so 3*7 + 2*2 + 1*4 = 29
+                currentDate = currentDate.add(Duration(days: 1));
+              }
+            }
+            tableData[i].categoryData['Total'] = total;
+            dataIndex++;
           }
-          tableData[i].categoryData['Total'] = total;
-          dataIndex++;
         } else {
           //if the data is after the current date
           currentDate =
