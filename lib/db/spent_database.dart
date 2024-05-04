@@ -225,6 +225,7 @@ class SpentDatabase {
       double totalAmount = countAll[0]['SUM(amount)'] is int
           ? (countAll[0]['SUM(amount)'] as int).toDouble()
           : countAll[0]['SUM(amount)'];
+      print(totalAmount);
       double totAmount = totalAmount ?? 0.0;
       double toAdd = (spentCat / totAmount) * 100;
       String percent = toAdd.toStringAsFixed(2);
