@@ -5,6 +5,7 @@ import 'package:fin_view/charts/data/bar_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fin_view/charts/data/table_data.dart';
+
 //import 'package:fin_view/charts/data/table_data.dart';
 
 class SpentDatabase {
