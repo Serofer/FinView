@@ -313,6 +313,7 @@ class SpentDatabase {
     });
 
     for (int i = 0; i < groupedSections; i++) {
+      print("i: $i");
       List categoryValues = List.generate(categories.length, (index) => 0.0);
 
       double total = 0.0;
@@ -341,6 +342,7 @@ class SpentDatabase {
       ));
 
       for (int j = 0; j < dataPerSection; j++) {
+        print(j);
         //define some variables
         var thisData = {};
         late var nextData;
@@ -420,7 +422,7 @@ class SpentDatabase {
             //function to step further
 
             tableData[i].categoryData['Total'] = total;
-            dataIndex++;
+            //dataIndex++;
           }
         } else {
           incraseDate = true;
@@ -433,7 +435,7 @@ class SpentDatabase {
             currentDate = currentDate.add(Duration(days: shiftCorrect));
           }*/
         }
-        if (incraseDate) {
+        if (incraseDate) {// if the date current date is not before the referencedate
           currentDate = currentDate.add(Duration(days: timeshift));
           if (((timeframe == "This Month" &&
                       DaysPerMonth[currentMonth]! > 29) ||
@@ -442,7 +444,20 @@ class SpentDatabase {
             //if it is a longer month and the last gropuedSection
 
             currentDate =
-                currentDate.add(const Duration(days: 1)); //increase to set of 3 days
+                currentDate.add(const Duration(days: 1)); 
+                
+            if ( j == dataPerSection - 2) {
+              //increase to set of 3 days so that 21  + 3*3 = 30
+              currentDate = currentDate.add(const Duration(days: 2));
+              if ((timeframe == "This Month" &&
+                    DaysPerMonth[currentMonth] == 30) ||
+                timeframe == "Last 30 Days") {
+                  
+              //month has only 30 days so 3*7 + 3*3 = 30 
+              currentDate = currentDate.subtract(const Duration(days: 1));
+            }
+            }
+
           }
           if (j == dataPerSection - 2) {
             //next iteration will be the last one for this section
@@ -450,8 +465,9 @@ class SpentDatabase {
             if ((timeframe == "This Month" &&
                     DaysPerMonth[currentMonth] == 30) ||
                 timeframe == "Last 30 Days") {
-              //month has only 30 days so 3*7 + 3*3 = 30
-              currentDate = currentDate.subtract(const Duration(days: 1));
+                  
+              //month has only 30 days so 3*7 + 3*3 = 30 
+              //currentDate = currentDate.add(const Duration(days: 1));
             }
             if (timeframe == "This Month" &&
                 currentMonth == 2 &&
