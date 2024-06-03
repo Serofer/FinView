@@ -88,7 +88,9 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
 
   Future loadTableData(String? timeframe) async {
     setState(() => tableLoading = true);
+    await Future.delayed(const Duration(seconds: 1));
     DataForTable tableData = DataForTable();
+    await Future.delayed(const Duration(seconds: 1));
     await tableData.createTableData(timeframe);
     setState(() => tableLoading = false);
   }

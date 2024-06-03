@@ -361,7 +361,7 @@ class SpentDatabase {
           nextDate = DateTime.parse(nextData['date']);
           nextDate = nextDate.add(const Duration(seconds: 1));
         } else {
-          nextDate = now.add(const Duration(days: 1));
+          nextDate = now.add(const Duration(days: 1000000));
         }
 
         DateTime dateFromDatabase = DateTime.parse(thisData['date']);
@@ -371,14 +371,21 @@ class SpentDatabase {
 
         if (dateFromDatabase.isBefore(currentDate)) {
           print('isBefore');
+
+          
           //if the date from the database is before the currentDate
           barHeight += thisData['amount'];
           categoryValues[categories.indexOf(thisData['category'])] +=
               thisData['amount'];
           j--; //reset, so that the dataPerSection can be increased
+          dataIndex++;//changed------------------------------------------------------------------------------
+          print(nextDate);
+          
+          //problem if two data points are set on othe exact same time: test for the case
+          
 
-          //this is wrong
-          if (nextDate.isAfter(currentDate)) {
+
+          if (nextDate.isAfter(currentDate)) { 
             //if the nextDate is after this one
             print('head on');
             incraseDate = true; //date has to be increased
@@ -557,7 +564,7 @@ class SpentDatabase {
           '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
       DateTime timefilter = DateTime.parse(timefilterString);
       timeData['result'] = await db.rawQuery(
-          "SELECT amount, category, date FROM expenditure WHERE date >= ?",
+          "SELECT amount, category, date FROM expenditure WHERE date >= ? ORDER BY date ASC",
           [timefilter.toIso8601String()]); //to BE TESTED
     }
     if (timeframe == "Last 7 Days") {
@@ -572,7 +579,7 @@ class SpentDatabase {
 
 // Query to select data from the last seven days
       timeData['result'] = await db.rawQuery(
-        "SELECT amount, category, date FROM expenditure WHERE date >= ?",
+        "SELECT amount, category, date FROM expenditure WHERE date >= ? ORDER BY date ASC",
         [formattedDate],
       );
     }
@@ -589,7 +596,7 @@ class SpentDatabase {
 
 // Query to select data from the last thirty days
       timeData['result'] = await db.rawQuery(
-        "SELECT amount, category, date FROM expenditure WHERE date >= ?",
+        "SELECT amount, category, date FROM expenditure WHERE date >= ? ORDER BY date ASC",
         [formattedDate],
       );
     }
@@ -603,7 +610,7 @@ class SpentDatabase {
 
 // Query to select data for the current year
       timeData['result'] = await db.rawQuery(
-        "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ?",
+        "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ? ORDER BY date ASC",
         ['$currentYear'], //maybe doesn't work
       );
     }
