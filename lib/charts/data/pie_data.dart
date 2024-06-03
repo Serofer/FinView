@@ -6,10 +6,10 @@ class PieData {
   late List<dynamic> percentages;
   static List<Data> data = [];
   List categoryColors = [
-    Color(0xff0293ee),
-    Color(0xfff8b250),
-    Color(0xff845bef),
-    Color(0xff13d38e)
+    const Color(0xff0293ee),
+    const Color(0xfff8b250),
+    const Color(0xff845bef),
+    const Color(0xff13d38e)
   ];
   List categories = ['Food', 'Event', 'Education', 'Other'];
 

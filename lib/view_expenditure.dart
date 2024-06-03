@@ -92,16 +92,16 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
-                    title: Text('Confirm'),
-                    content: Text('Are you sure you want to delete this item?'),
+                    title: const Text('Confirm'),
+                    content: const Text('Are you sure you want to delete this item?'),
                     actions: <Widget>[
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: Text('CANCEL'),
+                        child: const Text('CANCEL'),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(true),
-                        child: Text('DELETE'),
+                        child: const Text('DELETE'),
                       ),
                     ],
                   );
@@ -111,8 +111,8 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
             background: Container(
               color: Colors.red,
               alignment: Alignment.centerRight,
-              padding: EdgeInsets.only(right: 16.0),
-              child: Icon(Icons.delete, color: Colors.white),
+              padding: const EdgeInsets.only(right: 16.0),
+              child: const Icon(Icons.delete, color: Colors.white),
             ),
             child: Card(
               child: ListTile(
@@ -131,7 +131,7 @@ class _ViewExpenditurePageState extends State<ViewExpenditurePage> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return const SizedBox(
           height: 500, //Adjust height as needed
           child: AddExpenditurePage(),
         );

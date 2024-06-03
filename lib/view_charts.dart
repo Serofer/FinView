@@ -5,12 +5,10 @@ import 'package:fin_view/charts/pie_chart_sections.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fin_view/charts/data/pie_data.dart';
 import 'package:fin_view/charts/indicators_widget.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:fin_view/charts/table_widget.dart';
 import 'package:fin_view/charts/bar_chart_widget.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
 import 'package:fin_view/charts/data/table_data.dart';
-import 'package:fin_view/charts/table_widget.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -64,10 +62,10 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     PieData pieData = PieData();
     setState(() => pieLoading = true);
 
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     await pieData.calculate(timeframe);
     sections = getSections();
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     setState(() => pieLoading = false);
   }
 
@@ -81,9 +79,9 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }*/
   Future loadBarChartData(String? timeframe) async {
     setState(() => barLoading = true);
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     BarData barData = BarData();
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
     await barData.createBarData(timeframe);
     setState(() => barLoading = false);
   }
@@ -115,13 +113,13 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         child: Column(
           children: <Widget>[
             pieLoading
-                ? Center(child: const CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : _buildPie(),
             barLoading
-                ? Center(child: const CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : _buildBar(),
             tableLoading
-                ? Center(child: const CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator())
                 : _buildTable(),
           ],
         ),
@@ -130,7 +128,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }
 
   Widget _buildPie() {
-    return Container(
+    return SizedBox(
       height: 500,
       //change to staggered view
       child: Card(
@@ -176,7 +174,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }
 
   Widget _buildBar() {
-    return Container(
+    return SizedBox(
       height: 500,
       child: Card(
         elevation: 4,
@@ -199,7 +197,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
           builder: (BuildContext context, StateSetter setState) {
             // Use StatefulBuilder to rebuild the dialog's UI when the state changes
             return AlertDialog(
-              title: Text('Select Filter'),
+              title: const Text('Select Filter'),
               content: DropdownButton(
                 hint: const Text('Choose a category'),
                 items: timeframes.map((value) {
@@ -225,7 +223,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
                     // Close the dialog
                     Navigator.of(context).pop();
                   },
-                  child: Text('Close'),
+                  child: const Text('Close'),
                 ),
               ],
             );
@@ -236,7 +234,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }
 
   Widget _buildTable() {
-    return Container(
+    return SizedBox(
       height: 500,
       child: Card(
         elevation: 4,

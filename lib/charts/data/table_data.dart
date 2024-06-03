@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
 
 class DataForTable {

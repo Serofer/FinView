@@ -165,14 +165,14 @@ class SpentDatabase {
       case 'Last 7 Days':
         // Get data from the last seven days
         timefilter = DateTime.now()
-            .subtract(Duration(days: 8))
-            .subtract(Duration(seconds: 1));
+            .subtract(const Duration(days: 8))
+            .subtract(const Duration(seconds: 1));
         break;
       case 'Last 30 Days':
         // Get data from the last thirty days
         timefilter = DateTime.now()
-            .subtract(Duration(days: 30))
-            .subtract(Duration(seconds: 1));
+            .subtract(const Duration(days: 30))
+            .subtract(const Duration(seconds: 1));
 
         break;
       case 'This Month':
@@ -223,7 +223,7 @@ class SpentDatabase {
           "SELECT SUM(amount) FROM expenditure WHERE date >= ?",
           [timefilter.toIso8601String()]);
 
-      double totalAmount = countAll[0]['SUM(amount)'] is int
+      double? totalAmount = countAll[0]['SUM(amount)'] is int
           ? (countAll[0]['SUM(amount)'] as int).toDouble()
           : countAll[0]['SUM(amount)'];
       print(totalAmount);
@@ -268,10 +268,10 @@ class SpentDatabase {
       12: 31
     };
     List categoryColors = [
-      Color(0xff0293ee),
-      Color(0xfff8b250),
-      Color(0xff845bef),
-      Color(0xff13d38e)
+      const Color(0xff0293ee),
+      const Color(0xfff8b250),
+      const Color(0xff845bef),
+      const Color(0xff13d38e)
     ];
     List<Data> barData = [];
     Map<String, dynamic> timeData = {};
@@ -308,9 +308,7 @@ class SpentDatabase {
       // Generate TableData for each index
       return TableData(
         time: '',
-        categoryData: Map.fromIterable(categoriesExtra,
-            key: (category) => category,
-            value: (_) => 0.0), // Initialize with default value
+        categoryData: { for (var category in categoriesExtra) category : 0.0 }, // Initialize with default value
       );
     });
 
@@ -335,7 +333,7 @@ class SpentDatabase {
               (index) => RodStackItemsClass(
                 minY: 0.0,
                 maxY: 0.0,
-                color: Color(0xff19bfff),
+                color: const Color(0xff19bfff),
               ),
             ),
           ),
@@ -344,7 +342,7 @@ class SpentDatabase {
 
       for (int j = 0; j < dataPerSection; j++) {
         //define some variables
-        var thisData = new Map();
+        var thisData = {};
         late var nextData;
         late DateTime nextDate;
 
@@ -358,7 +356,7 @@ class SpentDatabase {
           break;
         }
         if (dataIndex < result.length - 1) {
-          nextData = new Map();
+          nextData = {};
           nextData = result[dataIndex + 1];
           nextDate = DateTime.parse(nextData['date']);
           nextDate = nextDate.add(const Duration(seconds: 1));
@@ -369,7 +367,7 @@ class SpentDatabase {
         DateTime dateFromDatabase = DateTime.parse(thisData['date']);
         dateFromDatabase = dateFromDatabase.add(const Duration(seconds: 1));
         print('Date from database: $dateFromDatabase');
-        print('reference date: ${currentDate}');
+        print('reference date: $currentDate');
 
         if (dateFromDatabase.isBefore(currentDate)) {
           print('isBefore');
@@ -437,7 +435,7 @@ class SpentDatabase {
             //if it is a longer month and the last gropuedSection
 
             currentDate =
-                currentDate.add(Duration(days: 1)); //increase to set of 3 days
+                currentDate.add(const Duration(days: 1)); //increase to set of 3 days
           }
           if (j == dataPerSection - 2) {
             //next iteration will be the last one for this section
@@ -446,14 +444,14 @@ class SpentDatabase {
                     DaysPerMonth[currentMonth] == 30) ||
                 timeframe == "Last 30 Days") {
               //month has only 30 days so 3*7 + 3*3 = 30
-              currentDate = currentDate.subtract(Duration(days: 1));
+              currentDate = currentDate.subtract(const Duration(days: 1));
             }
             if (timeframe == "This Month" &&
                 currentMonth == 2 &&
                 currentYear % 4 == 0 &&
                 currentYear % 100 != 0) {
               //if it is a leap year than add one day so 3*7 + 2*2 + 1*4 = 29
-              currentDate = currentDate.add(Duration(days: 1));
+              currentDate = currentDate.add(const Duration(days: 1));
             }
           }
         }
@@ -518,7 +516,7 @@ class SpentDatabase {
       timeData['currentDate'] = DateTime.parse(timeData['result'][0]['date']);
       currentDate = timeData['currentDate'];
 
-      DateTime sevenDays = currentDateAtMidnight.subtract(Duration(days: 7));
+      DateTime sevenDays = currentDateAtMidnight.subtract(const Duration(days: 7));
       DateTime thisMonth = DateTime(currentYear, currentMonth, 1);
       int targetMonth = currentMonth - 3;
       int targetYear = currentYear;
@@ -567,10 +565,10 @@ class SpentDatabase {
       timeData['dataPerSection'] = 1;
       timeData['timeshift'] = 1;
       timeData['currentDate'] =
-          currentDateAtMidnight.subtract(Duration(days: 6));
+          currentDateAtMidnight.subtract(const Duration(days: 6));
       currentDate = timeData['currentDate'];
       String formattedDate = DateFormat('yyyy-MM-dd')
-          .format(currentDate.subtract(Duration(days: 1)));
+          .format(currentDate.subtract(const Duration(days: 1)));
 
 // Query to select data from the last seven days
       timeData['result'] = await db.rawQuery(
@@ -584,10 +582,10 @@ class SpentDatabase {
       timeData['timeshift'] = 2;
       timeData['timeshiftCorrect'] = 1;
       timeData['currentDate'] =
-          currentDateAtMidnight.subtract(Duration(days: 29));
+          currentDateAtMidnight.subtract(const Duration(days: 29));
       currentDate = timeData['currentDate'];
       String formattedDate = DateFormat('yyyy-MM-dd')
-          .format(currentDate.subtract(Duration(days: 1)));
+          .format(currentDate.subtract(const Duration(days: 1)));
 
 // Query to select data from the last thirty days
       timeData['result'] = await db.rawQuery(

@@ -1,6 +1,3 @@
-import 'package:fin_view/charts/data/bar_data.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 /*
 class BarTitles {
   static SideTitles getBottomTitles() => SideTitles(

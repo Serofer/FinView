@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
-import 'package:fin_view/charts/bar_titles.dart';
 
 class BarChartWidget extends StatelessWidget {
   final double barWidth = 22;
   final double barHeight;
-  BarChartWidget()
+  BarChartWidget({super.key})
       : barHeight = BarData
             .barHeight; //calculate barHeight based on max spent in timeframe
   final double groupSpace = 12; //is the space between the bars

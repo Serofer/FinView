@@ -122,7 +122,8 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
                       if (value != null) {
                         double? newValue = double.tryParse(value);
                       }
-                      String next = newValue.toStringAsFixed(2);
+                      
+                                          String next = newValue.toStringAsFixed(2);
                       price = double.parse(next);
                     },
                     keyboardType: TextInputType.number,
