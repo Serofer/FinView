@@ -180,7 +180,7 @@ class SpentDatabase {
       case 'This Month':
         // Get data for the current month
         int currentYear = DateTime.now().year;
-        int currentMonth = DateTime.now().month;
+        int currentMonth = 2;
 
         String timefilterString =
             '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
@@ -281,7 +281,7 @@ class SpentDatabase {
     final db = await instance.database; //delete unnecessary stuff
     final now = DateTime.now();
     final currentYear = now.year;
-    final currentMonth = now.month;
+    final currentMonth = 2;
 
     bool incraseDate = false;
 
@@ -448,6 +448,7 @@ class SpentDatabase {
             currentDate =
                 currentDate.add(const Duration(days: 1)); //instead of 2 let it be 3 so that 21 + 3*3 = 30
                 
+                
             if ( j == dataPerSection - 2) { //if it is the last grouped Data from this month
               
               currentDate = currentDate.add(const Duration(days: 2)); //incrase so that 21 + 3*3 + 2 = 32
@@ -462,10 +463,14 @@ class SpentDatabase {
             }
           }
 
+          if(timeframe == "This Month" && currentMonth == 2 && i == timeData['groupedSections'] - 1 && j == dataPerSection - 2) {
+            currentDate = currentDate.add(const Duration(days:1));
+          }
+
           if ((timeframe == "This Month" &&
                 currentMonth == 2 &&
                 currentYear % 4 == 0 &&
-                currentYear % 100 != 0) && i == timeData['groupedSections'] - 1) {
+                currentYear % 100 != 0) && i == timeData['groupedSections'] - 1 && j == dataPerSection - 2) {
               //if it is a leap year than add one day so 4*7 + 1  = 29
               currentDate = currentDate.add(const Duration(days: 1));
             }
@@ -522,7 +527,7 @@ class SpentDatabase {
     final currentYear = now.year;
 
 
-    final currentMonth = now.month;
+    final currentMonth = 2;
 
 
     final currentWeek = now.weekday;
