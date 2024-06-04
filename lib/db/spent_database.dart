@@ -155,6 +155,8 @@ class SpentDatabase {
     late List<Expenditure> expenses;
     late List spentOnCat;
     late DateTime timefilter;
+    DateTime now = DateTime.now();
+
     //expenses = await SpentDatabase.instance.readAllExpenditure();
     spentOnCat = await db.rawQuery("SELECT SUM(amount) FROM expenditure");
     List result = await db.rawQuery("SELECT amount, category FROM expenditure");
@@ -205,8 +207,8 @@ class SpentDatabase {
     for (int i = 0; i < categories.length; i++) {
       //print(i.toString());
       spentOnCat = await db.rawQuery(
-          "SELECT SUM(amount) FROM expenditure WHERE category = '${categories[i]}' AND date >= ?",
-          [timefilter.toIso8601String()]);
+          "SELECT SUM(amount) FROM expenditure WHERE category = '${categories[i]}' AND date >= ? AND date <= ?",
+          [timefilter.toIso8601String(), now.toIso8601String()]);
       //print(spentOnCat);
 
       //List<dynamic> spentOnCat =
@@ -221,8 +223,8 @@ class SpentDatabase {
       }
       //List countAll = await SpentDatabase.instance.readAmount();
       final List countAll = await db.rawQuery(
-          "SELECT SUM(amount) FROM expenditure WHERE date >= ?",
-          [timefilter.toIso8601String()]);
+          "SELECT SUM(amount) FROM expenditure WHERE date >= ? AND date <= ?",
+          [timefilter.toIso8601String(), now.toIso8601String()]);
 
       double? totalAmount = countAll[0]['SUM(amount)'] is int
           ? (countAll[0]['SUM(amount)'] as int).toDouble()
@@ -383,7 +385,6 @@ class SpentDatabase {
           dataIndex++;//changed------------------------------------------------------------------------------
           print(nextDate);
           
-          //problem if two data points are set on othe exact same time: test for the case
           
 
 
@@ -471,7 +472,7 @@ class SpentDatabase {
           if (j == dataPerSection - 2) {
             //next iteration will be the last one for this section so add one more for 2 + 2 + 3 = 7
             currentDate = currentDate.add(Duration(days: shiftCorrect)); 
-            print("increased yet again");
+            
           }
         }
       } //loop of sectionPerData is over
@@ -573,7 +574,7 @@ class SpentDatabase {
       timeData['groupedSections'] = 4;
       timeData['dataPerSection'] = 3;
       timeData['timeshift'] = 2;
-      timeData['currentDate'] = DateTime(currentYear, currentMonth, 2, 0, 0, 0);
+      timeData['currentDate'] = DateTime(currentYear, currentMonth, 2, 0, 0, 0);//start at the second day of the month to compare
       timeData['shiftCorrect'] = 1;
 
       //String timefilterString =
@@ -607,12 +608,13 @@ class SpentDatabase {
       timeData['groupedSections'] = 4;
       timeData['dataPerSection'] = 3;
       timeData['timeshift'] = 2;
-      timeData['timeshiftCorrect'] = 1;
+      timeData['shiftCorrect'] = 1;
       timeData['currentDate'] =
-          currentDateAtMidnight.subtract(const Duration(days: 29));
+          currentDateAtMidnight.subtract(const Duration(days: 28));
       currentDate = timeData['currentDate'];
-      String formattedDate = DateFormat('yyyy-MM-dd')
-          .format(currentDate.subtract(const Duration(days: 1)));
+    String formattedDate = DateFormat('yyyy-MM-dd')
+          .format(currentDate.subtract(const Duration(days: 2)));
+      print("start date: $formattedDate");
 
 // Query to select data from the last thirty days
       timeData['result'] = await db.rawQuery(
