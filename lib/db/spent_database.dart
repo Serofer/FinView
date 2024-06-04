@@ -179,6 +179,7 @@ class SpentDatabase {
         // Get data for the current month
         int currentYear = DateTime.now().year;
         int currentMonth = DateTime.now().month;
+
         String timefilterString =
             '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
         timefilter = DateTime.parse(timefilterString);
@@ -279,7 +280,6 @@ class SpentDatabase {
     final now = DateTime.now();
     final currentYear = now.year;
     final currentMonth = now.month;
-    final currentWeek = now.weekday;
 
     bool incraseDate = false;
 
@@ -437,6 +437,7 @@ class SpentDatabase {
         }
         if (incraseDate) {// if the date current date is not before the referencedate
           currentDate = currentDate.add(Duration(days: timeshift));
+
           if (((timeframe == "This Month" &&
                       DaysPerMonth[currentMonth]! > 29) ||
                   timeframe == "Last 30 Days") &&
@@ -444,38 +445,33 @@ class SpentDatabase {
             //if it is a longer month and the last gropuedSection
 
             currentDate =
-                currentDate.add(const Duration(days: 1)); 
+                currentDate.add(const Duration(days: 1)); //instead of 2 let it be 3 so that 21 + 3*3 = 30
                 
-            if ( j == dataPerSection - 2) {
-              //increase to set of 3 days so that 21  + 3*3 = 30
-              currentDate = currentDate.add(const Duration(days: 2));
+            if ( j == dataPerSection - 2) { //if it is the last grouped Data from this month
+              
+              currentDate = currentDate.add(const Duration(days: 2)); //incrase so that 21 + 3*3 + 2 = 32
+              print("increased");
               if ((timeframe == "This Month" &&
                     DaysPerMonth[currentMonth] == 30) ||
                 timeframe == "Last 30 Days") {
                   
-              //month has only 30 days so 3*7 + 3*3 = 30 
+              //month has only 30 days so 3*7 + 3*3  + 2 - 1 = 31
               currentDate = currentDate.subtract(const Duration(days: 1));
+              }
             }
-            }
-
           }
-          if (j == dataPerSection - 2) {
-            //next iteration will be the last one for this section
-            currentDate = currentDate.add(Duration(days: shiftCorrect));
-            if ((timeframe == "This Month" &&
-                    DaysPerMonth[currentMonth] == 30) ||
-                timeframe == "Last 30 Days") {
-                  
-              //month has only 30 days so 3*7 + 3*3 = 30 
-              //currentDate = currentDate.add(const Duration(days: 1));
-            }
-            if (timeframe == "This Month" &&
+
+          if ((timeframe == "This Month" &&
                 currentMonth == 2 &&
                 currentYear % 4 == 0 &&
-                currentYear % 100 != 0) {
-              //if it is a leap year than add one day so 3*7 + 2*2 + 1*4 = 29
+                currentYear % 100 != 0) && i == timeData['groupedSections'] - 1) {
+              //if it is a leap year than add one day so 4*7 + 1  = 29
               currentDate = currentDate.add(const Duration(days: 1));
             }
+          if (j == dataPerSection - 2) {
+            //next iteration will be the last one for this section so add one more for 2 + 2 + 3 = 7
+            currentDate = currentDate.add(Duration(days: shiftCorrect)); 
+            print("increased yet again");
           }
         }
       } //loop of sectionPerData is over
@@ -523,7 +519,11 @@ class SpentDatabase {
     DateTime currentDateAtMidnight =
         DateTime(now.year, now.month, now.day, 0, 0, 0);
     final currentYear = now.year;
+
+
     final currentMonth = now.month;
+
+
     final currentWeek = now.weekday;
     late DateTime currentDate;
     timeData['shiftCorrect'] = 0;
@@ -576,12 +576,16 @@ class SpentDatabase {
       timeData['currentDate'] = DateTime(currentYear, currentMonth, 2, 0, 0, 0);
       timeData['shiftCorrect'] = 1;
 
-      String timefilterString =
-          '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
+      //String timefilterString =
+          //'$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
+      String timefilterString = '${currentMonth == 1 ? now.year - 1 : now.year}-${(currentMonth == 1 ? 12 : currentMonth - 1).toString().padLeft(2, '0')}-${DateTime(currentMonth == 1 ? now.year - 1 : now.year, (currentMonth == 1 ? 12 : currentMonth - 1) + 1, 0).day} 23:59:59';
       DateTime timefilter = DateTime.parse(timefilterString);
+      print("Timefilter: $timefilter");
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure WHERE date >= ? ORDER BY date ASC",
-          [timefilter.toIso8601String()]); //to BE TESTED
+          [timefilter.toIso8601String()]);
+      
+  
     }
     if (timeframe == "Last 7 Days") {
       timeData['groupedSections'] = 8;
