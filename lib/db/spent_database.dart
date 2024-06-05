@@ -155,11 +155,12 @@ class SpentDatabase {
     late List<Expenditure> expenses;
     late List spentOnCat;
     late DateTime timefilter;
+    late DateTime timeborder;
     DateTime now = DateTime.now();
 
     //expenses = await SpentDatabase.instance.readAllExpenditure();
-    spentOnCat = await db.rawQuery("SELECT SUM(amount) FROM expenditure");
-    List result = await db.rawQuery("SELECT amount, category FROM expenditure");
+    //spentOnCat = await db.rawQuery("SELECT SUM(amount) FROM expenditure");----------------------------------------------------------------changed
+    //List result = await db.rawQuery("SELECT amount, category FROM expenditure");
 
     //Map<String, dynamic> timeData = getTimeData(timeframe);
 
@@ -169,34 +170,44 @@ class SpentDatabase {
         timefilter = DateTime.now()
             .subtract(const Duration(days: 8))
             .subtract(const Duration(seconds: 1));
+        timeborder = DateTime.now();
         break;
       case 'Last 30 Days':
         // Get data from the last thirty days
         timefilter = DateTime.now()
             .subtract(const Duration(days: 30))
             .subtract(const Duration(seconds: 1));
+        timeborder = DateTime.now();
 
         break;
       case 'This Month':
         // Get data for the current month
         int currentYear = DateTime.now().year;
-        int currentMonth = 2;
+        int currentMonth = DateTime.now().month;
 
         String timefilterString =
             '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
         timefilter = DateTime.parse(timefilterString);
+
+        String timeborderString = '$currentYear-$currentMonth-${DateTime(timefilter.year, timefilter.month + 1, 0).day}';
+        timeborder = DateTime.parse(timeborderString);
+        
+
         break;
       case 'This Year':
         // Get data for the current year
         int currentYear = DateTime.now().year;
         String timefilterString = '$currentYear-01-01';
         timefilter = DateTime.parse(timefilterString);
+        String timeborderString = '$currentYear-12-31';
+        timeborder = DateTime.parse(timeborderString);
 
         break;
       case 'All Time':
         // Get all data
         DateTime now = DateTime.now();
         timefilter = DateTime(now.year - 100, now.month, now.day);
+        timeborder = now;
 
         break;
       default:
@@ -208,7 +219,7 @@ class SpentDatabase {
       //print(i.toString());
       spentOnCat = await db.rawQuery(
           "SELECT SUM(amount) FROM expenditure WHERE category = '${categories[i]}' AND date >= ? AND date <= ?",
-          [timefilter.toIso8601String(), now.toIso8601String()]);
+          [timefilter.toIso8601String(), timeborder.toIso8601String()]);
       //print(spentOnCat);
 
       //List<dynamic> spentOnCat =
@@ -224,7 +235,7 @@ class SpentDatabase {
       //List countAll = await SpentDatabase.instance.readAmount();
       final List countAll = await db.rawQuery(
           "SELECT SUM(amount) FROM expenditure WHERE date >= ? AND date <= ?",
-          [timefilter.toIso8601String(), now.toIso8601String()]);
+          [timefilter.toIso8601String(), timeborder.toIso8601String()]);
 
       double? totalAmount = countAll[0]['SUM(amount)'] is int
           ? (countAll[0]['SUM(amount)'] as int).toDouble()
@@ -281,7 +292,7 @@ class SpentDatabase {
     final db = await instance.database; //delete unnecessary stuff
     final now = DateTime.now();
     final currentYear = now.year;
-    final currentMonth = 2;
+    final currentMonth = now.month;
 
     bool incraseDate = false;
 
@@ -527,7 +538,7 @@ class SpentDatabase {
     final currentYear = now.year;
 
 
-    final currentMonth = 2;
+    final currentMonth = now.month;
 
 
     final currentWeek = now.weekday;
