@@ -188,9 +188,11 @@ class SpentDatabase {
         String timefilterString =
             '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
         timefilter = DateTime.parse(timefilterString);
+        print("timefilter: $timefilter");
 
-        String timeborderString = '$currentYear-$currentMonth-${DateTime(timefilter.year, timefilter.month + 1, 0).day}';
+        String timeborderString = '${DateTime.now().year.toString().padLeft(4, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day.toString().padLeft(2, '0')}T23:59:59';
         timeborder = DateTime.parse(timeborderString);
+        print("timeborder: $timeborder");
         
 
         break;
