@@ -1,3 +1,4 @@
+import 'package:fin_view/user_data/timeframe_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
 import 'package:fin_view/model/spent.dart';
@@ -9,6 +10,8 @@ import 'package:fin_view/charts/table_widget.dart';
 import 'package:fin_view/charts/bar_chart_widget.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
 import 'package:fin_view/charts/data/table_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fin_view/user_data/timeframe_manager.dart';
 
 class ViewChartsPage extends StatefulWidget {
   const ViewChartsPage({super.key});
@@ -19,7 +22,7 @@ class ViewChartsPage extends StatefulWidget {
 class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<PieChartSectionData> sections;
   late List<Expenditure> expenses;
-  String selectedTimeframe = 'Last 7 Days';
+  String selectedTimeframe = TimeframeManager().selectedTimeframe;
   List timeframes = [
     'Last 7 Days',
     'Last 30 Days',
@@ -37,11 +40,12 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   @override
   void initState() {
     super.initState();
+    _loadSelectedTimeframe();
     refreshExpenses();
-    loadPieChartData("Last 7 Days");
-    loadBarChartData("Last 7 Days");
+    loadPieChartData(selectedTimeframe);
+    loadBarChartData(selectedTimeframe);
     //loadLineChartData("Last 30 Days");
-    loadTableData("Last 7 Days");
+    loadTableData(selectedTimeframe);
   }
 
   @override
@@ -212,16 +216,20 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
                 onChanged: (selectedValue) {
                   setState(() {
                     selectedTimeframe = selectedValue.toString();
-                    // Update data immediately when an item is selected
-                    loadBarChartData(selectedTimeframe);
-                    loadTableData(selectedTimeframe);
-                    loadPieChartData(selectedTimeframe);
+                    //save the selected timeframe
+                    _saveSelectedTimeframe(selectedTimeframe);
+                    
+                    
                   });
                 },
               ),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
+                    // Update data immediately when the user closes the dialog
+                    loadBarChartData(selectedTimeframe);
+                    loadTableData(selectedTimeframe);
+                    loadPieChartData(selectedTimeframe);
                     // Close the dialog
                     Navigator.of(context).pop();
                   },
@@ -235,6 +243,11 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     );
   }
 
+  void _saveSelectedTimeframe(String? selectedTimeframe) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('selectedTimeframe', selectedTimeframe!);
+  }
+
   Widget _buildTable() {
     return SizedBox(
       height: 500,
@@ -246,6 +259,20 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         ),
       ),
     );
+  }
+
+
+  void _loadSelectedTimeframe() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      selectedTimeframe = prefs.getString('selectedTimeframe') ?? 'Last 7 Days';
+      // Save the loaded timeframe in the singleton
+      TimeframeManager().selectedTimeframe = selectedTimeframe;
+      // Optionally, load the data based on the saved timeframe
+      loadBarChartData(selectedTimeframe);
+      loadTableData(selectedTimeframe);
+      loadPieChartData(selectedTimeframe);
+    });
   }
 /*
   Widget _buildLine () {
