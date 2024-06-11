@@ -431,12 +431,10 @@ class SpentDatabase {
               }
             }
             print(currentDate);
-            //correct the timeshift
-
-            //function to step further
+            
 
             tableData[i].categoryData['Total'] = total;
-            //dataIndex++;
+            
           }
         } else {
           incraseDate = true;
@@ -452,6 +450,7 @@ class SpentDatabase {
         if (incraseDate) {// if the date current date is not before the referencedate
           currentDate = currentDate.add(Duration(days: timeshift));
 
+          //modifications for This Month
           if (((timeframe == "This Month" &&
                       DaysPerMonth[currentMonth]! > 29) ||
                   timeframe == "Last 30 Days") &&
@@ -492,6 +491,17 @@ class SpentDatabase {
             currentDate = currentDate.add(Duration(days: shiftCorrect)); 
             
           }
+
+          //modifications for This Year, NOT EXACT YET, MONTHS SHOULD BE MORE PRECISE
+
+          if (timeframe == "This Year" && i == timeData['groupedSections'] - 1 && j == dataPerSection - 2) {
+            currentDate = currentDate.add(const Duration(days: 5));
+
+            if (currentYear % 4 == 0 && currentYear % 100 != 0) {
+              currentDate = currentDate.add(const Duration(days: 1));
+            }
+          }
+          
         }
       } //loop of sectionPerData is over
     } //loop of groupedSections is over
@@ -557,13 +567,16 @@ class SpentDatabase {
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
       timeData['currentDate'] = DateTime.parse(timeData['result'][0]['date']);
       currentDate = timeData['currentDate'];
+      print("FIRST DAY RECORDED IS: $currentDate");
 
       DateTime sevenDays = currentDateAtMidnight.subtract(const Duration(days: 7));
       DateTime thisMonth = DateTime(currentYear, currentMonth, 1);
       int targetMonth = currentMonth - 3;
       int targetYear = currentYear;
       int startYear = currentDate.year;
+      print(startYear);
       int years = currentYear - startYear;
+      print("YEARS: $years");
 
       if (targetMonth < 1) {
         targetMonth += 12; // Wrap around to December of the previous year
@@ -575,18 +588,34 @@ class SpentDatabase {
         timeframe = "Last 7 Days";
       } else if (currentDate.isAfter(thisMonth)) {
         timeframe = "This Month";
-      } else if (currentDate.isAfter(threeMonths)) {
+      } else if (currentDate.isAfter(threeMonths)) { //change parameters
         timeData['groupedSections'] = 12;
         timeData['dataPerSection'] = 1;
         timeData['timeshift'] = 3;
       } else if (years == 0) {
         timeframe = "This Year";
       } else {
-        timeData['groupedSections'] = years * 12;
+        
+        timeData['groupedSections'] = (years + 1) * 12;
         timeData['dataPerSection'] = 3;
         timeData['timeshift'] = 10;
         timeData['shiftCorrect'] = 0;
       }
+    }
+
+    if (timeframe == "This Year") {
+      timeData['groupedSections'] = 12;
+      timeData['dataPerSection'] = 3;
+      timeData['timeshift'] = 10;
+      timeData['currentDate'] = DateTime(now.year, 1, 1);
+      int currentYear = DateTime.now().year;
+
+// Query to select data for the current year
+      timeData['result'] = await db.rawQuery(
+        "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ? ORDER BY date ASC",
+        ['$currentYear'], 
+      );
+      print(timeData['result']);
     }
     if (timeframe == "This Month") {
       timeData['groupedSections'] = 4;
@@ -603,24 +632,6 @@ class SpentDatabase {
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure WHERE date >= ? ORDER BY date ASC",
           [timefilter.toIso8601String()]);
-      
-  
-    }
-    if (timeframe == "Last 7 Days") {
-      timeData['groupedSections'] = 8;
-      timeData['dataPerSection'] = 1;
-      timeData['timeshift'] = 1;
-      timeData['currentDate'] =
-          currentDateAtMidnight.subtract(const Duration(days: 6));
-      currentDate = timeData['currentDate'];
-      String formattedDate = DateFormat('yyyy-MM-dd')
-          .format(currentDate.subtract(const Duration(days: 1)));
-
-// Query to select data from the last seven days
-      timeData['result'] = await db.rawQuery(
-        "SELECT amount, category, date FROM expenditure WHERE date >= ? ORDER BY date ASC",
-        [formattedDate],
-      );
     }
     if (timeframe == "Last 30 Days") {
       timeData['groupedSections'] = 4;
@@ -640,20 +651,24 @@ class SpentDatabase {
         [formattedDate],
       );
     }
-    if (timeframe == "This Year") {
-      timeData['groupedSections'] = 12;
-      timeData['dataPerSection'] = 3;
-      timeData['timeshift'] = 10;
-      //shiftCorrect = 1;
-      timeData['currentDate'] = DateTime(now.year, 1, 1);
-      int currentYear = DateTime.now().year;
+    if (timeframe == "Last 7 Days") {
+      timeData['groupedSections'] = 8;
+      timeData['dataPerSection'] = 1;
+      timeData['timeshift'] = 1;
+      timeData['currentDate'] =
+          currentDateAtMidnight.subtract(const Duration(days: 6));
+      currentDate = timeData['currentDate'];
+      String formattedDate = DateFormat('yyyy-MM-dd')
+          .format(currentDate.subtract(const Duration(days: 1)));
 
-// Query to select data for the current year
+// Query to select data from the last seven days
       timeData['result'] = await db.rawQuery(
-        "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ? ORDER BY date ASC",
-        ['$currentYear'], //maybe doesn't work
+        "SELECT amount, category, date FROM expenditure WHERE date >= ? ORDER BY date ASC",
+        [formattedDate],
       );
     }
+    
+    
     return timeData;
   }
 }

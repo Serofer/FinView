@@ -66,7 +66,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     PieData pieData = PieData();
     setState(() => pieLoading = true);
 
-    await Future.delayed(const Duration(seconds: 1));
+    //await Future.delayed(const Duration(seconds: 1));
     await pieData.calculate(timeframe);
     sections = getSections();
     await Future.delayed(const Duration(seconds: 1));
@@ -83,7 +83,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }*/
   Future loadBarChartData(String? timeframe) async {
     setState(() => barLoading = true);
-    await Future.delayed(const Duration(seconds: 1));
+    //await Future.delayed(const Duration(seconds: 1));
     BarData barData = BarData();
     await Future.delayed(const Duration(seconds: 1));
     await barData.createBarData(timeframe);
@@ -92,7 +92,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
 
   Future loadTableData(String? timeframe) async {
     setState(() => tableLoading = true);
-    await Future.delayed(const Duration(seconds: 1));
+    //await Future.delayed(const Duration(seconds: 1));
     DataForTable tableData = DataForTable();
     await Future.delayed(const Duration(seconds: 1));
     await tableData.createTableData(timeframe);
@@ -269,9 +269,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       // Save the loaded timeframe in the singleton
       TimeframeManager().selectedTimeframe = selectedTimeframe;
       // Optionally, load the data based on the saved timeframe
-      loadBarChartData(selectedTimeframe);
-      loadTableData(selectedTimeframe);
-      loadPieChartData(selectedTimeframe);
+      
     });
   }
 /*
