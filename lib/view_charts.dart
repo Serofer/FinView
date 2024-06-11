@@ -248,18 +248,20 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     await prefs.setString('selectedTimeframe', selectedTimeframe!);
   }
 
-  Widget _buildTable() {
-    return SizedBox(
-      height: 500,
-      child: Card(
+ Widget _buildTable() {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return Card(
         elevation: 4,
         child: Padding(
           padding: const EdgeInsets.only(top: 16),
           child: TableWidget(),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
+}
+
 
 
   void _loadSelectedTimeframe() async {
