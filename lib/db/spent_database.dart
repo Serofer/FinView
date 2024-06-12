@@ -245,9 +245,9 @@ class SpentDatabase {
       'This Month': 'Week',
       'Last 7 Days': 'Day',
       'This Year': 'Month',
-      'All Time': 'Month' //wrong, if not multiple months
+      'All Time': 'Month' //has to be dynamically changed
     };
-    Map<int, int> DaysPerMonth = {
+    Map<int, int> daysPerMonth = {
       1: 31,
       2: 28, //Leap year
       3: 31,
@@ -426,7 +426,7 @@ class SpentDatabase {
 
           //modifications for This Month
           if (((timeframe == "This Month" &&
-                      DaysPerMonth[currentMonth]! > 29) ||
+                      daysPerMonth[currentMonth]! > 29) ||
                   timeframe == "Last 30 Days") &&
               i == timeData['groupedSections'] - 1) {
             //if it is a longer month and the last gropuedSection
@@ -440,7 +440,7 @@ class SpentDatabase {
               currentDate = currentDate.add(const Duration(days: 2)); //incrase so that 21 + 3*3 + 2 = 32
               //print("increased");
               if ((timeframe == "This Month" &&
-                    DaysPerMonth[currentMonth] == 30) ||
+                    daysPerMonth[currentMonth] == 30) ||
                 timeframe == "Last 30 Days") {
                   
               //month has only 30 days so 3*7 + 3*3  + 2 - 1 = 31
@@ -484,7 +484,7 @@ class SpentDatabase {
             }
 
             
-            if (DaysPerMonth[monthNumber] == 31) {
+            if (daysPerMonth[monthNumber] == 31) {
               currentDate = currentDate.add(const Duration(days: 1));
               //------------------------for summer and winter time, to be updated if it changes
               if (monthNumber == 3) {
@@ -495,7 +495,7 @@ class SpentDatabase {
               }
               //-----------------------------------------------------------
             }
-            if (DaysPerMonth[monthNumber] == 28) {
+            if (daysPerMonth[monthNumber] == 28) {
               currentDate = currentDate.subtract(const Duration(days: 2));
               if (yearNumber % 4 == 0 && yearNumber % 100 != 0) {
                 currentDate = currentDate.add(const Duration(days: 1));
@@ -625,6 +625,7 @@ class SpentDatabase {
     }
 
     if (timeframe == "This Year") {
+    
       timeData['groupedSections'] = 12;
       timeData['dataPerSection'] = 3;
       timeData['timeshift'] = 10;
