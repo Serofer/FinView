@@ -292,6 +292,7 @@ class SpentDatabase {
     
     currentDate = timeData['currentDate'];
     result = timeData['result'];
+    timeframe = timeData['timeframe'];
     //print(result);
 
     //List sectionValues =
@@ -570,8 +571,8 @@ class SpentDatabase {
 
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
-      timeData['currentDate'] = DateTime.parse(timeData['result'][0]['date']);
-      currentDate = timeData['currentDate'];
+      currentDate = DateTime.parse(timeData['result'][0]['date']);
+      //currentDate = timeData['currentDate'];
       print("FIRST DAY RECORDED IS: $currentDate");
 
       DateTime sevenDays = currentDateAtMidnight.subtract(const Duration(days: 7));
@@ -619,13 +620,12 @@ class SpentDatabase {
           timeData ['timeshift'] = 365;
           timeData['currentDate'] = DateTime(startYear, 12, 31);
         }
-        
-        
       }
+      timeData['timeframe'] = timeframe;
     }
 
     if (timeframe == "This Year") {
-    
+      timeData['timeframe'] = timeframe;
       timeData['groupedSections'] = 12;
       timeData['dataPerSection'] = 3;
       timeData['timeshift'] = 10;
@@ -641,6 +641,7 @@ class SpentDatabase {
       print(timeData['result']);
     }
     if (timeframe == "This Month") {
+      timeData['timeframe'] = timeframe;
       timeData['groupedSections'] = 4;
       timeData['dataPerSection'] = 3;
       timeData['timeshift'] = 2;
@@ -657,6 +658,7 @@ class SpentDatabase {
           [timefilter.toIso8601String()]);
     }
     if (timeframe == "Last 30 Days") {
+      timeData['timeframe'] = timeframe;
       timeData['groupedSections'] = 4;
       timeData['dataPerSection'] = 3;
       timeData['timeshift'] = 2;
@@ -675,6 +677,7 @@ class SpentDatabase {
       );
     }
     if (timeframe == "Last 7 Days") {
+      timeData['timeframe'] = timeframe;
       timeData['groupedSections'] = 8;
       timeData['dataPerSection'] = 1;
       timeData['timeshift'] = 1;
