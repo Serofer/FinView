@@ -4,7 +4,7 @@ import 'package:fin_view/charts/data/bar_data.dart';
 
 
 class BarChartWidget extends StatelessWidget {
-  final double barWidth = 10;
+  final double barWidth = 30;
   final double barHeight;
   final double groupSpace = 22; // Space between the bars
 
@@ -14,7 +14,11 @@ class BarChartWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Calculate total width required for the chart
-    double totalWidth = (BarData.barData.length * (barWidth * 3 + groupSpace));
+    // Calculate total width required for the chart
+    double totalWidth = (BarData.barData.length * (barWidth + groupSpace));
+    // Ensure totalWidth is at least the width of the screen
+    double screenWidth = MediaQuery.of(context).size.width;
+    totalWidth = totalWidth < screenWidth ? screenWidth : totalWidth;
 
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
@@ -44,7 +48,7 @@ class BarChartWidget extends StatelessWidget {
                         .map(
                           (rodData) => BarChartRodData(
                             toY: rodData.barHeight,
-                            width: barWidth,
+                            //width: barWidth,
                             rodStackItems: rodData.rodItems
                                 .map(
                                   (rodItem) => BarChartRodStackItem(

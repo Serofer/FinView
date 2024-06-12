@@ -185,7 +185,7 @@ class SpentDatabase {
         // Get all data
         DateTime now = DateTime.now();
         timefilter = DateTime(now.year - 100, now.month, now.day);
-        timeborder = now;
+        timeborder = DateTime(now.year + 100, now.month, now.day);
 
         break;
       default:
