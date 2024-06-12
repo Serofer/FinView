@@ -16,6 +16,7 @@ class BarChartWidget extends StatelessWidget {
     // Calculate total width required for the chart
     // Calculate total width required for the chart
     double totalWidth = (BarData.barData.length * (barWidth + groupSpace));
+    
     // Ensure totalWidth is at least the width of the screen
     double screenWidth = MediaQuery.of(context).size.width;
     totalWidth = totalWidth < screenWidth ? screenWidth : totalWidth;
@@ -30,6 +31,33 @@ class BarChartWidget extends StatelessWidget {
             minY: 0,
             groupsSpace: groupSpace,
             barTouchData: BarTouchData(enabled: true),
+            /*titlesData: FlTitlesData(
+                show: true,
+                bottomTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 28,
+                        getTitlesWidget: BarTitles.getBottomTitles(),    
+                    ),
+                ),
+                leftTitles: AxisTitles(
+                    sideTitles: SideTitles(
+                        showTitles: true,
+                        reservedSize: 40,
+                        getTitlesWidget: BarTitles.getleftTitles(),
+                    ),
+                ),
+                topTitles: const AxisTitles(
+                    sideTitles: const SideTitles(
+                        showTitles: false,
+                    ),
+                ),
+                rightTitles: const AxisTitles(
+                  sideTitles: const SideTitles(
+                    showTitles: false,
+                  ),
+                )
+            ),*/
             gridData: FlGridData(
               checkToShowHorizontalLine: (value) => value % BarData.interval == 0,
               getDrawingHorizontalLine: (value) {
