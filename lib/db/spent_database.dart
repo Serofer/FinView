@@ -194,12 +194,12 @@ class SpentDatabase {
     }
 
     for (int i = 0; i < categories.length; i++) {
-      print(categories[i]);
+      
       
       spentOnCat = await db.rawQuery(
           "SELECT SUM(amount) FROM expenditure WHERE category = '${categories[i]}' AND date >= ? AND date <= ?",
           [timefilter.toIso8601String(), timeborder.toIso8601String()]);
-      print(spentOnCat);
+      
       
 
       //List<dynamic> spentOnCat =
@@ -420,7 +420,7 @@ class SpentDatabase {
           
         }
         if (incraseDate) {// if the date current date is not before the referencedate
-        print("hello");
+        
           
           
 
@@ -558,7 +558,7 @@ class SpentDatabase {
     final currentMonth = now.month;
 
 
-    final currentWeek = now.weekday;
+    
     late DateTime currentDate;
     timeData['shiftCorrect'] = 0;
 
@@ -599,12 +599,28 @@ class SpentDatabase {
         timeData['timeshift'] = 3;
       } else if (years == 0) {
         timeframe = "This Year";
+        print("---------------------------------------------------------------");
       } else {
+        if (years <= 2) { 
+          timeData['groupedSections'] = (years + 1) * 12;
+          timeData['dataPerSection'] = 1;
+          timeData['timeshift'] = 30;
+          timeData['currentDate'] = DateTime(startYear, 1, 1);
+        }
+        else if (years <= 4){
+          timeData ['groupedSections'] = (years + 1) * 6;
+          timeData ['dataPerSection'] = 1;
+          timeData ['timeshift'] = 60;
+          timeData['currentDate'] = DateTime(startYear, 2, 1);
+        }
+        else if (years <= 10){
+          timeData ['groupedSections'] = years + 1;
+          timeData ['dataPerSection'] = 1;
+          timeData ['timeshift'] = 365;
+          timeData['currentDate'] = DateTime(startYear, 12, 31);
+        }
         
-        timeData['groupedSections'] = (years + 1) * 12;
-        timeData['dataPerSection'] = 3;
-        timeData['timeshift'] = 10;
-        timeData['shiftCorrect'] = 0;
+        
       }
     }
 
@@ -614,6 +630,7 @@ class SpentDatabase {
       timeData['timeshift'] = 10;
       timeData['currentDate'] = DateTime(now.year, 1, 10);
       int currentYear = DateTime.now().year;
+      print("******************************************************333");
 
 // Query to select data for the current year
       timeData['result'] = await db.rawQuery(
