@@ -188,11 +188,11 @@ class SpentDatabase {
         String timefilterString =
             '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
         timefilter = DateTime.parse(timefilterString);
-        print("timefilter: $timefilter");
+        //print("timefilter: $timefilter");
 
         String timeborderString = '${DateTime.now().year.toString().padLeft(4, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day.toString().padLeft(2, '0')}T23:59:59';
         timeborder = DateTime.parse(timeborderString);
-        print("timeborder: $timeborder");
+        //print("timeborder: $timeborder");
         
 
         break;
@@ -218,11 +218,11 @@ class SpentDatabase {
     }
 
     for (int i = 0; i < categories.length; i++) {
-      //print(i.toString());
+      
       spentOnCat = await db.rawQuery(
           "SELECT SUM(amount) FROM expenditure WHERE category = '${categories[i]}' AND date >= ? AND date <= ?",
           [timefilter.toIso8601String(), timeborder.toIso8601String()]);
-      //print(spentOnCat);
+      
 
       //List<dynamic> spentOnCat =
       //await SpentDatabase.instance.readCategory(categories[i]);
@@ -242,7 +242,7 @@ class SpentDatabase {
       double? totalAmount = countAll[0]['SUM(amount)'] is int
           ? (countAll[0]['SUM(amount)'] as int).toDouble()
           : countAll[0]['SUM(amount)'];
-      print(totalAmount);
+      //print(totalAmount);
       double totAmount = totalAmount ?? 0.0;
       double toAdd = (spentCat / totAmount) * 100;
       String percent = toAdd.toStringAsFixed(2);
@@ -250,7 +250,7 @@ class SpentDatabase {
       percentages.add(percentNum);
     }
 
-    print(percentages);
+    //print(percentages);
 
     return percentages;
   }
@@ -311,10 +311,10 @@ class SpentDatabase {
     dataPerSection = timeData['dataPerSection'];
     timeshift = timeData['timeshift'];
     shiftCorrect = timeData['shiftCorrect'];
-    //print(timeData['currentDate']);
+    
     currentDate = timeData['currentDate'];
     result = timeData['result'];
-    print(result);
+    //print(result);
 
     //List sectionValues =
     //List.generate(timeData['dataPerSection'], (index) => 0.0);
@@ -387,7 +387,7 @@ class SpentDatabase {
         print('reference date: $currentDate');
 
         if (dateFromDatabase.isBefore(currentDate)) {
-          print('isBefore');
+          //print('isBefore');
 
           
           //if the date from the database is before the currentDate
@@ -396,14 +396,15 @@ class SpentDatabase {
               thisData['amount'];
           j--; //reset, so that the dataPerSection can be increased
           dataIndex++;//changed------------------------------------------------------------------------------
+          //print(nextDate);
+          
+          
+
+          print(currentDate);
           print(nextDate);
-          
-          
-
-
           if (nextDate.isAfter(currentDate)) { 
             //if the nextDate is after this one
-            print('head on');
+            //print('head on');
             incraseDate = true; //date has to be increased
             //print(dateFromDatabase);
             //print(currentDate);
@@ -430,7 +431,7 @@ class SpentDatabase {
                 categoryValues[k] = 0.0;
               }
             }
-            print(currentDate);
+            //print(currentDate);
             
 
             tableData[i].categoryData['Total'] = total;
@@ -438,17 +439,12 @@ class SpentDatabase {
           }
         } else {
           incraseDate = true;
-          //if the data is after the current date
-          /*currentDate =
-              currentDate.add(Duration(days: timeshift)); //change this
-          print('should increase');
-
-          if (j == dataPerSection - 2) {
-            currentDate = currentDate.add(Duration(days: shiftCorrect));
-          }*/
+          
         }
         if (incraseDate) {// if the date current date is not before the referencedate
-          currentDate = currentDate.add(Duration(days: timeshift));
+        print("hello");
+          
+          
 
           //modifications for This Month
           if (((timeframe == "This Month" &&
@@ -464,7 +460,7 @@ class SpentDatabase {
             if ( j == dataPerSection - 2) { //if it is the last grouped Data from this month
               
               currentDate = currentDate.add(const Duration(days: 2)); //incrase so that 21 + 3*3 + 2 = 32
-              print("increased");
+              //print("increased");
               if ((timeframe == "This Month" &&
                     DaysPerMonth[currentMonth] == 30) ||
                 timeframe == "Last 30 Days") {
@@ -494,13 +490,44 @@ class SpentDatabase {
 
           //modifications for This Year, NOT EXACT YET, MONTHS SHOULD BE MORE PRECISE
 
-          if (timeframe == "This Year" && i == timeData['groupedSections'] - 1 && j == dataPerSection - 2) {
-            currentDate = currentDate.add(const Duration(days: 5));
+          /*if (timeframe == "This Year" && i == timeData['groupedSections'] - 1 && j == dataPerSection - 2) {
+            currentDate = currentDate.add(const Duration(days: 6));
 
             if (currentYear % 4 == 0 && currentYear % 100 != 0) {
               currentDate = currentDate.add(const Duration(days: 1));
+
             }
+          }*/
+          if (timeframe == "This Year" && j == dataPerSection - 2) {
+            int monthNumber = currentDate.month;
+            int yearNumber = currentDate.year;
+            if (i % 12 == 0) {
+              currentDate = currentDate.add(const Duration(days: 1));
+            }
+
+            
+            if (DaysPerMonth[monthNumber] == 31) {
+              currentDate = currentDate.add(const Duration(days: 1));
+              //------------------------for summer and winter time, to be updated if it changes
+              if (monthNumber == 3) {
+                currentDate = currentDate.subtract(const Duration (hours: 1));
+              }
+              if (monthNumber == 10) {
+                currentDate = currentDate.add(const Duration (hours: 1));
+              }
+              //-----------------------------------------------------------
+            }
+            if (DaysPerMonth[monthNumber] == 28) {
+              currentDate = currentDate.subtract(const Duration(days: 2));
+              if (yearNumber % 4 == 0 && yearNumber % 100 != 0) {
+                currentDate = currentDate.add(const Duration(days: 1));
+              }
+
+            }
+            
+            
           }
+          currentDate = currentDate.add(Duration(days: timeshift)); //switched to bottom
           
         }
       } //loop of sectionPerData is over
@@ -607,7 +634,7 @@ class SpentDatabase {
       timeData['groupedSections'] = 12;
       timeData['dataPerSection'] = 3;
       timeData['timeshift'] = 10;
-      timeData['currentDate'] = DateTime(now.year, 1, 1);
+      timeData['currentDate'] = DateTime(now.year, 1, 10);
       int currentYear = DateTime.now().year;
 
 // Query to select data for the current year

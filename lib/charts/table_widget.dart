@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fin_view/charts/data/table_data.dart';
 
-//work on this to display data
-
-import 'package:flutter/material.dart';
-
 class TableWidget extends StatelessWidget {
   final List<String> categoriesExtra = ['Food', 'Event', 'Education', 'Other', 'Total'];
 
@@ -17,38 +13,43 @@ class TableWidget extends StatelessWidget {
         final rowsHeight = DataForTable.tableData.length * 48.0; // 48.0 is the height of each DataRow
         final tableHeight = rowsHeight + 56.0; // Adding height for the headers
 
-        return SizedBox(
-          height: tableHeight,
-          child: DataTable(
-            columnSpacing: 30,
-            columns: [
-              DataColumn(
-                label: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 2),
-                  child: Text(
-                    'Time',
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-              ...categoriesExtra.map(
-                (category) => DataColumn(
-                  label: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 2),
-                    child: Text(
-                      category,
-                      style: TextStyle(
-                        fontSize: category == 'Total' ? 16 : 14,
-                        fontWeight: category == 'Total' ? FontWeight.bold : FontWeight.normal,
+        return SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: constraints.maxWidth,
+              minHeight: tableHeight,
+            ),
+            child: IntrinsicHeight(
+              child: DataTable(
+                columnSpacing: 30,
+                columns: [
+                  DataColumn(
+                    label: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      child: Text(
+                        'Time',
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
-            rows: DataForTable.tableData
-                .map(
-                  (data) => DataRow(
+                  ...categoriesExtra.map(
+                    (category) => DataColumn(
+                      label: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: Text(
+                          category,
+                          style: TextStyle(
+                            fontSize: category == 'Total' ? 16 : 14,
+                            fontWeight: category == 'Total' ? FontWeight.bold : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+                rows: DataForTable.tableData.map((data) {
+                  return DataRow(
                     cells: [
                       DataCell(
                         Text(
@@ -56,37 +57,38 @@ class TableWidget extends StatelessWidget {
                           style: const TextStyle(fontSize: 14),
                         ),
                       ),
-                      ...categoriesExtra.map(
-                        (category) {
-                          final value = data.categoryData[category] ?? '';
-                          return DataCell(
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  right: BorderSide(color: Colors.grey),
-                                ),
+                      ...categoriesExtra.map((category) {
+                        final value = data.categoryData[category] ?? 0.0;
+                        return DataCell(
+                          Container(
+                            decoration: BoxDecoration(
+                              border: Border(
+                                right: BorderSide(color: Colors.grey),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                child: Text(
-                                  value.toString(),
-                                  style: TextStyle(
-                                    fontSize: category == 'Total' ? 16 : 14,
-                                    fontWeight: category == 'Total' ? FontWeight.bold : FontWeight.normal,
-                                  ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                              child: Text(
+                                value.toString(),
+                                style: TextStyle(
+                                  fontSize: category == 'Total' ? 16 : 14,
+                                  fontWeight: category == 'Total' ? FontWeight.bold : FontWeight.normal,
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      }).toList(),
                     ],
-                  ),
-                )
-                .toList(),
+                  );
+                }).toList(),
+              ),
+            ),
           ),
         );
       },
     );
   }
 }
+
+
