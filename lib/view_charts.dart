@@ -37,6 +37,8 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   bool barLoading = false;
   int touchedIndex = 0;
 
+  
+
   @override
   void initState() {
     super.initState();
@@ -62,6 +64,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }
 
   Future loadPieChartData(String? timeframe) async {
+    _loadSelectedTimeframe();
     //Initialize PieData and call calculate
     PieData pieData = PieData();
     setState(() => pieLoading = true);
@@ -82,6 +85,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     setState(() => lineLoading = false);
   }*/
   Future loadBarChartData(String? timeframe) async {
+    _loadSelectedTimeframe();
     setState(() => barLoading = true);
     //await Future.delayed(const Duration(seconds: 1));
     BarData barData = BarData();
@@ -91,6 +95,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }
 
   Future loadTableData(String? timeframe) async {
+    _loadSelectedTimeframe();
     setState(() => tableLoading = true);
     //await Future.delayed(const Duration(seconds: 1));
     DataForTable tableData = DataForTable();
