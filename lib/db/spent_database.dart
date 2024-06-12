@@ -51,14 +51,6 @@ class SpentDatabase {
   Future<Expenditure> create(Expenditure expenditure) async {
     final db = await instance.database;
 
-    /*final json = expenditure.toJson();
-    final columns =
-        '${ExpenditureFields.amount}, ${ExpenditureFields.category}, ${ExpenditureFields.date}';
-    final values =
-        '${json[ExpenditureFields.amount]}, ${json[ExpenditureFields.category]}, ${json[ExpenditureFields.date]}';
-
-    final id = await db.rawInsert('INSERT INTO $tableExpenditure ($columns) VALUES ($values)');*/
-
     final id = await db.insert(tableExpenditure, expenditure.toJson());
     return expenditure.copy(id: id);
   }
@@ -92,23 +84,7 @@ class SpentDatabase {
     return result.map((json) => Expenditure.fromJson(json)).toList();
   }
 
-  /*Future<List<dynamic>> readCategory(String category) async {
-    final db = await instance.database;
-
-    final List spentOnCat = await db.rawQuery(
-        "SELECT SUM(amount) FROM expenditure WHERE category = '$category'");
-
-    return spentOnCat;
-  }
-
-  Future<List<dynamic>> readAmount() async {
-    final db = await instance.database;
-
-    final List tot_amount =
-        await db.rawQuery("SELECT SUM(amount) FROM expenditure");
-
-    return tot_amount;
-  }*/
+  
 
   Future<int> update(Expenditure expenditure) async {
     final db = await instance.database;
@@ -152,11 +128,10 @@ class SpentDatabase {
     List percentages = [];
     dynamic sumAmount;
     double spentCat = 0.0;
-    late List<Expenditure> expenses;
     late List spentOnCat;
     late DateTime timefilter;
     late DateTime timeborder;
-    DateTime now = DateTime.now();
+   
 
     //expenses = await SpentDatabase.instance.readAllExpenditure();
     //spentOnCat = await db.rawQuery("SELECT SUM(amount) FROM expenditure");----------------------------------------------------------------changed
@@ -199,7 +174,8 @@ class SpentDatabase {
       case 'This Year':
         // Get data for the current year
         int currentYear = DateTime.now().year;
-        String timefilterString = '$currentYear-01-01';
+        int selectedYear = currentYear - 1;
+        String timefilterString = '$selectedYear-12-31 23:59:59';
         timefilter = DateTime.parse(timefilterString);
         String timeborderString = '$currentYear-12-31';
         timeborder = DateTime.parse(timeborderString);
@@ -218,10 +194,12 @@ class SpentDatabase {
     }
 
     for (int i = 0; i < categories.length; i++) {
+      print(categories[i]);
       
       spentOnCat = await db.rawQuery(
           "SELECT SUM(amount) FROM expenditure WHERE category = '${categories[i]}' AND date >= ? AND date <= ?",
           [timefilter.toIso8601String(), timeborder.toIso8601String()]);
+      print(spentOnCat);
       
 
       //List<dynamic> spentOnCat =
