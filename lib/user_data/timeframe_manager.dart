@@ -9,7 +9,7 @@ class TimeframeManager {
   
   TimeframeManager._internal();
 
-  String _selectedTimeframe = 'Last 7 Days';
+  String _selectedTimeframe = 'This Year';
 
   String get selectedTimeframe => _selectedTimeframe;
 

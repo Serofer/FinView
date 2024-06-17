@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
 import 'package:fin_view/charts//bar_titles.dart';
+import 'package:fin_view/user_data/timeframe_manager.dart';
 
 
 class BarChartWidget extends StatelessWidget {
@@ -17,9 +18,11 @@ class BarChartWidget extends StatelessWidget {
   @override
 
   Widget bottomTitles(double value, TitleMeta meta) {
+    String selectedTimeframe = TimeframeManager().selectedTimeframe;
     const style = TextStyle(fontSize: 10);
     String text;
-    switch (value.toInt())  {
+    if (selectedTimeframe == 'This Year' || selectedTimeframe == 'All Time') {
+      switch (value.toInt())  {
       case 0:
         text = 'Jan';
         break;
@@ -60,6 +63,72 @@ class BarChartWidget extends StatelessWidget {
         text = 'lol';
         break;
     }
+    } else if (selectedTimeframe == 'This Month' || selectedTimeframe == 'Last 30 Days') {
+      switch (value.toInt())  {
+      case 0:
+        text = 'Week 1';
+        break;
+      case 1:
+        text = 'Week 2';
+        break;
+      case 2:
+        text = 'Week 3';
+        break;
+      case 3:
+        text = 'Week 4';
+        break;
+      case 4:
+        text = 'Week 5';
+        break;
+      case 5:
+        text = 'Week 6';
+        break;
+      case 6:
+        text = 'Week 7';
+        break;
+      case 7:
+        text = 'Week 8';
+        break;
+      default:
+        text = 'lol';
+        break;
+      }
+    }
+    else if (selectedTimeframe == 'Last 7 Days') {
+      switch (value.toInt())  {
+      case 0:
+        text = 'Day 1';
+        break;
+      case 1:
+        text = 'Day 2';
+        break;
+      case 2:
+        text = 'Day 3';
+        break;
+      case 3:
+        text = 'Day 4';
+        break;
+      case 4:
+        text = 'Day 5';
+        break;
+      case 5:
+        text = 'Day 6';
+        break;
+      case 6:
+        text = 'Day 7';
+        break;
+      case 7:
+        text = 'Day 8';
+        break;
+      default:
+        text = 'lol';
+        break;
+      }
+    }
+    else {
+      text = value.toInt().toString();
+    }
+    
     return SideTitleWidget(
       axisSide: meta.axisSide,
        child: Text(text, style: style,)
@@ -108,33 +177,7 @@ class BarChartWidget extends StatelessWidget {
                       ),
                   ), 
             ),
-            /*titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 28,
-                        getTitlesWidget: BarTitles.getBottomTitles(),    
-                    ),
-                ),
-                leftTitles: AxisTitles(
-                    sideTitles: SideTitles(
-                        showTitles: true,
-                        reservedSize: 40,
-                        getTitlesWidget: BarTitles.getleftTitles(),
-                    ),
-                ),
-                topTitles: const AxisTitles(
-                    sideTitles: const SideTitles(
-                        showTitles: false,
-                    ),
-                ),
-                rightTitles: const AxisTitles(
-                  sideTitles: const SideTitles(
-                    showTitles: false,
-                  ),
-                )
-            ),*/
+            
             gridData: FlGridData(
               checkToShowHorizontalLine: (value) => value % BarData.interval == 0,
               getDrawingHorizontalLine: (value) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fin_view/view_expenditure.dart';
 import 'package:fin_view/settings.dart';
 import 'package:fin_view/view_charts.dart';
+import 'package:fin_view/user_data/timeframe_manager.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,6 +19,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _selectedIndex = 0;
+  String selectedTimeframe = TimeframeManager().selectedTimeframe;
 
   final List<Widget> _pages = [
     const ViewExpenditurePage(),
