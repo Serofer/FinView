@@ -13,7 +13,7 @@ class BarChartWidget extends StatelessWidget {
   final double groupSpace = 22; // Space between the bars
 
   BarChartWidget({super.key})
-      : barHeight = BarData.barHeight; // Calculate barHeight based on max spent in timeframe
+      : barHeight = BarData.barHeight; // Calculate barHeight based on max spent in timeframe§
 
   @override
 

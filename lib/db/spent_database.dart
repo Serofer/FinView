@@ -240,12 +240,12 @@ class SpentDatabase {
     categoriesExtra.add('Total');
     List totalCategoryValues = List.generate(categories.length, (index) => 0.0);
 
-    Map<String, String> labeling = {
+    Map<String, dynamic> labeling = {
       'Last 30 Days': 'Week',
       'This Month': 'Week',
       'Last 7 Days': 'Day',
-      'This Year': 'Month',
-      'All Time': 'Month' //has to be dynamically changed
+      'This Year': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      'All Time': ['Jan-Feb', 'Mar-Apr', 'May-Jun', 'Jul-Aug', 'Sep-Oct', 'Nov-Dec'],
     };
     Map<int, int> daysPerMonth = {
       1: 31,
@@ -312,10 +312,66 @@ class SpentDatabase {
 
       double total = 0.0;
       double barHeight = 0.0;
-
+      print('saved timeframe: $timeframe');
+      if (timeframe == 'This Year') {
+        tableData[i].time = labeling[timeframe][i];
+      }
+      else if (timeframe == 'All Time') {
+        if (groupedSections <= 36 && timeshift == 30) {//part it in months
+          if (i < 12) {
+            tableData[i].time = "${labeling['This Year'][i]} $currentYear ";
+          }
+          else if (i < 24) {
+            tableData[i].time = "${labeling['This Year'][i - 12]} ${currentYear - 1}";
+          }
+          else if (i < 36) {//only if 3 years
+            tableData[i].time = "${labeling['This Year'][i - 24]} ${currentYear - 2}";
+          }
+        }
+        else if (groupedSections <= 30 && timeshift == 60) {//every two months
+          if (i < 6) {
+            if (groupedSections == 24) {
+              tableData[i].time = "${labeling['All Time'][i]} ${currentYear - 3}";
+            }
+            tableData[i].time = "${labeling['All Time'][i]} ${currentYear - 4}";
+          }
+          if (i < 12) {
+            if (groupedSections == 24) {
+              tableData[i].time = "${labeling['All Time'][i - 6]} ${currentYear - 2}";
+            }
+            tableData[i].time = "${labeling['All Time'][i- 6]} ${currentYear - 3}";
+          }
+          if (i < 18) {
+            if (groupedSections == 24) {
+              tableData[i].time = "${labeling['All Time'][i - 12]} ${currentYear - 1}";
+            }
+            tableData[i].time = "${labeling['All Time'][i - 12]} ${currentYear - 2}";
+          }
+          if (i < 24) {
+            if (groupedSections == 24) {
+              tableData[i].time = "${labeling['All Time'][i - 18]} $currentYear";
+            }
+            else {
+              tableData[i].time = "${labeling['All Time'][i - 18]} ${currentYear - 1}";
+            }
+            
+          }
+          if (i < 30) {//only if 5 years
+            tableData[i].time = "${labeling['All Time'][i - 24]} $currentYear";
+        }
+        else if (timeshift == 365) {
+          tableData[i].time = "${currentYear - i}";
+        }
+        }
+        
+      }
+      else {
+        tableData[i].time =
+          '${labeling[timeframe]} ${(i + 1).toString()}';//month: Week, 7 days: Day, Year: array with Months
+      }
+      
       //define an almost empty listElement of the barData
-      tableData[i].time =
-          '${labeling[timeframe]} ${(i + 1).toString()}'; //month: Week, 7 days: Day, Year: array with Months
+       
       barData.add(Data(
         id: i,
         name: 'Week ${i.toString()}',
