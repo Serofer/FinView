@@ -345,21 +345,28 @@ class SpentDatabase {
             if (groupedSections == 24) {
               tableData[i].time = "${labeling['All Time'][i]} ${currentYear - 3}";
             }
-            tableData[i].time = "${labeling['All Time'][i]} ${currentYear - 4}";
+            else {
+              tableData[i].time = "${labeling['All Time'][i]} ${currentYear - 4}";
+            }
+            
           }
-          if (i < 12) {
+          else if (i < 12) {
             if (groupedSections == 24) {
               tableData[i].time = "${labeling['All Time'][i - 6]} ${currentYear - 2}";
             }
-            tableData[i].time = "${labeling['All Time'][i- 6]} ${currentYear - 3}";
+            else {
+              tableData[i].time = "${labeling['All Time'][i- 6]} ${currentYear - 3}";
+            }   
           }
-          if (i < 18) {
+          else if (i < 18) {
             if (groupedSections == 24) {
               tableData[i].time = "${labeling['All Time'][i - 12]} ${currentYear - 1}";
             }
-            tableData[i].time = "${labeling['All Time'][i - 12]} ${currentYear - 2}";
+            else {
+              tableData[i].time = "${labeling['All Time'][i - 12]} ${currentYear - 2}";
+            }
           }
-          if (i < 24) {
+          else if (i < 24) {
             if (groupedSections == 24) {
               tableData[i].time = "${labeling['All Time'][i - 18]} $currentYear";
             }
@@ -367,7 +374,7 @@ class SpentDatabase {
               tableData[i].time = "${labeling['All Time'][i - 18]} ${currentYear - 1}";
             }          
           }        
-          if (i < 30) {//only if 5 years (years = 4)
+          else if (i < 30) {//only if 5 years (years = 4)
             tableData[i].time = "${labeling['All Time'][i - 24]} $currentYear";
         }
         }
@@ -666,7 +673,6 @@ class SpentDatabase {
         timeData['timeshift'] = 3;
       } else if (years == 0) {
         timeframe = "This Year";
-        print("---------------------------------------------------------------");
       } else {
         if (years <= 2) { 
           timeData['groupedSections'] = (years + 1) * 12;
@@ -697,8 +703,6 @@ class SpentDatabase {
       timeData['timeshift'] = 10;
       timeData['currentDate'] = DateTime(now.year, 1, 10);
       int currentYear = DateTime.now().year;
-      print("******************************************************333");
-
 // Query to select data for the current year
       timeData['result'] = await db.rawQuery(
         "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ? ORDER BY date ASC",
