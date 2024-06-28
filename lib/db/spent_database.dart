@@ -165,11 +165,10 @@ class SpentDatabase {
         String timefilterString =
             '$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
         timefilter = DateTime.parse(timefilterString);
-        //print("timefilter: $timefilter");
+
 
         String timeborderString = '${DateTime.now().year.toString().padLeft(4, '0')}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime(DateTime.now().year, DateTime.now().month + 1, 0).day.toString().padLeft(2, '0')}T23:59:59';
         timeborder = DateTime.parse(timeborderString);
-        //print("timeborder: $timeborder");
         
 
         break;
@@ -222,7 +221,7 @@ class SpentDatabase {
       double? totalAmount = countAll[0]['SUM(amount)'] is int
           ? (countAll[0]['SUM(amount)'] as int).toDouble()
           : countAll[0]['SUM(amount)'];
-      //print(totalAmount);
+
       double totAmount = totalAmount ?? 0.0;
       double toAdd = (spentCat / totAmount) * 100;
       String percent = toAdd.toStringAsFixed(2);
@@ -230,7 +229,6 @@ class SpentDatabase {
       percentages.add(percentNum);
     }
 
-    //print(percentages);
 
     return percentages;
   }
@@ -295,7 +293,6 @@ class SpentDatabase {
     currentDate = timeData['currentDate'];
     result = timeData['result'];
     timeframe = timeData['timeframe'];
-    //print(result);
 
     //List sectionValues =
     //List.generate(timeData['dataPerSection'], (index) => 0.0);
@@ -309,12 +306,12 @@ class SpentDatabase {
     });
 
     for (int i = 0; i < groupedSections; i++) {
-      print("i: $i");
+      //print("i: $i");
       List categoryValues = List.generate(categories.length, (index) => 0.0);
 
       double total = 0.0;
       double barHeight = 0.0;
-      print('saved timeframe: $timeframe');
+      //print('saved timeframe: $timeframe');
       if (timeframe == 'This Year') {
         tableData[i].time = labeling[timeframe][i];
       }
@@ -411,7 +408,7 @@ class SpentDatabase {
       ));
 
       for (int j = 0; j < dataPerSection; j++) {
-        print(j);
+        //print(j);
         //define some variables
         var thisData = {};
         late var nextData;
@@ -423,7 +420,7 @@ class SpentDatabase {
         if (dataIndex < result.length) {
           thisData = result[dataIndex];
         } else {
-          print('end of data');
+          //print('end of data');
           break;
         }
         if (dataIndex < result.length - 1) {
@@ -437,8 +434,8 @@ class SpentDatabase {
 
         DateTime dateFromDatabase = DateTime.parse(thisData['date']);
         dateFromDatabase = dateFromDatabase.add(const Duration(seconds: 1));
-        print('Date from database: $dateFromDatabase');
-        print('reference date: $currentDate');
+        //print('Date from database: $dateFromDatabase');
+        //print('reference date: $currentDate');
 
         if (dateFromDatabase.isBefore(currentDate)) {
           //print('isBefore');
@@ -454,8 +451,8 @@ class SpentDatabase {
           
           
 
-          print(currentDate);
-          print(nextDate);
+          //print(currentDate);
+          //print(nextDate);
           if (nextDate.isAfter(currentDate)) { 
             //if the nextDate is after this one
             //print('head on');
@@ -648,16 +645,15 @@ class SpentDatabase {
           "SELECT amount, category, date FROM expenditure ORDER BY date ASC");
       currentDate = DateTime.parse(timeData['result'][0]['date']);
       //currentDate = timeData['currentDate'];
-      print("FIRST DAY RECORDED IS: $currentDate");
+      //print("FIRST DAY RECORDED IS: $currentDate");
 
       DateTime sevenDays = currentDateAtMidnight.subtract(const Duration(days: 7));
       DateTime thisMonth = DateTime(currentYear, currentMonth, 1);
       int targetMonth = currentMonth - 3;
       int targetYear = currentYear;
       int startYear = currentDate.year;
-      print(startYear);
+      //print(startYear);
       int years = currentYear - startYear;
-      print("YEARS: $years");
 
       if (targetMonth < 1) {
         targetMonth += 12; // Wrap around to December of the previous year
@@ -698,6 +694,7 @@ class SpentDatabase {
       }
       timeData['timeframe'] = timeframe;
       _saveGroupedSections(timeData['groupedSections']);
+      _saveTimeshift(timeData['timeshift']);
     }
 
     if (timeframe == "This Year") {
@@ -712,7 +709,7 @@ class SpentDatabase {
         "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ? ORDER BY date ASC",
         ['$currentYear'], 
       );
-      print(timeData['result']);
+      //print(timeData['result']);
     }
     if (timeframe == "This Month") {
       timeData['timeframe'] = timeframe;
@@ -722,11 +719,8 @@ class SpentDatabase {
       timeData['currentDate'] = DateTime(currentYear, currentMonth, 2, 0, 0, 0);//start at the second day of the month to compare
       timeData['shiftCorrect'] = 1;
 
-      //String timefilterString =
-          //'$currentYear-${currentMonth.toString().padLeft(2, '0')}-01';
       String timefilterString = '${currentMonth == 1 ? now.year - 1 : now.year}-${(currentMonth == 1 ? 12 : currentMonth - 1).toString().padLeft(2, '0')}-${DateTime(currentMonth == 1 ? now.year - 1 : now.year, (currentMonth == 1 ? 12 : currentMonth - 1) + 1, 0).day} 23:59:59';
       DateTime timefilter = DateTime.parse(timefilterString);
-      print("Timefilter: $timefilter");
       timeData['result'] = await db.rawQuery(
           "SELECT amount, category, date FROM expenditure WHERE date >= ? ORDER BY date ASC",
           [timefilter.toIso8601String()]);
@@ -742,7 +736,6 @@ class SpentDatabase {
       currentDate = timeData['currentDate'];
     String formattedDate = DateFormat('yyyy-MM-dd')
           .format(currentDate.subtract(const Duration(days: 2)));
-      print("start date: $formattedDate");
 
 // Query to select data from the last thirty days
       timeData['result'] = await db.rawQuery(
@@ -775,5 +768,10 @@ class SpentDatabase {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   await prefs.setInt('groupedSections', sections);
   TimeframeManager().groupedSections = sections;
-}
+  }
+  void _saveTimeshift(int timeshift) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('timeshift', timeshift);
+    TimeframeManager().timeshift = timeshift;
+  }
 }

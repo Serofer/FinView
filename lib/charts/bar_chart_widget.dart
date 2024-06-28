@@ -20,141 +20,93 @@ class BarChartWidget extends StatelessWidget {
   Widget bottomTitles(double value, TitleMeta meta) {
     String selectedTimeframe = TimeframeManager().selectedTimeframe;
     int groupedSections = TimeframeManager().groupedSections;
+    int timeshift = TimeframeManager().timeshift;
     print(groupedSections.toString());
+    print(timeshift.toString());
+    int currentYear = DateTime.now().year;
+
+    Map<String, dynamic> labeling = {
+      'Last 30 Days': 'Week',
+      'This Month': 'Week',
+      'Last 7 Days': 'Day',
+      'This Year': ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+      'All Time': ['Jan-Feb', 'Mar-Apr', 'May-Jun', 'Jul-Aug', 'Sep-Oct', 'Nov-Dec'],
+    };
 
     const style = TextStyle(fontSize: 10);
-    String text;
-    if (selectedTimeframe == 'This Year' || selectedTimeframe == 'All Time' ) {
-      switch (value.toInt())  {
-      case 0:
-      case 12:
-      case 24:
-        text = 'Jan';
-        break;
-      case 1:
-      case 13:
-      case 25:
-        text = 'Feb';
-        break;
-      case 2:
-      case 14:
-      case 26:
-        text = 'Mar';
-        break;
-      case 3:
-      case 15:
-      case 27:
-        text = 'Apr';
-        break;
-      case 4:
-      case 16:
-      case 28:
-        text = 'May';
-        break;
-      case 5:
-      case 17:
-      case 29:
-        text = 'Jun';
-        break;
-      case 6:
-      case 18:
-      case 30:
-        text = 'Jul';
-        break;
-      case 7:
-      case 19:
-      case 31:
-        text = 'Aug';
-        break;
-      case 8:
-      case 20:
-      case 32:
-        text = 'Sep';
-        break;
-      case 9:
-      case 21:
-      case 33:
-        text = 'Oct';
-        break;
-      case 10:
-      case 22:
-      case 34:
-        text = 'Nov';
-        break;
-      case 11:
-      case 23:
-      case 35:
-        text = 'Dec';
-        break;
-      default:
-        text = 'lol';
-        break;
+    String text = "";  
+    
+    if (selectedTimeframe == 'This Year' || (selectedTimeframe == 'All Time' && groupedSections == 12)) {
+        text = "${labeling['This Year'][value]}";
     }
-    } else if (selectedTimeframe == 'This Month' || selectedTimeframe == 'Last 30 Days') {
-      switch (value.toInt())  {
-      case 0:
-        text = 'Week 1';
-        break;
-      case 1:
-        text = 'Week 2';
-        break;
-      case 2:
-        text = 'Week 3';
-        break;
-      case 3:
-        text = 'Week 4';
-        break;
-      case 4:
-        text = 'Week 5';
-        break;
-      case 5:
-        text = 'Week 6';
-        break;
-      case 6:
-        text = 'Week 7';
-        break;
-      case 7:
-        text = 'Week 8';
-        break;
-      default:
-        text = 'lol';
-        break;
+    else if (selectedTimeframe == 'All Time') {
+      if (groupedSections <= 36 && timeshift == 30) {//years <= 2 //problem with timeshift to be solved
+         if (value < 12) {
+          if (groupedSections == 24) {
+            text = "${labeling['This Year'][value]} ${currentYear - 1}";
+          }
+          else {
+            text = "${labeling['This Year'][value]} ${currentYear - 2}";
+          }   
+        }
+        else if (value < 24) {
+          if (groupedSections == 24) {
+            text = "${labeling['This Year'][value - 12]} $currentYear";
+          }
+          else {
+            text = "${labeling['This Year'][value - 12]} ${currentYear - 1}";
+          }
+        }
+        else if (value < 36) {//only if 3 years (years = 2)          
+          text = "${labeling['This Year'][value - 24]} $currentYear";
+        }
       }
-    }
-    else if (selectedTimeframe == 'Last 7 Days') {
-      switch (value.toInt())  {
-      case 0:
-        text = 'Day 1';
-        break;
-      case 1:
-        text = 'Day 2';
-        break;
-      case 2:
-        text = 'Day 3';
-        break;
-      case 3:
-        text = 'Day 4';
-        break;
-      case 4:
-        text = 'Day 5';
-        break;
-      case 5:
-        text = 'Day 6';
-        break;
-      case 6:
-        text = 'Day 7';
-        break;
-      case 7:
-        text = 'Day 8';
-        break;
-      default:
-        text = 'lol';
-        break;
+      else if (groupedSections <= 30 && timeshift == 60) {//every two months (years <= 4)
+        if (value < 6) {
+          if (groupedSections == 24) {
+            text = "${labeling['All Time'][value]} ${currentYear - 3}";
+          }
+          else {
+            text = "${labeling['All Time'][value]} ${currentYear - 4}";
+          }       
+        }
+      else if (value < 12) {
+        if (groupedSections == 24) {
+          text = "${labeling['All Time'][value - 6]} ${currentYear - 2}";
+          }
+          else {
+            text = "${labeling['All Time'][value- 6]} ${currentYear - 3}";
+          }   
+        }
+        else if (value < 18) {
+          if (groupedSections == 24) {
+            text = "${labeling['All Time'][value - 12]} ${currentYear - 1}";
+          }
+          else {
+            text = "${labeling['All Time'][value - 12]} ${currentYear - 2}";
+          }
+        }
+        else if (value < 24) {
+          if (groupedSections == 24) {
+            text = "${labeling['All Time'][value - 18]} $currentYear";
+          }
+          else {
+            text = "${labeling['All Time'][value - 18]} ${currentYear - 1}";
+          }          
+        }        
+        else if (value < 30) {//only if 5 years (years = 4)
+          text = "${labeling['All Time'][value - 24]} $currentYear";
+        }
+      }
+      else if (timeshift == 365) {
+          text = "${currentYear - (groupedSections - (value + 1))}";
       }
     }
     else {
-      text = value.toInt().toString();
+      text =
+          '${labeling[selectedTimeframe]} ${(value + 1).toString()}';//month: Week, 7 days: Day, Year: array with Months
     }
+      
     
     return SideTitleWidget(
       axisSide: meta.axisSide,

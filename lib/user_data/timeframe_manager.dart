@@ -9,6 +9,7 @@ class TimeframeManager {
 
   String _selectedTimeframe = 'This Year';
   int _groupedSections = 0;
+  int _timeshift = 0;
 
   String get selectedTimeframe => _selectedTimeframe;
 
@@ -21,4 +22,11 @@ class TimeframeManager {
   set groupedSections(int sections) {
     _groupedSections = sections;
   }
+
+  int get timeshift => _timeshift;
+
+  set timeshift(int shift) {
+    _timeshift = shift;
+  }
+  
 }
