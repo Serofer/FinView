@@ -24,7 +24,7 @@ class BarChartWidget extends StatelessWidget {
 
     const style = TextStyle(fontSize: 10);
     String text;
-    if (selectedTimeframe == 'This Year' || selectedTimeframe == 'All Time') {
+    if (selectedTimeframe == 'This Year' || selectedTimeframe == 'All Time' ) {
       switch (value.toInt())  {
       case 0:
       case 12:
