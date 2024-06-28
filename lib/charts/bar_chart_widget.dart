@@ -19,44 +19,71 @@ class BarChartWidget extends StatelessWidget {
 
   Widget bottomTitles(double value, TitleMeta meta) {
     String selectedTimeframe = TimeframeManager().selectedTimeframe;
+    int groupedSections = TimeframeManager().groupedSections;
+    print(groupedSections.toString());
+
     const style = TextStyle(fontSize: 10);
     String text;
     if (selectedTimeframe == 'This Year' || selectedTimeframe == 'All Time') {
       switch (value.toInt())  {
       case 0:
+      case 12:
+      case 24:
         text = 'Jan';
         break;
       case 1:
+      case 13:
+      case 25:
         text = 'Feb';
         break;
       case 2:
+      case 14:
+      case 26:
         text = 'Mar';
         break;
       case 3:
+      case 15:
+      case 27:
         text = 'Apr';
         break;
       case 4:
+      case 16:
+      case 28:
         text = 'May';
         break;
       case 5:
+      case 17:
+      case 29:
         text = 'Jun';
         break;
       case 6:
+      case 18:
+      case 30:
         text = 'Jul';
         break;
       case 7:
+      case 19:
+      case 31:
         text = 'Aug';
         break;
       case 8:
+      case 20:
+      case 32:
         text = 'Sep';
         break;
       case 9:
+      case 21:
+      case 33:
         text = 'Oct';
         break;
       case 10:
+      case 22:
+      case 34:
         text = 'Nov';
         break;
       case 11:
+      case 23:
+      case 35:
         text = 'Dec';
         break;
       default:

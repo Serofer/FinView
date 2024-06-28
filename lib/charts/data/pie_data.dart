@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
+import 'package:fin_view/user_data/timeframe_manager.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PieData {
   //add logic to which time period was given
@@ -14,6 +16,9 @@ class PieData {
   List categories = ['Food', 'Event', 'Education', 'Other'];
 
   Future<void> calculate(String? timeframe) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String timeframe = prefs.getString('selectedTimeframe') ?? 'Last 7 Days';
+    TimeframeManager().selectedTimeframe = timeframe;
     data = [];
     for (int i = 0; i < categories.length; i++) {
       data.add(Data(

@@ -23,6 +23,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   late List<PieChartSectionData> sections;
   late List<Expenditure> expenses;
   String selectedTimeframe = TimeframeManager().selectedTimeframe;
+  
   List timeframes = [
     'Last 7 Days',
     'Last 30 Days',

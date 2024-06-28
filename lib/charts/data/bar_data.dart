@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fin_view/db/spent_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fin_view/user_data/timeframe_manager.dart';
 
 class BarData {
   static int interval = 10; //change according to max bar
@@ -8,6 +10,9 @@ class BarData {
   static double barHeight = 0.0;
 
   Future<void> createBarData(String? timeframe) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String timeframe = prefs.getString('selectedTimeframe') ?? 'Last 7 Days';
+    TimeframeManager().selectedTimeframe = timeframe;
     barHeight = 0.0;
     barData = await SpentDatabase.instance.queryForBar(timeframe, true);
     for (int i = 0; i < barData.length; i++) {

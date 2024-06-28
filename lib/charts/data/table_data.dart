@@ -1,13 +1,15 @@
 import 'package:fin_view/db/spent_database.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fin_view/user_data/timeframe_manager.dart';
 
 class DataForTable {
   static late List<TableData> tableData;
   List categories = ["Food", "Event", "Eductation", "Other"];
 
   Future<void> createTableData(String? timeframe) async {
-    /*final Map<String, double> fields = Map.fromIterable(categories,
-        key: (category) => category,
-        value: (_) => 0.0); */ // Initialize with default value
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String timeframe = prefs.getString('selectedTimeframe') ?? 'Last 7 Days';
+    TimeframeManager().selectedTimeframe = timeframe;
     tableData = await SpentDatabase.instance.queryForBar(timeframe, false);
   }
 

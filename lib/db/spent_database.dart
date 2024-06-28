@@ -1,10 +1,12 @@
 import 'package:path/path.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:fin_view/model/spent.dart';
 import 'package:fin_view/charts/data/bar_data.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:fin_view/charts/data/table_data.dart';
+import 'package:fin_view/user_data/timeframe_manager.dart';
 
 //import 'package:fin_view/charts/data/table_data.dart';
 
@@ -679,6 +681,7 @@ class SpentDatabase {
           timeData['dataPerSection'] = 1;
           timeData['timeshift'] = 30;
           timeData['currentDate'] = DateTime(startYear, 1, 1);
+          
         }
         else if (years <= 4){
           timeData ['groupedSections'] = (years + 1) * 6;
@@ -694,6 +697,7 @@ class SpentDatabase {
         }
       }
       timeData['timeframe'] = timeframe;
+      _saveGroupedSections(timeData['groupedSections']);
     }
 
     if (timeframe == "This Year") {
@@ -767,4 +771,9 @@ class SpentDatabase {
     
     return timeData;
   }
+  void _saveGroupedSections(int sections) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.setInt('groupedSections', sections);
+  TimeframeManager().groupedSections = sections;
+}
 }
