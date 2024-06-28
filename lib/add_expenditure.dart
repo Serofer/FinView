@@ -154,7 +154,7 @@ class _AddExpenditurePageState extends State<AddExpenditurePage> {
                     label: const Text('Add Expenditure'),
                   ),
                   const SizedBox(height: 16.0),
-                  Text('$cost'),
+                  //Text('$cost'),
                 ]),
           )),
     );

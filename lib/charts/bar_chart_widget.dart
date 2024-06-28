@@ -10,7 +10,7 @@ class BarChartWidget extends StatelessWidget {
   
   final double barWidth = 30;
   final double barHeight;
-  final double groupSpace = 22; // Space between the bars
+  final double groupSpace = 50; // Space between the bars
 
   BarChartWidget({super.key})
       : barHeight = BarData.barHeight; // Calculate barHeight based on max spent in timeframe§
@@ -24,6 +24,7 @@ class BarChartWidget extends StatelessWidget {
     print(groupedSections.toString());
     print(timeshift.toString());
     int currentYear = DateTime.now().year;
+    int index = value.toInt();
 
     Map<String, dynamic> labeling = {
       'Last 30 Days': 'Week',
@@ -37,74 +38,74 @@ class BarChartWidget extends StatelessWidget {
     String text = "";  
     
     if (selectedTimeframe == 'This Year' || (selectedTimeframe == 'All Time' && groupedSections == 12)) {
-        text = "${labeling['This Year'][value]}";
+        text = "${labeling['This Year'][index]}";
     }
     else if (selectedTimeframe == 'All Time') {
       if (groupedSections <= 36 && timeshift == 30) {//years <= 2 //problem with timeshift to be solved
-         if (value < 12) {
+         if (index < 12) {
           if (groupedSections == 24) {
-            text = "${labeling['This Year'][value]} ${currentYear - 1}";
+            text = "${labeling['This Year'][index]} ${currentYear - 1}";
           }
           else {
-            text = "${labeling['This Year'][value]} ${currentYear - 2}";
+            text = "${labeling['This Year'][index]} ${currentYear - 2}";
           }   
         }
-        else if (value < 24) {
+        else if (index < 24) {
           if (groupedSections == 24) {
-            text = "${labeling['This Year'][value - 12]} $currentYear";
+            text = "${labeling['This Year'][index - 12]} $currentYear";
           }
           else {
-            text = "${labeling['This Year'][value - 12]} ${currentYear - 1}";
+            text = "${labeling['This Year'][index - 12]} ${currentYear - 1}";
           }
         }
-        else if (value < 36) {//only if 3 years (years = 2)          
-          text = "${labeling['This Year'][value - 24]} $currentYear";
+        else if (index < 36) {//only if 3 years (years = 2)          
+          text = "${labeling['This Year'][index - 24]} $currentYear";
         }
       }
       else if (groupedSections <= 30 && timeshift == 60) {//every two months (years <= 4)
-        if (value < 6) {
+        if (index < 6) {
           if (groupedSections == 24) {
-            text = "${labeling['All Time'][value]} ${currentYear - 3}";
+            text = "${labeling['All Time'][index]} ${currentYear - 3}";
           }
           else {
-            text = "${labeling['All Time'][value]} ${currentYear - 4}";
+            text = "${labeling['All Time'][index]} ${currentYear - 4}";
           }       
         }
-      else if (value < 12) {
+      else if (index < 12) {
         if (groupedSections == 24) {
-          text = "${labeling['All Time'][value - 6]} ${currentYear - 2}";
+          text = "${labeling['All Time'][index - 6]} ${currentYear - 2}";
           }
           else {
-            text = "${labeling['All Time'][value- 6]} ${currentYear - 3}";
+            text = "${labeling['All Time'][index - 6]} ${currentYear - 3}";
           }   
         }
-        else if (value < 18) {
+        else if (index < 18) {
           if (groupedSections == 24) {
-            text = "${labeling['All Time'][value - 12]} ${currentYear - 1}";
+            text = "${labeling['All Time'][index - 12]} ${currentYear - 1}";
           }
           else {
-            text = "${labeling['All Time'][value - 12]} ${currentYear - 2}";
+            text = "${labeling['All Time'][index - 12]} ${currentYear - 2}";
           }
         }
-        else if (value < 24) {
+        else if (index < 24) {
           if (groupedSections == 24) {
-            text = "${labeling['All Time'][value - 18]} $currentYear";
+            text = "${labeling['All Time'][index - 18]} $currentYear";
           }
           else {
-            text = "${labeling['All Time'][value - 18]} ${currentYear - 1}";
+            text = "${labeling['All Time'][index - 18]} ${currentYear - 1}";
           }          
         }        
-        else if (value < 30) {//only if 5 years (years = 4)
-          text = "${labeling['All Time'][value - 24]} $currentYear";
+        else if (index < 30) {//only if 5 years (years = 4)
+          text = "${labeling['All Time'][index - 24]} $currentYear";
         }
       }
       else if (timeshift == 365) {
-          text = "${currentYear - (groupedSections - (value + 1))}";
+          text = "${currentYear - (groupedSections - (index + 1))}";
       }
     }
     else {
       text =
-          '${labeling[selectedTimeframe]} ${(value + 1).toString()}';//month: Week, 7 days: Day, Year: array with Months
+          '${labeling[selectedTimeframe]} ${(index + 1).toString()}';//month: Week, 7 days: Day, Year: array with Months
     }
       
     
@@ -113,7 +114,7 @@ class BarChartWidget extends StatelessWidget {
        child: Text(text, style: style,)
       );
   }
-  Widget topTitles(double value, TitleMeta meta) {
+  Widget topTitles(double index, TitleMeta meta) {
     const style = TextStyle(fontSize: 10);
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -158,8 +159,8 @@ class BarChartWidget extends StatelessWidget {
             ),
             
             gridData: FlGridData(
-              checkToShowHorizontalLine: (value) => value % BarData.interval == 0,
-              getDrawingHorizontalLine: (value) {
+              checkToShowHorizontalLine: (index) => index % BarData.interval == 0,
+              getDrawingHorizontalLine: (index) {
                 return const FlLine(
                   color: Color(0xff2a7747),
                   strokeWidth: 0.8,
