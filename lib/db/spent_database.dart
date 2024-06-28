@@ -317,18 +317,30 @@ class SpentDatabase {
         tableData[i].time = labeling[timeframe][i];
       }
       else if (timeframe == 'All Time') {
-        if (groupedSections <= 36 && timeshift == 30) {//part it in months
+        
+        if (groupedSections <= 36 && timeshift == 30) {//years <= 2
           if (i < 12) {
-            tableData[i].time = "${labeling['This Year'][i]} $currentYear ";
+            if (groupedSections == 24) {
+              tableData[i].time = "${labeling['This Year'][i]} ${currentYear - 1}";
+            }
+            else {
+              tableData[i].time = "${labeling['This Year'][i]} ${currentYear - 2}";
+            }
+            
           }
           else if (i < 24) {
-            tableData[i].time = "${labeling['This Year'][i - 12]} ${currentYear - 1}";
+            if (groupedSections == 24) {
+              tableData[i].time = "${labeling['This Year'][i - 12]} $currentYear";
+            }
+            else {
+              tableData[i].time = "${labeling['This Year'][i - 12]} ${currentYear - 1}";
+            }
           }
-          else if (i < 36) {//only if 3 years
-            tableData[i].time = "${labeling['This Year'][i - 24]} ${currentYear - 2}";
+          else if (i < 36) {//only if 3 years (years = 2)          
+            tableData[i].time = "${labeling['This Year'][i - 24]} $currentYear";
           }
         }
-        else if (groupedSections <= 30 && timeshift == 60) {//every two months
+        else if (groupedSections <= 30 && timeshift == 60) {//every two months (years <= 4)
           if (i < 6) {
             if (groupedSections == 24) {
               tableData[i].time = "${labeling['All Time'][i]} ${currentYear - 3}";
@@ -353,17 +365,15 @@ class SpentDatabase {
             }
             else {
               tableData[i].time = "${labeling['All Time'][i - 18]} ${currentYear - 1}";
-            }
-            
-          }
-          if (i < 30) {//only if 5 years
+            }          
+          }        
+          if (i < 30) {//only if 5 years (years = 4)
             tableData[i].time = "${labeling['All Time'][i - 24]} $currentYear";
         }
+        }
         else if (timeshift == 365) {
-          tableData[i].time = "${currentYear - i}";
+          tableData[i].time = "${currentYear - (groupedSections - (i + 1))}";
         }
-        }
-        
       }
       else {
         tableData[i].time =
@@ -670,7 +680,7 @@ class SpentDatabase {
           timeData ['timeshift'] = 60;
           timeData['currentDate'] = DateTime(startYear, 2, 1);
         }
-        else if (years <= 10){
+        else {
           timeData ['groupedSections'] = years + 1;
           timeData ['dataPerSection'] = 1;
           timeData ['timeshift'] = 365;
