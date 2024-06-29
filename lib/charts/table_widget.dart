@@ -24,12 +24,12 @@ class TableWidget extends StatelessWidget {
               child: DataTable(
                 columnSpacing: 30,
                 columns: [
-                  DataColumn(
+                  const DataColumn(
                     label: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 2),
+                      padding: EdgeInsets.symmetric(horizontal: 2),
                       child: Text(
                         'Time',
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -61,7 +61,7 @@ class TableWidget extends StatelessWidget {
                         final value = data.categoryData[category] ?? 0.0;
                         return DataCell(
                           Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               border: Border(
                                 right: BorderSide(color: Colors.grey),
                               ),
@@ -73,6 +73,7 @@ class TableWidget extends StatelessWidget {
                                 style: TextStyle(
                                   fontSize: category == 'Total' ? 16 : 14,
                                   fontWeight: category == 'Total' ? FontWeight.bold : FontWeight.normal,
+                                  color: data.time == 'All' ? Colors.blue : Colors.black,
                                 ),
                               ),
                             ),

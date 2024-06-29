@@ -78,14 +78,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     setState(() => pieLoading = false);
   }
 
-/*
-  Future loadLineChartData() async {
-    setState(() => lineLoading = true);
-    BarData barData = BarData();
-    //reference to needed functions
-    await barData.createBarData("month");
-    setState(() => lineLoading = false);
-  }*/
+
   Future loadBarChartData(String? timeframe) async {
     selectedTimeframe = TimeframeManager().selectedTimeframe;
     _loadSelectedTimeframe();
@@ -116,6 +109,11 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
         title: const Text('View Charts'),
         backgroundColor: Colors.lightBlueAccent,
         actions: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(selectedTimeframe,
+                style: const TextStyle(color: Colors.black, fontSize: 24)),
+          ),
           IconButton(
             icon: const Icon(Icons.filter_alt),
             onPressed: () {
@@ -271,8 +269,6 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   );
 }
 
-
-
   void _loadSelectedTimeframe() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -283,29 +279,4 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
       
     });
   }
-/*
-  Widget _buildLine () {
-    return Container(
-      height: 500,
-      child: Card(
-        child: Linechart(
-          LineChartData( //according to filter
-            minX: 0,
-            maxX: 11,
-            minY: 0,
-            maxX: 3,
-            lineBarsData: [
-              LineChartBarData(
-                spots: [
-                  FlSpot(0, 30),
-                  FlSpot(2, 40),
-
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }*/
 }
