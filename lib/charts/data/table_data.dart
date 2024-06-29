@@ -11,12 +11,15 @@ class DataForTable {
     String timeframe = prefs.getString('selectedTimeframe') ?? 'Last 7 Days';
     TimeframeManager().selectedTimeframe = timeframe;
     tableData = await SpentDatabase.instance.queryForBar(timeframe, false);
+
+    if (tableData == null) {// TODO: add error handling
+      throw Exception('Failed to load table data');
+    }
   }
 
-  /*final TableData tableData = TableData(time: '2024-01-27', categoryData: fields);
+  
 
-  // Print the tableData
-  print(tableData.categoryData); // Output: {food: 0.0, event: 0.0, education: 0.0, other: 0.0} */
+  
 }
 
 class TableData {

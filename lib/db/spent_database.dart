@@ -193,6 +193,18 @@ class SpentDatabase {
         // Invalid timeframe
         throw ArgumentError('Invalid timeframe: $timeframe');
     }
+    final List countAll = await db.rawQuery(
+          "SELECT SUM(amount) FROM expenditure WHERE date >= ? AND date <= ?",
+          [timefilter.toIso8601String(), timeborder.toIso8601String()]);
+    double? totalAmount = countAll[0]['SUM(amount)'] is int
+          ? (countAll[0]['SUM(amount)'] as int).toDouble()
+          : countAll[0]['SUM(amount)'];
+
+
+    if (countAll == null) {
+      return List<double>.filled(categories.length, 0.0);
+    }
+
 
     for (int i = 0; i < categories.length; i++) {
       
@@ -214,13 +226,6 @@ class SpentDatabase {
         spentCat = sumAmount;
       }
       //List countAll = await SpentDatabase.instance.readAmount();
-      final List countAll = await db.rawQuery(
-          "SELECT SUM(amount) FROM expenditure WHERE date >= ? AND date <= ?",
-          [timefilter.toIso8601String(), timeborder.toIso8601String()]);
-
-      double? totalAmount = countAll[0]['SUM(amount)'] is int
-          ? (countAll[0]['SUM(amount)'] as int).toDouble()
-          : countAll[0]['SUM(amount)'];
 
       double totAmount = totalAmount ?? 0.0;
       double toAdd = (spentCat / totAmount) * 100;
@@ -269,7 +274,6 @@ class SpentDatabase {
     ];
     List<Data> barData = [];
     Map<String, dynamic> timeData = {};
-    final db = await instance.database; //delete unnecessary stuff
     final now = DateTime.now();
     final currentYear = now.year;
     final currentMonth = now.month;
@@ -294,9 +298,12 @@ class SpentDatabase {
     result = timeData['result'];
     timeframe = timeData['timeframe'];
 
+    if (result == null) {
+      return null;
+    }
+
     //List sectionValues =
     //List.generate(timeData['dataPerSection'], (index) => 0.0);
-    List totalTimeValues = List.generate(groupedSections, (index) => 0.0);
     List<TableData> tableData = List.generate(groupedSections + 1, (index) {
       // Generate TableData for each index
       return TableData(
@@ -607,21 +614,7 @@ class SpentDatabase {
   Future<Map<String, dynamic>> getTimeData(String? timeframe) async {
     Map<String, dynamic> timeData = {};
     final db = await instance.database;
-    List months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December'
-    ];
-
+    
     final now = DateTime.now();
     DateTime currentDateAtMidnight =
         DateTime(now.year, now.month, now.day, 0, 0, 0);
@@ -705,6 +698,7 @@ class SpentDatabase {
       timeData['currentDate'] = DateTime(now.year, 1, 10);
       int currentYear = DateTime.now().year;
 // Query to select data for the current year
+      _saveGroupedSections(timeData['groupedSections']);
       timeData['result'] = await db.rawQuery(
         "SELECT amount, category, date FROM expenditure WHERE strftime('%Y', date) = ? ORDER BY date ASC",
         ['$currentYear'], 

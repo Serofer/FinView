@@ -20,6 +20,8 @@ class PieData {
     String timeframe = prefs.getString('selectedTimeframe') ?? 'Last 7 Days';
     TimeframeManager().selectedTimeframe = timeframe;
     data = [];
+    bool empty = true;
+
     for (int i = 0; i < categories.length; i++) {
       data.add(Data(
         name: categories[i],
@@ -31,11 +33,18 @@ class PieData {
     percentages = await SpentDatabase.instance.calculatePercentages(timeframe);
 
     for (int i = 0; i < categories.length; i++) {
+      if (percentages[i] != 0.0) {
+        empty = false;
+      }
       data[i] = (Data(
         name: categories[i],
         percent: percentages[i],
         color: categoryColors[i],
       ));
+    }
+
+    if (empty) {//add error handling
+      data = [];
     }
   }
 }
