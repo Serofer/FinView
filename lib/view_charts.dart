@@ -128,9 +128,11 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
             pieLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _buildPie(),
+                const SizedBox(height: 16.0),
             barLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _buildBar(),
+                const SizedBox(height: 16.0),
             tableLoading
                 ? const Center(child: CircularProgressIndicator())
                 : _buildTable(),
@@ -141,66 +143,118 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
   }
 
   Widget _buildPie() {
-    return SizedBox(
-      height: 500,
-      //change to staggered view
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: PieChart(
-                  PieChartData(
-                    borderData: FlBorderData(show: false),
-                    sectionsSpace: 0,
-                    centerSpaceRadius: 40,
-                    sections: sections,
-                  ),
+  return SizedBox(
+    height: 400, // Reduced height
+    child: Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0), // Reduced padding
+        child: Column(
+          children: [
+            const Text(
+              'Pie Chart', // Title text
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ), 
+            Expanded(
+              child: PieChart(
+                PieChartData(
+                  borderData: FlBorderData(show: false),
+                  sectionsSpace: 0,
+                  centerSpaceRadius: 30, // Adjusted for less space in the center
+                  sections: sections,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: PieData.data
-                          .map(
-                            (data) => Container(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 2),
-                                child: buildIndicator(
-                                    color: data.color, text: data.name)),
-                          )
-                          .toList(),
-                    ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0), // Reduced padding
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: PieData.data
+                        .map(
+                          (data) => Container(
+                            padding: const EdgeInsets.symmetric(vertical: 2),
+                            child: buildIndicator(
+                                color: data.color, text: data.name),
+                          ),
+                        )
+                        .toList(),
                   ),
-                ],
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+
+  Widget _buildBar() {
+  return SizedBox(
+    height: 500,
+    child: Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(      
+          children: [
+            const Text(
+              'Bar Chart', // Title text
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
               ),
+            ),
+             // Spacing between title and chart
+            Expanded(
+              child: BarChartWidget(),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
+ Widget _buildTable() {
+  return LayoutBuilder(
+    builder: (context, constraints) {
+      return Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16),
+          child: Column(
+            children: [
+              const Text(
+              'Table', // Title text
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16), // Spacing between title and chart
+            TableWidget(),
             ],
           ),
         ),
-      ),
-    );
-  }
+      );
+    },
+  );
+}
 
-  Widget _buildBar() {
-    return SizedBox(
-      height: 500,
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(32),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: BarChartWidget(),
-        ),
-      ),
-    );
-  }
 
   void _showFilterModal(BuildContext context) {
     showDialog(
@@ -255,19 +309,7 @@ class _ViewChartsPageState extends State<ViewChartsPage> {
     await prefs.setString('selectedTimeframe', selectedTimeframe!);
   }
 
- Widget _buildTable() {
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      return Card(
-        elevation: 4,
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16),
-          child: TableWidget(),
-        ),
-      );
-    },
-  );
-}
+
 
   void _loadSelectedTimeframe() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

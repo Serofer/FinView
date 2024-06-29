@@ -29,7 +29,7 @@ class TableWidget extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 2),
                       child: Text(
                         'Time',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
@@ -40,7 +40,7 @@ class TableWidget extends StatelessWidget {
                         child: Text(
                           category,
                           style: TextStyle(
-                            fontSize: category == 'Total' ? 16 : 14,
+                            fontSize: category == 'Total' ? 20 : 18,
                             fontWeight: category == 'Total' ? FontWeight.bold : FontWeight.normal,
                           ),
                         ),
@@ -54,7 +54,10 @@ class TableWidget extends StatelessWidget {
                       DataCell(
                         Text(
                           data.time,
-                          style: const TextStyle(fontSize: 14),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: data.time == 'All' ? FontWeight.bold: FontWeight.normal,
+                            ),
                         ),
                       ),
                       ...categoriesExtra.map((category) {
@@ -71,9 +74,13 @@ class TableWidget extends StatelessWidget {
                               child: Text(
                                 value.toString(),
                                 style: TextStyle(
-                                  fontSize: category == 'Total' ? 16 : 14,
+                                  fontSize: category == 'Total' ? 20 : 18,
                                   fontWeight: category == 'Total' ? FontWeight.bold : FontWeight.normal,
-                                  color: data.time == 'All' ? Colors.blue : Colors.black,
+                                  color: data.time == 'All'
+                                    ? Colors.blue
+                                    : value == 0.0
+                                      ? Colors.grey
+                                      : Colors.black,
                                 ),
                               ),
                             ),
